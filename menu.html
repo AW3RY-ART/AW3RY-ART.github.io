@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boogie Cafe & Bistro Retkinia — Kawiarnia i Bistro w Łodzi</title>
-<meta name="description" content="Boogie Cafe & Bistro na Retkini — śniadania, kawa, dania z klimatem i muzyka na żywo. Al. Kard. S. Wyszyńskiego 13, Łódź.">
+<title>Menu — Boogie Cafe & Bistro Retkinia</title>
+<meta name="description" content="Pełne menu Boogie Cafe & Bistro: śniadania, bajgle, burgery, sałatki, tapasy, naleśniki i pankejki.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap');
 
@@ -194,87 +194,42 @@ footer{
 
 </style>
 <style>
-  .hero{
-    min-height:100vh;
-    display:flex; flex-direction:column; justify-content:center;
-    padding:0 6vw;
-    position:relative;
-    background:
-      radial-gradient(circle at 85% 20%, var(--mustard) 0%, transparent 40%),
-      radial-gradient(circle at 10% 80%, var(--pink) 0%, transparent 35%),
-      var(--cream);
+  .menu-nav{
+    position:sticky; top:76px; z-index:90;
+    display:flex; gap:10px; flex-wrap:wrap;
+    padding:16px 6vw; background:var(--cream);
+    border-bottom:2px solid var(--ink);
   }
-  .hero .eyebrow{ font-weight:700; text-transform:uppercase; letter-spacing:0.2em; font-size:0.8rem; color:var(--rust); margin-bottom:14px; }
-  .hero h1{ font-size:clamp(3.5rem, 12vw, 9rem); color:var(--ink); }
-  .hero h1 span{ color:var(--rust); }
-  .hero .sub{ max-width:520px; margin-top:22px; font-size:1.15rem; color:#4a433f; }
-  .hero .cta-row{ margin-top:38px; display:flex; gap:16px; flex-wrap:wrap; }
-
-  .vinyl{
-    position:absolute; right:6vw; bottom:8vh;
-    width:220px; height:220px; border-radius:50%;
-    background:repeating-radial-gradient(circle, var(--ink) 0 2px, #3a3532 2px 8px);
-    box-shadow:0 20px 50px rgba(0,0,0,0.25);
-    animation:spin 12s linear infinite;
+  .menu-nav a{
+    padding:8px 18px; border:1.5px solid var(--ink); border-radius:30px;
+    font-size:0.82rem; text-transform:uppercase; letter-spacing:0.04em; font-weight:700;
+    transition:background 0.2s ease, color 0.2s ease;
   }
-  .vinyl::after{
-    content:''; position:absolute; top:50%; left:50%; width:60px; height:60px;
-    background:var(--mustard); border-radius:50%; transform:translate(-50%,-50%);
-    box-shadow:0 0 0 4px var(--ink);
+  .menu-nav a:hover{ background:var(--ink); color:var(--cream); }
+
+  .menu-section{ padding:80px 6vw; max-width:1000px; margin:0 auto; }
+  .menu-section + .menu-section{ border-top:2px solid var(--ink); }
+  .menu-section .cat-head{ display:flex; align-items:baseline; gap:16px; margin-bottom:44px; }
+  .menu-section .cat-head .num{ font-family:'Bebas Neue'; color:var(--rust); font-size:1rem; letter-spacing:0.2em; }
+  .menu-section h2{ font-size:clamp(2.2rem, 6vw, 3.6rem); }
+
+  .dish-list{ display:flex; flex-direction:column; gap:0; }
+  .dish{
+    display:flex; justify-content:space-between; align-items:flex-start; gap:20px;
+    padding:22px 0; border-bottom:1px dashed #c9c0b2;
+    transition:padding-left 0.25s ease, background 0.25s ease;
   }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
-  @media (max-width:800px){ .vinyl{ display:none; } }
-
-  .scroll-cue{
-    position:absolute; left:6vw; bottom:6vh; display:flex; align-items:center; gap:10px;
-    font-size:0.78rem; text-transform:uppercase; letter-spacing:0.15em; color:#6b6259;
+  .dish:hover{ padding-left:14px; background:rgba(224,149,74,0.12); }
+  .dish-left h3{ font-family:'Space Grotesk'; font-weight:700; font-size:1.15rem; letter-spacing:0; }
+  .dish-left p{ font-size:0.92rem; color:#5a5148; margin-top:4px; max-width:480px; }
+  .dish-price{
+    font-family:'Bebas Neue'; font-size:1.4rem; color:var(--rust); white-space:nowrap;
   }
-  .scroll-cue .line{ width:36px; height:1px; background:#6b6259; animation:pulseLine 1.8s ease-in-out infinite; }
-  @keyframes pulseLine{ 0%,100%{ opacity:0.4; } 50%{ opacity:1; } }
 
-  .about{ background:var(--teal); color:var(--cream); }
-  .about .section-head .num{ color:var(--mustard); }
-  .about-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:start; }
-  .about p{ font-size:1.15rem; line-height:1.7; margin-bottom:20px; color:#e9f2f1; }
-  .about .tag{ border-color:var(--pink); color:var(--pink); }
-  @media (max-width:800px){ .about-grid{ grid-template-columns:1fr; } }
-
-  .menu{ background:var(--cream); }
-  .menu-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-top:2px solid var(--ink); }
-  .menu-item{
-    border-bottom:2px solid var(--ink); border-right:2px solid var(--ink);
-    padding:34px 26px; transition:background 0.25s ease, transform 0.25s ease;
+  .menu-hint{
+    background:var(--teal); color:var(--cream); text-align:center; padding:60px 6vw;
   }
-  .menu-item:nth-child(3n){ border-right:none; }
-  .menu-item:hover{ background:var(--mustard); transform:translateY(-4px); }
-  .menu-item h3{ font-size:1.8rem; margin-bottom:10px; }
-  .menu-item p{ font-size:0.95rem; color:#4a433f; line-height:1.5; }
-  .menu-item .price{ display:block; margin-top:14px; font-weight:700; color:var(--rust); }
-  @media (max-width:800px){ .menu-grid{ grid-template-columns:1fr; } .menu-item{ border-right:none; } }
-  .menu-more{ margin-top:34px; text-align:center; }
-
-  .live{ background:var(--rust); color:var(--cream); text-align:center; padding:90px 6vw; }
-  .live h2{ font-size:clamp(2.5rem, 8vw, 5rem); }
-  .live p{ max-width:560px; margin:20px auto 0; font-size:1.1rem; opacity:0.95; }
-
-  .reviews{ background:var(--cream); }
-  .review-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
-  .review-card{
-    background:#fff; border:2px solid var(--ink); border-radius:14px; padding:28px;
-    display:flex; flex-direction:column; gap:14px; transition:transform 0.25s ease, box-shadow 0.25s ease;
-  }
-  .review-card:hover{ transform:translateY(-6px); box-shadow:0 16px 30px rgba(33,30,27,0.14); }
-  .stars{ color:var(--mustard); font-size:1.2rem; letter-spacing:2px; }
-  .review-card p{ font-size:0.98rem; line-height:1.55; color:#3a332f; }
-  .review-card .who{ font-weight:700; font-size:0.9rem; margin-top:auto; }
-  @media (max-width:800px){ .review-grid{ grid-template-columns:1fr; } }
-  .rating-badge{ display:inline-flex; align-items:center; gap:10px; margin-top:40px; font-family:'Bebas Neue'; font-size:1.3rem; }
-  .rating-badge .num{ background:var(--ink); color:var(--mustard); padding:6px 14px; border-radius:8px; }
-
-  .visit-cta{ background:var(--ink); color:var(--cream); text-align:center; }
-  .visit-cta h2{ font-size:clamp(2.4rem, 7vw, 4.5rem); }
-  .visit-cta p{ max-width:520px; margin:16px auto 32px; color:#cfc7ba; }
-  .visit-cta .cta-row{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .menu-hint p{ max-width:520px; margin:0 auto; font-size:1.05rem; }
 </style>
 </head>
 <body>
@@ -292,125 +247,119 @@ footer{
   </ul>
 </nav>
 
-<section class="hero">
-  <div class="eyebrow">Retkinia · Śniadania · Kawa · Muzyka na żywo</div>
-  <h1>DOBRY <span>GROOVE.</span><br>DOBRA <span>KAWA.</span></h1>
-  <p class="sub">Przytulne miejsce spotkań na Retkini — świeże, sycące śniadania, dania z klimatem i muzyka na żywo, która sprawia, że nie chce się stąd wychodzić.</p>
-  <div class="cta-row">
-    <a class="btn solid" href="rezerwacja.html">Zarezerwuj stolik</a>
-    <a class="btn outline" href="menu.html">Zobacz menu</a>
-  </div>
-  <div class="vinyl"></div>
-  <div class="scroll-cue"><span class="line"></span>Przewiń</div>
+<section class="page-hero">
+  <div class="eyebrow reveal">Nasza karta</div>
+  <h1 class="reveal">MENU</h1>
+  <p class="sub reveal">Śniadania, bajgle, burgery, sałatki, tapasy i słodkości — wszystko przygotowywane na miejscu, ze świeżych składników.</p>
 </section>
 
-<div class="marquee">
-  <div>ŚNIADANIA CAŁY DZIEŃ <span>★</span> OPCJE WEGAŃSKIE <span>★</span> OGRÓDEK LETNI <span>★</span> MUZYKA NA ŻYWO <span>★</span> 4,6 / 5 W GOOGLE <span>★</span> ŚNIADANIA CAŁY DZIEŃ <span>★</span> OPCJE WEGAŃSKIE <span>★</span> OGRÓDEK LETNI <span>★</span> MUZYKA NA ŻYWO <span>★</span> 4,6 / 5 W GOOGLE <span>★</span></div>
+<div class="menu-nav">
+  <a href="#sniadania">Śniadania</a>
+  <a href="#bajgle">Bajgle</a>
+  <a href="#burgery">Burgery</a>
+  <a href="#salatki">Sałatki</a>
+  <a href="#tapasy">Tapasy</a>
+  <a href="#slodko">Na słodko</a>
+  <a href="#pankejki">Pankejki</a>
 </div>
 
-<section class="about" id="about">
-  <div class="section-head reveal">
-    <div class="num">01 — O NAS</div>
-    <h2>Miejsce, gdzie<br>zwalnia się tempo.</h2>
-  </div>
-  <div class="about-grid">
-    <div class="reveal">
-      <p>Boogie Cafe & Bistro to przytulny zakątek na Retkini, stworzony dla wszystkich, którzy cenią dobre jedzenie, aromatyczną kawę i miłą atmosferę. Świeże składniki, domowe smaki i muzyka, która unosi się w tle — to nasza recepta na udany dzień.</p>
-      <p>Niezależnie, czy wpadasz na szybką kawę przed pracą, leniwe niedzielne śniadanie, czy wieczór z muzyką na żywo — zawsze znajdziesz tu miejsce dla siebie.</p>
-      <a class="btn outline" href="o-nas.html" style="margin-top:10px; border-color:var(--cream);">Poznaj naszą historię</a>
-    </div>
-    <div class="reveal">
-      <div class="tags">
-        <span class="tag">Ogródek</span>
-        <span class="tag">Dania wegańskie</span>
-        <span class="tag">Muzyka na żywo</span>
-        <span class="tag">Dostawa bezkontaktowa</span>
-        <span class="tag">Odbiór przy krawężniku</span>
-        <span class="tag">Przyjazne LGBTQ+</span>
-        <span class="tag">Dobre miejsce do pracy</span>
-      </div>
-    </div>
+<section class="menu-section" id="sniadania">
+  <div class="cat-head reveal"><span class="num">01</span><h2>Śniadania</h2></div>
+  <div class="dish-list reveal-stagger">
+    <div class="dish"><div class="dish-left"><h3>Omlet z chorizo</h3><p>Omlet z 4 jaj z chorizo, warzywa podawane z grzankami.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Śniadanie Szefa</h3><p>Jajka, frankfurterki, wędlina, ser, warzywa, twarożek, pieczywo.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Bawaria</h3><p>3 frankfurterki, jajka, cebula, ogórek, pomidor, 2 tosty z szynką i serem.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Poranek</h3><p>Jajka, twarożek, mix serów, warzywa, sałatka jarzynowa, pieczywo.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Śniadanie Szlacheckie</h3><p>Łosoś wędzony, jajka, frankfurterki, wędlina, twarożek, ser, warzywa, pieczywo.</p></div><span class="dish-price">31 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Norwegia</h3><p>Łosoś wędzony, mix serów, twarożek, sałatka jarzynowa, warzywa, pieczywo.</p></div><span class="dish-price">31 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Moc</h3><p>Jajecznica z trzech jaj z boczkiem, sałatka, tosty z serem i szynką.</p></div><span class="dish-price">28 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Meksyk</h3><p>Jajecznica, guacamole, cebula, tortilla, chilli.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Pobudka</h3><p>Dwa tosty: 4 sery mozzarella, camembert, lazur, gouda, orzechy włoskie, sałatka.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Szakszuka</h3><p>Pomidory zapiekane z cebulą i kminkiem, kozi ser, jajko, grzanki.</p></div><span class="dish-price">30 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Tosty Skandynawskie</h3><p>Dwa tosty, bekon, jajecznica, guacamole, łosoś, sałatka.</p></div><span class="dish-price">30 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Wytrawna Francja</h3><p>Gofr, bekon, jajko, pomidor, ogórek, rukola, majonez.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Śniadanie Staropolskie</h3><p>Gofr, kaszanka, konfitura z cebuli, bekon, jajko, sos musztardowy.</p></div><span class="dish-price">31 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Gruzja</h3><p>Leczo z zapiekanymi pomidorami z cukinią i papryką, podane w miseczce z tortillą z frankfurterkami i jajkiem.</p></div><span class="dish-price">31 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Weekend</h3><p>2 gofry, miód, dżem, owoce.</p></div><span class="dish-price">28 zł</span></div>
   </div>
 </section>
 
-<section class="menu" id="menu">
-  <div class="section-head reveal">
-    <div class="num">02 — MENU</div>
-    <h2>Coś dla każdego nastroju.</h2>
-  </div>
-  <div class="menu-grid reveal-stagger">
-    <div class="menu-item">
-      <h3>Śniadania</h3>
-      <p>Omlet z chorizo, Śniadanie Szefa, Szakszuka, Tosty Skandynawskie i inne.</p>
-      <span class="price">28–31 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Bajgle</h3>
-      <p>Z twarożkiem, kozim serem, łososiem, kurczakiem lub parmą.</p>
-      <span class="price">22–29 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Burgery</h3>
-      <p>Nowy Jork, Nevada, California, Texas — wołowina 100%.</p>
-      <span class="price">38–45 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Sałatki</h3>
-      <p>Kurczak, łosoś, wege z kozim serem, krewetka.</p>
-      <span class="price">34–39 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Tapasy</h3>
-      <p>Quesadilla, rollsy z kurczakiem, krewetki w winie, Boogie Bowl.</p>
-      <span class="price">32–46 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Naleśniki i pankejki</h3>
-      <p>Na słodko, wytrawne i pankejki owocowe, czekoladowe, karmelowe.</p>
-      <span class="price">16–35 zł</span>
-    </div>
-  </div>
-  <div class="menu-more reveal"><a class="btn solid" href="menu.html">Zobacz pełne menu</a></div>
-</section>
-
-<section class="live" id="live">
-  <h2 class="reveal">MUZYKA NA ŻYWO</h2>
-  <p class="reveal">Regularne wieczory z muzyką na żywo — sprawdź nasz Instagram, żeby nie przegapić najbliższego koncertu.</p>
-</section>
-
-<section class="reviews" id="reviews">
-  <div class="section-head reveal">
-    <div class="num">03 — OPINIE</div>
-    <h2>Co mówią goście.</h2>
-    <div class="rating-badge"><span class="num">4,6</span> na podstawie 1406 opinii w Google</div>
-  </div>
-  <div class="review-grid reveal-stagger">
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p>Przytulne miejsce z pysznym jedzeniem, dobrą kawą i miłymi cenami. W menu mnóstwo ciekawych propozycji — na pewno wrócimy spróbować czegoś nowego.</p>
-      <div class="who">— Maryia Siankova, Local Guide</div>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p>Naprawdę dobra kawa, duże porcje i świeże jedzenie. Dobry posiłek w ładnym, jasnym i zadbanym wnętrzu.</p>
-      <div class="who">— Michał Radomski, Local Guide</div>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★☆</div>
-      <p>Ciekawe przepisy śniadaniowe i świetne miejsce do pracy zdalnej — dobra atmosfera do co-workingu przy kawie.</p>
-      <div class="who">— Israel Alpuche, Local Guide</div>
-    </div>
+<section class="menu-section" id="bajgle">
+  <div class="cat-head reveal"><span class="num">02</span><h2>Bajgle</h2></div>
+  <div class="dish-list reveal-stagger">
+    <div class="dish"><div class="dish-left"><h3>Z twarożkiem</h3><p>Twarożek, rzodkiewka, rukola.</p></div><span class="dish-price">22 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Wege</h3><p>Guacamole, mozzarella, pomidor, rukola.</p></div><span class="dish-price">25 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Z kozim serem</h3><p>Kozi ser, gruszka, orzechy włoskie, sos żurawinowy, rukola.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Z kurczakiem</h3><p>Kurczak, ogórek, pomidor, rukola, sos cezar.</p></div><span class="dish-price">25 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Z łososiem</h3><p>Łosoś wędzony, ogórek, serek biały, sos kaparowy, rukola.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Z parmą</h3><p>Szynka włoska, suszone pomidory, mozzarella, sos musztardowy.</p></div><span class="dish-price">26 zł</span></div>
   </div>
 </section>
 
-<section class="visit-cta">
-  <h2 class="reveal">WPADNIJ NA GROOVE</h2>
-  <p class="reveal">Al. Kardynała Stefana Wyszyńskiego 13, Retkinia, Łódź — czekamy z kawą i dobrą muzyką.</p>
-  <div class="cta-row reveal">
-    <a class="btn solid" href="rezerwacja.html">Zarezerwuj stolik</a>
-    <a class="btn outline" href="kontakt.html" style="border-color:var(--cream);">Dojazd i kontakt</a>
+<section class="menu-section" id="burgery">
+  <div class="cat-head reveal"><span class="num">03</span><h2>Burgery</h2></div>
+  <div class="dish-list reveal-stagger">
+    <div class="dish"><div class="dish-left"><h3>Nowy Jork</h3><p>Bajgiel, wołowina 100% 180g, cheddar, bekon, pomidor, konfitura z czerwonej cebuli, sos musztardowy.</p></div><span class="dish-price">38 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Nevada</h3><p>Bajgiel, wołowina 100% 180g, cheddar, bekon, ogórek konserwowy, jalapeño, sos meksykański.</p></div><span class="dish-price">38 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>California</h3><p>Bajgiel, wołowina 100% 180g, kozi ser, gruszka, orzechy włoskie, sos kaparowy.</p></div><span class="dish-price">41 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Texas</h3><p>Bajgiel, 2x wołowina 100% 180g, 2x cheddar, bekon, ogórek konserwowy, czerwona cebula, pomidor, sos chrzanowy.</p></div><span class="dish-price">45 zł</span></div>
   </div>
 </section>
+
+<section class="menu-section" id="salatki">
+  <div class="cat-head reveal"><span class="num">04</span><h2>Sałatki</h2></div>
+  <div class="dish-list reveal-stagger">
+    <div class="dish"><div class="dish-left"><h3>Kurczak</h3><p>Kurczak, camembert, gruszka, migdały, sos żurawinowy.</p></div><span class="dish-price">34 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Łosoś</h3><p>Łosoś wędzony, burak, ser typu feta, słonecznik.</p></div><span class="dish-price">36 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Wege</h3><p>Kozi ser, gruszka, winogrono, orzechy włoskie.</p></div><span class="dish-price">36 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Parma</h3><p>Szynka włoska, suszone pomidory, mozzarella, pesto, oliwki, pestki dyni.</p></div><span class="dish-price">36 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Krewetka</h3><p>Krewetki, pomidorki, sos mango-chilli.</p></div><span class="dish-price">39 zł</span></div>
+  </div>
+  <p style="margin-top:20px; font-size:0.88rem; color:#6b6259;">Do każdej sałatki podajemy grzanki.</p>
+</section>
+
+<section class="menu-section" id="tapasy">
+  <div class="cat-head reveal"><span class="num">05</span><h2>Tapasy</h2></div>
+  <div class="dish-list reveal-stagger">
+    <div class="dish"><div class="dish-left"><h3>Quesadilla</h3><p>Tortilla, chorizo, cheddar, czerwona fasolka, cebula, sos meksykański.</p></div><span class="dish-price">34 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Rollsy z kurczakiem</h3><p>Kurczak, cebula, pomidor, ogórek, serek śmietankowy.</p></div><span class="dish-price">32 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Krewetki w winie</h3><p>Krewetki, białe wino, chilli, czosnek, natka pietruszki, grzanki.</p></div><span class="dish-price">45 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Boogie Bowl</h3><p>Krewetki, camembert, brzoskwinia, winogrono, tortilla, rukola, sos mango-chilli.</p></div><span class="dish-price">46 zł</span></div>
+  </div>
+</section>
+
+<section class="menu-section" id="slodko">
+  <div class="cat-head reveal"><span class="num">06</span><h2>Naleśniki na słodko</h2></div>
+  <div class="dish-list reveal-stagger">
+    <div class="dish"><div class="dish-left"><h3>Z cukrem pudrem</h3></div><span class="dish-price">16 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Z konfiturą</h3><p>Truskawkowa / jagodowa / wiśniowa.</p></div><span class="dish-price">24 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Z białym serem</h3></div><span class="dish-price">24 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Mango</h3><p>Mus mango, biały ser, owoce.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Czeko-banan</h3><p>Krem orzechowy, banan, bita śmietana.</p></div><span class="dish-price">29 zł</span></div>
+  </div>
+
+  <div class="cat-head reveal" style="margin-top:70px;"><span class="num">07</span><h2>Wytrawne naleśniki</h2></div>
+  <div class="dish-list reveal-stagger">
+    <div class="dish"><div class="dish-left"><h3>Jajko na szpinaku</h3><p>Szpinak, ser żółty, jajko.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Toskański</h3><p>Szpinak, feta, suszone pomidory.</p></div><span class="dish-price">32 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Kataloński</h3><p>Chorizo, mozzarella, pomidory, oliwki.</p></div><span class="dish-price">32 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Węgierski</h3><p>Kurczak, duszone pomidory z cebulą.</p></div><span class="dish-price">32 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Północny</h3><p>Pieczony łosoś, szpinak.</p></div><span class="dish-price">35 zł</span></div>
+  </div>
+</section>
+
+<section class="menu-section" id="pankejki">
+  <div class="cat-head reveal"><span class="num">08</span><h2>Pankejki</h2></div>
+  <div class="dish-list reveal-stagger">
+    <div class="dish"><div class="dish-left"><h3>Owocowe</h3><p>Konfitura truskawkowa / jagodowa / wiśniowa, słodki ser, owoce.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Czekoladowe</h3><p>Sos czekoladowy, słodki ser, posypka czekoladowa.</p></div><span class="dish-price">29 zł</span></div>
+    <div class="dish"><div class="dish-left"><h3>Karmelowe</h3><p>Słodki ser, orzechy, sos karmelowy.</p></div><span class="dish-price">29 zł</span></div>
+  </div>
+</section>
+
+<div class="menu-hint reveal">
+  <p>Do każdego śniadania: herbata lub mała czarna kawa 6 zł · Gałka lodów gratis na życzenie klienta od poniedziałku do piątku.</p>
+</div>
 
 <footer>
   <div class="footer-grid">

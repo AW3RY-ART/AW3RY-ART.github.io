@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Boogie Cafe & Bistro Retkinia — Kawiarnia i Bistro w Łodzi</title>
-<meta name="description" content="Boogie Cafe & Bistro na Retkini — śniadania, kawa, dania z klimatem i muzyka na żywo. Al. Kard. S. Wyszyńskiego 13, Łódź.">
+<title>O nas — Boogie Cafe & Bistro Retkinia</title>
+<meta name="description" content="Historia, wartości i klimat Boogie Cafe & Bistro — kawiarni i bistro na Retkini w Łodzi.">
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@400;500;700&display=swap');
 
@@ -194,87 +194,42 @@ footer{
 
 </style>
 <style>
-  .hero{
-    min-height:100vh;
-    display:flex; flex-direction:column; justify-content:center;
-    padding:0 6vw;
-    position:relative;
-    background:
-      radial-gradient(circle at 85% 20%, var(--mustard) 0%, transparent 40%),
-      radial-gradient(circle at 10% 80%, var(--pink) 0%, transparent 35%),
-      var(--cream);
+  .story{ max-width:800px; margin:0 auto; padding:20px 6vw 80px; }
+  .story .lede{ font-size:1.3rem; line-height:1.6; color:#2c2621; margin-bottom:28px; }
+  .story p{ font-size:1.05rem; line-height:1.8; color:#4a433f; margin-bottom:22px; }
+  .story .pull{
+    font-family:'Bebas Neue'; font-size:2rem; color:var(--rust); line-height:1.2;
+    border-left:4px solid var(--rust); padding-left:22px; margin:40px 0;
   }
-  .hero .eyebrow{ font-weight:700; text-transform:uppercase; letter-spacing:0.2em; font-size:0.8rem; color:var(--rust); margin-bottom:14px; }
-  .hero h1{ font-size:clamp(3.5rem, 12vw, 9rem); color:var(--ink); }
-  .hero h1 span{ color:var(--rust); }
-  .hero .sub{ max-width:520px; margin-top:22px; font-size:1.15rem; color:#4a433f; }
-  .hero .cta-row{ margin-top:38px; display:flex; gap:16px; flex-wrap:wrap; }
 
-  .vinyl{
-    position:absolute; right:6vw; bottom:8vh;
-    width:220px; height:220px; border-radius:50%;
-    background:repeating-radial-gradient(circle, var(--ink) 0 2px, #3a3532 2px 8px);
-    box-shadow:0 20px 50px rgba(0,0,0,0.25);
-    animation:spin 12s linear infinite;
+  .values{ background:var(--teal); color:var(--cream); }
+  .values-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:30px; }
+  @media (max-width:800px){ .values-grid{ grid-template-columns:1fr; } }
+  .value-card{
+    background:rgba(255,255,255,0.06); border:1px solid rgba(255,255,255,0.18);
+    border-radius:16px; padding:32px; transition:transform 0.3s ease, background 0.3s ease;
   }
-  .vinyl::after{
-    content:''; position:absolute; top:50%; left:50%; width:60px; height:60px;
-    background:var(--mustard); border-radius:50%; transform:translate(-50%,-50%);
-    box-shadow:0 0 0 4px var(--ink);
+  .value-card:hover{ transform:translateY(-6px); background:rgba(255,255,255,0.12); }
+  .value-card .num{ font-family:'Bebas Neue'; font-size:2.4rem; color:var(--mustard); }
+  .value-card h3{ font-family:'Space Grotesk'; font-weight:700; font-size:1.2rem; margin:10px 0 10px; letter-spacing:0; }
+  .value-card p{ font-size:0.95rem; color:#e9f2f1; line-height:1.6; }
+
+  .team{ background:var(--cream); }
+  .team-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
+  @media (max-width:800px){ .team-grid{ grid-template-columns:1fr; } }
+  .team-card{ text-align:center; }
+  .team-avatar{
+    width:110px; height:110px; border-radius:50%; margin:0 auto 16px;
+    display:flex; align-items:center; justify-content:center;
+    font-family:'Bebas Neue'; font-size:2rem; color:var(--cream);
+    border:2px solid var(--ink);
   }
-  @keyframes spin{ to{ transform:rotate(360deg); } }
-  @media (max-width:800px){ .vinyl{ display:none; } }
+  .team-card h3{ font-family:'Space Grotesk'; font-weight:700; font-size:1.1rem; }
+  .team-card span{ font-size:0.88rem; color:var(--rust); text-transform:uppercase; letter-spacing:0.04em; }
 
-  .scroll-cue{
-    position:absolute; left:6vw; bottom:6vh; display:flex; align-items:center; gap:10px;
-    font-size:0.78rem; text-transform:uppercase; letter-spacing:0.15em; color:#6b6259;
-  }
-  .scroll-cue .line{ width:36px; height:1px; background:#6b6259; animation:pulseLine 1.8s ease-in-out infinite; }
-  @keyframes pulseLine{ 0%,100%{ opacity:0.4; } 50%{ opacity:1; } }
-
-  .about{ background:var(--teal); color:var(--cream); }
-  .about .section-head .num{ color:var(--mustard); }
-  .about-grid{ display:grid; grid-template-columns:1.1fr 0.9fr; gap:60px; align-items:start; }
-  .about p{ font-size:1.15rem; line-height:1.7; margin-bottom:20px; color:#e9f2f1; }
-  .about .tag{ border-color:var(--pink); color:var(--pink); }
-  @media (max-width:800px){ .about-grid{ grid-template-columns:1fr; } }
-
-  .menu{ background:var(--cream); }
-  .menu-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:0; border-top:2px solid var(--ink); }
-  .menu-item{
-    border-bottom:2px solid var(--ink); border-right:2px solid var(--ink);
-    padding:34px 26px; transition:background 0.25s ease, transform 0.25s ease;
-  }
-  .menu-item:nth-child(3n){ border-right:none; }
-  .menu-item:hover{ background:var(--mustard); transform:translateY(-4px); }
-  .menu-item h3{ font-size:1.8rem; margin-bottom:10px; }
-  .menu-item p{ font-size:0.95rem; color:#4a433f; line-height:1.5; }
-  .menu-item .price{ display:block; margin-top:14px; font-weight:700; color:var(--rust); }
-  @media (max-width:800px){ .menu-grid{ grid-template-columns:1fr; } .menu-item{ border-right:none; } }
-  .menu-more{ margin-top:34px; text-align:center; }
-
-  .live{ background:var(--rust); color:var(--cream); text-align:center; padding:90px 6vw; }
-  .live h2{ font-size:clamp(2.5rem, 8vw, 5rem); }
-  .live p{ max-width:560px; margin:20px auto 0; font-size:1.1rem; opacity:0.95; }
-
-  .reviews{ background:var(--cream); }
-  .review-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:24px; }
-  .review-card{
-    background:#fff; border:2px solid var(--ink); border-radius:14px; padding:28px;
-    display:flex; flex-direction:column; gap:14px; transition:transform 0.25s ease, box-shadow 0.25s ease;
-  }
-  .review-card:hover{ transform:translateY(-6px); box-shadow:0 16px 30px rgba(33,30,27,0.14); }
-  .stars{ color:var(--mustard); font-size:1.2rem; letter-spacing:2px; }
-  .review-card p{ font-size:0.98rem; line-height:1.55; color:#3a332f; }
-  .review-card .who{ font-weight:700; font-size:0.9rem; margin-top:auto; }
-  @media (max-width:800px){ .review-grid{ grid-template-columns:1fr; } }
-  .rating-badge{ display:inline-flex; align-items:center; gap:10px; margin-top:40px; font-family:'Bebas Neue'; font-size:1.3rem; }
-  .rating-badge .num{ background:var(--ink); color:var(--mustard); padding:6px 14px; border-radius:8px; }
-
-  .visit-cta{ background:var(--ink); color:var(--cream); text-align:center; }
-  .visit-cta h2{ font-size:clamp(2.4rem, 7vw, 4.5rem); }
-  .visit-cta p{ max-width:520px; margin:16px auto 32px; color:#cfc7ba; }
-  .visit-cta .cta-row{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+  .vibe-cta{ background:var(--ink); color:var(--cream); text-align:center; padding:100px 6vw; }
+  .vibe-cta h2{ font-size:clamp(2.2rem,6vw,4rem); margin-bottom:16px; }
+  .vibe-cta p{ max-width:500px; margin:0 auto 30px; color:#cfc7ba; }
 </style>
 </head>
 <body>
@@ -292,123 +247,74 @@ footer{
   </ul>
 </nav>
 
-<section class="hero">
-  <div class="eyebrow">Retkinia · Śniadania · Kawa · Muzyka na żywo</div>
-  <h1>DOBRY <span>GROOVE.</span><br>DOBRA <span>KAWA.</span></h1>
-  <p class="sub">Przytulne miejsce spotkań na Retkini — świeże, sycące śniadania, dania z klimatem i muzyka na żywo, która sprawia, że nie chce się stąd wychodzić.</p>
-  <div class="cta-row">
+<section class="page-hero">
+  <div class="eyebrow reveal">Nasza historia</div>
+  <h1 class="reveal">O NAS</h1>
+  <p class="sub reveal">Skąd wziął się Boogie i dlaczego dobra kawa zawsze brzmi lepiej z muzyką w tle.</p>
+</section>
+
+<section class="story">
+  <p class="lede reveal">Boogie Cafe & Bistro powstało z prostego pomysłu: Retkinia zasługuje na miejsce, w którym można zwolnić — usiąść na dłużej, zjeść coś dobrego i posłuchać żywej muzyki bez wychodzenia z dzielnicy.</p>
+  <p class="reveal">Zaczęliśmy jako niewielka kawiarnia z kilkoma stolikami i jedną ekspresową maszyną. Z czasem, dzięki gościom, którzy wracali coraz częściej, rozrośliśmy się w pełne bistro — z szeroką kartą śniadań, autorskimi burgerami i sałatkami, a w weekendy z żywą muzyką, która niesie się po sali.</p>
+  <p class="pull reveal">Chcieliśmy zbudować miejsce, w którym mchowa ściana z naszym logo jest pierwszą rzeczą, jaką zapamiętasz — a smak drugą.</p>
+  <p class="reveal">Wnętrze zaprojektowaliśmy tak, żeby czuć się w nim swobodnie — granatowe sofy, drewniane akcenty, żywa zieleń i przytulne kąty na dłuższe rozmowy albo pracę przy laptopie. Kuchnia stawia na świeże składniki i dania, które można spersonalizować — mamy też szeroki wybór opcji wegańskich.</p>
+  <p class="reveal">Dziś Boogie to miejsce spotkań dla sąsiadów z Retkini, freelancerów szukających spokojnego kąta do pracy i wszystkich, którzy lubią zacząć dzień od dobrej kawy — a zakończyć wieczorem przy muzyce na żywo.</p>
+</section>
+
+<section class="values">
+  <div class="section-head reveal">
+    <div class="num">NASZE WARTOŚCI</div>
+    <h2>Na czym nam zależy.</h2>
+  </div>
+  <div class="values-grid reveal-stagger">
+    <div class="value-card">
+      <div class="num">01</div>
+      <h3>Świeżość przede wszystkim</h3>
+      <p>Gotujemy z produktów kupowanych na bieżąco, bez gotowych mieszanek i sztucznych skrótów.</p>
+    </div>
+    <div class="value-card">
+      <div class="num">02</div>
+      <h3>Miejsce dla każdego</h3>
+      <p>Szeroka oferta wegańska, przyjazna atmosfera i otwartość — każdy gość jest tu mile widziany.</p>
+    </div>
+    <div class="value-card">
+      <div class="num">03</div>
+      <h3>Muzyka jako część menu</h3>
+      <p>Regularne wieczory z muzyką na żywo, bo dobre jedzenie smakuje jeszcze lepiej z dobrym tłem dźwiękowym.</p>
+    </div>
+  </div>
+</section>
+
+<section class="team">
+  <div class="section-head reveal">
+    <div class="num">EKIPA</div>
+    <h2>Ludzie za ladą.</h2>
+  </div>
+  <div class="team-grid reveal-stagger">
+    <div class="team-card">
+      <div class="team-avatar" style="background:var(--teal);">MK</div>
+      <h3>Marta K.</h3>
+      <span>Szefowa kuchni</span>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:var(--rust);">PW</div>
+      <h3>Paweł W.</h3>
+      <span>Head barista</span>
+    </div>
+    <div class="team-card">
+      <div class="team-avatar" style="background:var(--mustard); color:var(--ink);">JN</div>
+      <h3>Julia N.</h3>
+      <span>Kierownik sali</span>
+    </div>
+  </div>
+</section>
+
+<section class="vibe-cta">
+  <h2 class="reveal">Poczuj klimat Boogie na żywo</h2>
+  <p class="reveal">Najlepiej opowie o nas wizyta — wpadnij na kawę albo od razu zarezerwuj stolik.</p>
+  <div class="cta-row reveal" style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
     <a class="btn solid" href="rezerwacja.html">Zarezerwuj stolik</a>
-    <a class="btn outline" href="menu.html">Zobacz menu</a>
-  </div>
-  <div class="vinyl"></div>
-  <div class="scroll-cue"><span class="line"></span>Przewiń</div>
-</section>
-
-<div class="marquee">
-  <div>ŚNIADANIA CAŁY DZIEŃ <span>★</span> OPCJE WEGAŃSKIE <span>★</span> OGRÓDEK LETNI <span>★</span> MUZYKA NA ŻYWO <span>★</span> 4,6 / 5 W GOOGLE <span>★</span> ŚNIADANIA CAŁY DZIEŃ <span>★</span> OPCJE WEGAŃSKIE <span>★</span> OGRÓDEK LETNI <span>★</span> MUZYKA NA ŻYWO <span>★</span> 4,6 / 5 W GOOGLE <span>★</span></div>
-</div>
-
-<section class="about" id="about">
-  <div class="section-head reveal">
-    <div class="num">01 — O NAS</div>
-    <h2>Miejsce, gdzie<br>zwalnia się tempo.</h2>
-  </div>
-  <div class="about-grid">
-    <div class="reveal">
-      <p>Boogie Cafe & Bistro to przytulny zakątek na Retkini, stworzony dla wszystkich, którzy cenią dobre jedzenie, aromatyczną kawę i miłą atmosferę. Świeże składniki, domowe smaki i muzyka, która unosi się w tle — to nasza recepta na udany dzień.</p>
-      <p>Niezależnie, czy wpadasz na szybką kawę przed pracą, leniwe niedzielne śniadanie, czy wieczór z muzyką na żywo — zawsze znajdziesz tu miejsce dla siebie.</p>
-      <a class="btn outline" href="o-nas.html" style="margin-top:10px; border-color:var(--cream);">Poznaj naszą historię</a>
-    </div>
-    <div class="reveal">
-      <div class="tags">
-        <span class="tag">Ogródek</span>
-        <span class="tag">Dania wegańskie</span>
-        <span class="tag">Muzyka na żywo</span>
-        <span class="tag">Dostawa bezkontaktowa</span>
-        <span class="tag">Odbiór przy krawężniku</span>
-        <span class="tag">Przyjazne LGBTQ+</span>
-        <span class="tag">Dobre miejsce do pracy</span>
-      </div>
-    </div>
-  </div>
-</section>
-
-<section class="menu" id="menu">
-  <div class="section-head reveal">
-    <div class="num">02 — MENU</div>
-    <h2>Coś dla każdego nastroju.</h2>
-  </div>
-  <div class="menu-grid reveal-stagger">
-    <div class="menu-item">
-      <h3>Śniadania</h3>
-      <p>Omlet z chorizo, Śniadanie Szefa, Szakszuka, Tosty Skandynawskie i inne.</p>
-      <span class="price">28–31 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Bajgle</h3>
-      <p>Z twarożkiem, kozim serem, łososiem, kurczakiem lub parmą.</p>
-      <span class="price">22–29 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Burgery</h3>
-      <p>Nowy Jork, Nevada, California, Texas — wołowina 100%.</p>
-      <span class="price">38–45 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Sałatki</h3>
-      <p>Kurczak, łosoś, wege z kozim serem, krewetka.</p>
-      <span class="price">34–39 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Tapasy</h3>
-      <p>Quesadilla, rollsy z kurczakiem, krewetki w winie, Boogie Bowl.</p>
-      <span class="price">32–46 zł</span>
-    </div>
-    <div class="menu-item">
-      <h3>Naleśniki i pankejki</h3>
-      <p>Na słodko, wytrawne i pankejki owocowe, czekoladowe, karmelowe.</p>
-      <span class="price">16–35 zł</span>
-    </div>
-  </div>
-  <div class="menu-more reveal"><a class="btn solid" href="menu.html">Zobacz pełne menu</a></div>
-</section>
-
-<section class="live" id="live">
-  <h2 class="reveal">MUZYKA NA ŻYWO</h2>
-  <p class="reveal">Regularne wieczory z muzyką na żywo — sprawdź nasz Instagram, żeby nie przegapić najbliższego koncertu.</p>
-</section>
-
-<section class="reviews" id="reviews">
-  <div class="section-head reveal">
-    <div class="num">03 — OPINIE</div>
-    <h2>Co mówią goście.</h2>
-    <div class="rating-badge"><span class="num">4,6</span> na podstawie 1406 opinii w Google</div>
-  </div>
-  <div class="review-grid reveal-stagger">
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p>Przytulne miejsce z pysznym jedzeniem, dobrą kawą i miłymi cenami. W menu mnóstwo ciekawych propozycji — na pewno wrócimy spróbować czegoś nowego.</p>
-      <div class="who">— Maryia Siankova, Local Guide</div>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★★</div>
-      <p>Naprawdę dobra kawa, duże porcje i świeże jedzenie. Dobry posiłek w ładnym, jasnym i zadbanym wnętrzu.</p>
-      <div class="who">— Michał Radomski, Local Guide</div>
-    </div>
-    <div class="review-card">
-      <div class="stars">★★★★☆</div>
-      <p>Ciekawe przepisy śniadaniowe i świetne miejsce do pracy zdalnej — dobra atmosfera do co-workingu przy kawie.</p>
-      <div class="who">— Israel Alpuche, Local Guide</div>
-    </div>
-  </div>
-</section>
-
-<section class="visit-cta">
-  <h2 class="reveal">WPADNIJ NA GROOVE</h2>
-  <p class="reveal">Al. Kardynała Stefana Wyszyńskiego 13, Retkinia, Łódź — czekamy z kawą i dobrą muzyką.</p>
-  <div class="cta-row reveal">
-    <a class="btn solid" href="rezerwacja.html">Zarezerwuj stolik</a>
-    <a class="btn outline" href="kontakt.html" style="border-color:var(--cream);">Dojazd i kontakt</a>
+    <a class="btn outline" href="galeria.html" style="border-color:var(--cream);">Zobacz galerię</a>
   </div>
 </section>
 
