@@ -62,11 +62,6 @@
   /* ABOUT */
   .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center;}
   @media (max-width:760px){.about-grid{grid-template-columns:1fr;}}
-  .about-map{
-    aspect-ratio:4/5;border-radius:2px;overflow:hidden;position:relative;
-    border:1px solid var(--line);filter:grayscale(0.15) contrast(1.05);
-  }
-  .about-map iframe{width:100%;height:100%;border:0;display:block;}
   .about-copy p{line-height:1.7;color:#4a4136;margin-bottom:16px;}
   .about-copy h2{font-size:2.2rem;margin-bottom:18px;}
   .checklist{list-style:none;margin-top:20px;display:grid;gap:10px;}
@@ -99,6 +94,10 @@
   .price-row .sub{display:block;font-size:0.78rem;color:#807a6c;font-weight:400;margin-top:2px;}
   .price-row .amt{color:var(--brick);font-weight:700;white-space:nowrap;}
 
+  /* MAP */
+  .map-section{padding:0;}
+  .map-frame{width:100%;height:420px;border:0;display:block;filter:grayscale(0.15) contrast(1.05);}
+
   /* OFFER + BOOK strip */
   .strip{display:grid;grid-template-columns:1fr 1fr;gap:2px;background:var(--line);}
   @media (max-width:760px){.strip{grid-template-columns:1fr;}}
@@ -113,7 +112,7 @@
   .strip-card.light p{color:#5c5346;}
 
   /* TESTIMONIALS with the single subtle neon accent */
-  .testimonials{background:var(--ink);color:var(--cream);position:relative;}
+  .testimonials{background:var(--ink);color:var(--cream);position:relative;border-top:1px solid rgba(247,241,230,0.14);}
   .testimonials .section-head h2{color:var(--cream);}
   .testimonials .eyebrow{color:#e8b98f;}
   .neon-accent{
@@ -170,21 +169,13 @@
 </header>
 
 <section id="about">
-  <div class="wrap about-grid">
-    <div class="about-map">
-      <iframe
-        src="https://www.google.com/maps?q=16+Crowndale+Rd,+London+NW1+1TT,+United+Kingdom&output=embed"
-        loading="lazy"
-        referrerpolicy="no-referrer-when-downgrade"
-        allowfullscreen>
-      </iframe>
-    </div>
-    <div class="about-copy">
-      <span class="eyebrow">Our Story</span>
-      <h2>Serving Camden since day one</h2>
+  <div class="wrap">
+    <div class="about-copy" style="max-width:640px;margin:0 auto;text-align:center;">
+      <span class="eyebrow" style="justify-content:center;display:flex;">Our Story</span>
+      <h2 style="font-size:2.2rem;margin-bottom:18px;">Serving Camden since day one</h2>
       <p>Crown Cafe sits in a converted brick unit on Crowndale Road — exposed brick, black ceiling, warm wood tables. Nothing fancy, everything made properly.</p>
       <p>Sandwiches built to order, dinners that taste home-made because they are, and coffee poured by people who've been doing it long enough to get it right.</p>
-      <ul class="checklist">
+      <ul class="checklist" style="justify-items:center;">
         <li>Freshly made sandwiches, not pre-packed</li>
         <li>Home-made dinners, changing daily</li>
         <li>Dine-in, kerbside pickup or no-contact delivery</li>
@@ -249,6 +240,15 @@
       </div>
     </div>
   </div>
+</section>
+
+<section class="map-section">
+  <iframe class="map-frame"
+    src="https://www.google.com/maps?q=Crown+Cafe,+16+Crowndale+Rd,+London+NW1+1TT,+United+Kingdom&output=embed"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen>
+  </iframe>
 </section>
 
 <div class="strip">
