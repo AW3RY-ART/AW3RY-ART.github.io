@@ -137,7 +137,14 @@
   .visit-card .row{display:flex;justify-content:space-between;padding:9px 0;border-bottom:1px dotted var(--line);font-size:0.88rem;}
   .visit-card .row:last-child{border-bottom:none;}
 
-  footer{background:var(--ink);color:#b9ac99;padding:36px 0;text-align:center;font-size:0.82rem;}
+  footer{background:var(--ink);color:#b9ac99;padding:64px 0 28px;font-size:0.88rem;}
+  .footer-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1fr;gap:40px;padding-bottom:36px;}
+  @media (max-width:760px){.footer-grid{grid-template-columns:1fr 1fr;}}
+  @media (max-width:480px){.footer-grid{grid-template-columns:1fr;}}
+  .footer-col h4{color:var(--cream);font-family:'Fraunces',serif;font-size:1rem;font-weight:700;margin-bottom:14px;text-transform:uppercase;letter-spacing:0.04em;}
+  .footer-col p{line-height:1.8;color:#b9ac99;}
+  .footer-col a:hover{color:var(--cream);}
+  .footer-bottom{border-top:1px solid rgba(247,241,230,0.14);padding-top:24px;text-align:center;font-size:0.8rem;}
   footer strong{color:var(--cream);}
 </style>
 </head>
@@ -242,15 +249,6 @@
   </div>
 </section>
 
-<section class="map-section">
-  <iframe class="map-frame"
-    src="https://www.google.com/maps?q=Crown+Cafe,+16+Crowndale+Rd,+London+NW1+1TT,+United+Kingdom&output=embed"
-    loading="lazy"
-    referrerpolicy="no-referrer-when-downgrade"
-    allowfullscreen>
-  </iframe>
-</section>
-
 <div class="strip">
   <div class="strip-card dark">
     <span class="eyebrow">Regulars know</span>
@@ -303,8 +301,37 @@
   </div>
 </section>
 
+<section class="map-section">
+  <iframe class="map-frame"
+    src="https://www.google.com/maps?q=Crown+Cafe,+16+Crowndale+Rd,+London+NW1+1TT,+United+Kingdom&output=embed"
+    loading="lazy"
+    referrerpolicy="no-referrer-when-downgrade"
+    allowfullscreen>
+  </iframe>
+</section>
+
 <footer>
-  <div class="wrap"><strong>Crown Cafe</strong> — 16 Crowndale Rd, Camden, London NW1 1TT</div>
+  <div class="wrap footer-grid">
+    <div class="footer-col">
+      <div class="brand" style="color:var(--cream);margin-bottom:14px;">Crown Cafe</div>
+      <p>All day breakfast, lunch and home-made dinners on Crowndale Road, Camden.</p>
+    </div>
+    <div class="footer-col">
+      <h4>Find Us</h4>
+      <p>16 Crowndale Rd<br>London NW1 1TT<br>Inside the CMC Centre</p>
+    </div>
+    <div class="footer-col">
+      <h4>Get In Touch</h4>
+      <p><a href="tel:+442073832825">+44 20 7383 2825</a></p>
+    </div>
+    <div class="footer-col">
+      <h4>Opening Hours</h4>
+      <p>Mon–Fri: 7:00 – 3:30<br>Sat: 7:30 – 3:00<br>Sun &amp; Bank Holidays: Closed</p>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© Crown Cafe. All rights reserved.</span>
+  </div>
 </footer>
 
 </body>
