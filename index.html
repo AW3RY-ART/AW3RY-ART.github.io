@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Zona Rossa Cafe — Elephant & Castle, London</title>
+<title>Zona Rossa Cafe — London SE1</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600;9..144,900&family=Work+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
@@ -40,12 +40,16 @@
   /* HERO */
   .hero{
     color:var(--cream);padding:100px 0 80px;position:relative;overflow:hidden;
-    background:linear-gradient(135deg, var(--plum-dark), var(--plum) 55%, #921a51 100%);
+    background:linear-gradient(120deg, #7a1442, #b32463, #a01a52, #c2367a, #7a1442);
+    background-size:400% 400%;
+    animation:heroShift 13s ease infinite;
   }
-  .hero::after{
-    content:"";position:absolute;inset:0;
-    background:radial-gradient(circle at 85% 15%, rgba(226,168,63,0.16), transparent 45%);
+  @keyframes heroShift{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
   }
+
   .hero-inner{position:relative;text-align:center;max-width:660px;margin:0 auto;}
   .hero .eyebrow{color:var(--gold);justify-content:center;display:flex;}
   .hero h1{font-size:clamp(2.6rem,7vw,4.4rem);line-height:1;margin:10px 0 18px;}
@@ -139,6 +143,18 @@
   .footer-col p{line-height:1.8;color:#c9b3bd;}
   .footer-col a:hover{color:var(--gold);}
   .footer-bottom{border-top:1px solid rgba(250,243,234,0.1);padding-top:24px;text-align:center;font-size:0.8rem;}
+
+  /* SCROLL REVEAL */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .7s ease, transform .7s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  .reveal-stagger > *{opacity:0;transform:translateY(20px);transition:opacity .6s ease, transform .6s ease;}
+  .reveal-stagger.in > *{opacity:1;transform:translateY(0);}
+  .reveal-stagger.in > *:nth-child(1){transition-delay:.05s;}
+  .reveal-stagger.in > *:nth-child(2){transition-delay:.15s;}
+  .reveal-stagger.in > *:nth-child(3){transition-delay:.25s;}
+  .reveal-stagger.in > *:nth-child(4){transition-delay:.35s;}
+  .reveal-stagger.in > *:nth-child(5){transition-delay:.45s;}
+  .reveal-stagger.in > *:nth-child(6){transition-delay:.55s;}
 </style>
 </head>
 <body>
@@ -165,17 +181,12 @@
 
 <header class="hero">
   <div class="wrap hero-inner">
-    <span class="eyebrow">The Castle Centre · Elephant &amp; Castle</span>
+    <span class="eyebrow">The Castle Centre · London SE1</span>
     <h1 class="display">Breakfast made<br>from scratch, on the spot</h1>
     <p>A community-centre cafe with a full English worth crossing London for — customisable, halal, and served with a smile from a team that remembers your order.</p>
     <div class="hero-actions">
       <a class="btn btn-primary" href="#menu">See the menu</a>
       <a class="btn btn-outline" href="#visit">Find us</a>
-    </div>
-    <div class="badge-row">
-      <div class="badge"><strong>4.9</strong>out of 5, 23 reviews</div>
-      <div class="badge"><strong>08:31</strong>doors open daily</div>
-      <div class="badge"><strong>£1–10</strong>per person</div>
     </div>
   </div>
 </header>
@@ -184,12 +195,12 @@
   <div class="wrap about-wrap">
     <div>
       <span class="eyebrow">Our Story</span>
-      <h2 style="font-size:2rem;margin-bottom:18px;">A hidden gem at Elephant &amp; Castle</h2>
-      <p>Zona Rossa Cafe sits inside The Castle Centre, just steps from Elephant &amp; Castle and the Imperial War Museum. It's easy to underestimate a community-centre cafe — until the full English arrives, made from scratch and customised exactly how you asked.</p>
+      <h2 style="font-size:2rem;margin-bottom:18px;">A hidden gem inside The Castle Centre</h2>
+      <p>Zona Rossa Cafe sits inside The Castle Centre, a short walk from the Imperial War Museum. It's easy to underestimate a community-centre cafe — until the full English arrives, made from scratch and customised exactly how you asked.</p>
       <p>Guests come back for the small touches: a bean swapped for hash browns without a fuss, a gluten-free panini improvised on the spot with avocado, bacon and eggs, and a team — including the cafe's women ownership — that treats every regular like they've been coming for years.</p>
       <p>It's halal, it's women-owned, and it's proof that the best breakfast in the area doesn't need a flashy address to earn it.</p>
     </div>
-    <div class="fact-card">
+    <div class="fact-card reveal">
       <h3>At A Glance</h3>
       <div class="fact-row"><span>Rating</span><span>4.9 / 5 (23 reviews)</span></div>
       <div class="fact-row"><span>Price</span><span>£1–10 per person</span></div>
@@ -203,11 +214,11 @@
 
 <section id="menu" class="menu-section">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <span class="eyebrow">Popular On The Menu</span>
       <h2>Signature Picks</h2>
     </div>
-    <div class="menu-grid">
+    <div class="menu-grid reveal-stagger">
       <div class="menu-item">
         <div class="tag">Signature</div>
         <h3>Egg, Bacon &amp; Sausage Panini</h3>
@@ -244,18 +255,16 @@
 
 <section>
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <span class="eyebrow">Service &amp; Highlights</span>
       <h2>However You Want It</h2>
     </div>
-    <div class="chips">
+    <div class="chips reveal">
       <span class="chip">Dine-in</span>
       <span class="chip">Takeaway</span>
       <span class="chip">Delivery</span>
-      <span class="chip">Kerbside pickup</span>
-      <span class="chip">No-contact delivery</span>
     </div>
-    <div class="highlight-grid">
+    <div class="highlight-grid reveal-stagger">
       <div class="highlight-card"><div class="n">☕</div><div class="l">Great coffee, great tea selection</div></div>
       <div class="highlight-card"><div class="n">🍰</div><div class="l">Great dessert, made in-house</div></div>
       <div class="highlight-card"><div class="n">♿</div><div class="l">Wheelchair-accessible entrance &amp; parking</div></div>
@@ -265,11 +274,11 @@
 
 <section style="background:var(--cream);">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <span class="eyebrow">Opening Hours</span>
       <h2>When We're Open</h2>
     </div>
-    <div class="hours-strip">
+    <div class="hours-strip reveal-stagger">
       <div class="hday"><div class="d">Mon</div><div class="t">8:31–6:30</div></div>
       <div class="hday"><div class="d">Tue</div><div class="t">8:31–6:30</div></div>
       <div class="hday"><div class="d">Wed</div><div class="t">8:31–6:30</div></div>
@@ -283,7 +292,7 @@
 
 <section id="reviews" class="reviews">
   <div class="wrap">
-    <div class="section-head">
+    <div class="section-head reveal">
       <span class="eyebrow">What Guests Are Saying</span>
       <h2>23 Reviews, 4.9 Stars</h2>
     </div>
@@ -291,7 +300,7 @@
       <div class="score">4.9</div>
       <div class="meta">out of 5.0, based on 23 guest reviews</div>
     </div>
-    <div class="review-row">
+    <div class="review-row reveal-stagger">
       <div class="review">
         <div class="stars">★★★★★</div>
         <p>Full English breakfast, made from scratch on the spot — beans swapped for hash browns without a fuss, and the counter staff were friendly and helpful.</p>
@@ -323,10 +332,8 @@
       </div>
     </div>
     <div class="visit-card">
-      <div class="row"><span>Near</span><span>Elephant &amp; Castle</span></div>
       <div class="row"><span>Nearby landmark</span><span>Imperial War Museum</span></div>
       <div class="row"><span>Dine-in</span><span>Yes</span></div>
-      <div class="row"><span>Kerbside pickup</span><span>Yes</span></div>
       <div class="row"><span>Wheelchair access</span><span>Yes</span></div>
       <div class="row"><span>Halal</span><span>Yes</span></div>
     </div>
@@ -346,7 +353,7 @@
   <div class="wrap footer-grid">
     <div class="footer-col">
       <div class="logo-word" style="color:var(--cream);margin-bottom:14px;">Zona Rossa Cafe</div>
-      <p>Fresh breakfast, brunch and Mediterranean bites at The Castle Centre, Elephant &amp; Castle.</p>
+      <p>Fresh breakfast, brunch and Mediterranean bites at The Castle Centre.</p>
     </div>
     <div class="footer-col">
       <h4>Find Us</h4>
@@ -365,6 +372,18 @@
     <span>© Zona Rossa Cafe. All rights reserved.</span>
   </div>
 </footer>
+
+<script>
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal, .reveal-stagger').forEach(el => io.observe(el));
+</script>
 
 </body>
 </html>
