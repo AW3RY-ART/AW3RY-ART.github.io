@@ -40,13 +40,15 @@
   /* HERO */
   .hero{
     color:var(--cream);padding:100px 0 80px;position:relative;overflow:hidden;
-    background:linear-gradient(120deg, #7a1442, #b32463, #a01a52, #c2367a, #7a1442);
-    background-size:400% 400%;
-    animation:heroShift 13s ease infinite;
+    background:linear-gradient(120deg, #4a0c28, #b32463, #e0468f, #7a1442, #c2367a, #3a0a20);
+    background-size:500% 500%;
+    animation:heroShift 20s ease infinite;
   }
   @keyframes heroShift{
     0%{background-position:0% 50%;}
+    25%{background-position:50% 100%;}
     50%{background-position:100% 50%;}
+    75%{background-position:50% 0%;}
     100%{background-position:0% 50%;}
   }
 
