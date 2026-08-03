@@ -32,7 +32,9 @@ function initLoader() {
   const loader = document.getElementById('loader');
   const pctEl = document.getElementById('loaderPct');
   const letters = document.querySelectorAll('.loader-letter');
-  const blades = document.querySelectorAll('.blade');
+  const fill = document.querySelector('.iris-fill');
+  const circumference = 2 * Math.PI * 88;
+  if (fill) fill.style.strokeDasharray = circumference;
   document.documentElement.classList.add('no-scroll');
 
   let pct = 0;
@@ -51,13 +53,7 @@ function initLoader() {
     const t = Math.min(1, (now - start) / duration);
     pct = Math.round(t * 100);
     if (pctEl) pctEl.textContent = pct;
-
-    // close iris blades progressively (rotate inward)
-    blades.forEach((b, i) => {
-      const delay = i * 0.02;
-      const localT = Math.min(1, Math.max(0, (t - delay) / (1 - delay)));
-      b.style.transform = `rotate(${localT * 34}deg) scale(${1 - localT * 0.08})`;
-    });
+    if (fill) fill.style.strokeDashoffset = String(circumference * (1 - t));
 
     if (t < 1) {
       requestAnimationFrame(tick);
@@ -258,7 +254,7 @@ function initReveals() {
     '.section-eyebrow', '.section-title', '.section-sub',
     '.about-portrait', '.lede', '.about-copy p', '.about-stats',
     '.work-item', '.gallery-item',
-    '.split-media', '.split-copy',
+    '.passion-strip',
     '.camera-content > *',
     '.equipment-item',
     '.contact-inner > *'

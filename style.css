@@ -87,12 +87,14 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
 }
 .loader-inner{ display:flex; flex-direction:column; align-items:center; gap:1.4rem; }
 
-.loader-iris .iris-ring{ stroke:var(--line); stroke-width:1; }
-.loader-iris .blade{
-  fill:var(--accent);
-  transform-origin:100px 100px;
-  transition:none;
+.loader-iris{ transform:rotate(-90deg); }
+.iris-track{ stroke:var(--line); stroke-width:2; }
+.iris-fill{
+  stroke:var(--accent-light); stroke-width:2; stroke-linecap:round;
+  stroke-dasharray:552.9; stroke-dashoffset:552.9;
+  filter:drop-shadow(0 0 6px var(--accent-glow));
 }
+.iris-center{ fill:var(--accent-light); transform-origin:100px 100px; }
 
 .loader-word{ font-family:var(--font-display); font-size:1.6rem; letter-spacing:.5em; display:flex; }
 .loader-letter{ opacity:0; transform:translateY(10px); display:inline-block; }
@@ -189,8 +191,8 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
 }
 .hero-title{
   font-family:var(--font-display); font-weight:400;
-  font-size:clamp(2.6rem, 8vw, 6.6rem); line-height:.98;
-  max-width:16ch;
+  font-size:clamp(2rem, 5.2vw, 4.2rem); line-height:1.05;
+  max-width:17ch;
 }
 .hero-title .line{ display:block; overflow:hidden; }
 .hero-title em{ font-style:italic; color:var(--accent-light); }
@@ -296,7 +298,6 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
   display:grid; grid-template-columns:repeat(3,1fr); gap:1rem;
 }
 .gallery-item{ position:relative; overflow:hidden; border-radius:4px; aspect-ratio:4/5; }
-.gallery-tall{ aspect-ratio:4/5.6; grid-row:span 2; }
 .gallery-item img{ transition:transform 1s var(--ease); }
 .gallery-item:hover img{ transform:scale(1.07); }
 .gallery-item figcaption{
@@ -311,7 +312,6 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
 
 @media (max-width: 860px){
   .gallery{ grid-template-columns:repeat(2,1fr); }
-  .gallery-tall{ grid-row:span 1; aspect-ratio:4/5; }
 }
 
 /* ==========================================================================
@@ -330,6 +330,21 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
   font-family:var(--font-mono); font-size:.74rem; letter-spacing:.03em;
   border:1px solid var(--line); border-radius:100px; padding:.5rem 1rem; color:var(--muted);
 }
+
+/* ==========================================================================
+   Passion strip — compact aside (graphic design)
+   ========================================================================== */
+.passion-strip{
+  max-width:var(--container); margin:0 auto;
+  padding:2.4rem clamp(1.4rem,4vw,3rem);
+  display:flex; align-items:baseline; gap:1.6rem; flex-wrap:wrap;
+  border-top:1px solid var(--line); border-bottom:1px solid var(--line);
+}
+.passion-eyebrow{
+  font-family:var(--font-display); font-style:italic; font-size:1.3rem; color:var(--accent-light);
+  flex-shrink:0;
+}
+.passion-text{ color:var(--muted); font-size:.98rem; max-width:60ch; }
 
 /* ==========================================================================
    Behind the camera (full-bleed dark panel)
