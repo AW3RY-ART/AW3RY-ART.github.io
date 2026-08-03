@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>AW3RY - Automotive Photography & Film</title>
-<meta name="description" content="AW3RY - Automotive photographer, filmmaker, and designer based in Poland. Shooting motorsport and car culture on Fujifilm X-M5.">
+<meta name="description" content="AW3RY - Automotive photography and visual design from Poland. Capturing cars, motorsport and car culture through photography and film.">
 <meta name="theme-color" content="#0a0b09">
 
 <!-- Open Graph -->
@@ -32,11 +32,6 @@
 <!-- Loader -->
 <div class="loader" id="loader" aria-hidden="true">
   <div class="loader-inner">
-    <svg class="loader-iris" viewBox="0 0 200 200" width="96" height="96">
-      <circle class="iris-track" cx="100" cy="100" r="88" fill="none"></circle>
-      <circle class="iris-fill" cx="100" cy="100" r="88" fill="none"></circle>
-      <circle class="iris-center" cx="100" cy="100" r="3"></circle>
-    </svg>
     <div class="loader-word">
       <span class="loader-letter">A</span><span class="loader-letter">W</span><span class="loader-letter">3</span><span class="loader-letter">R</span><span class="loader-letter">Y</span>
     </div>
@@ -44,11 +39,16 @@
   </div>
 </div>
 
-<!-- Scroll progress iris -->
-<svg class="scroll-iris" viewBox="0 0 60 60" width="44" height="44" aria-hidden="true">
-  <circle class="scroll-iris-track" cx="30" cy="30" r="26"></circle>
-  <circle class="scroll-iris-fill" cx="30" cy="30" r="26"></circle>
-</svg>
+<!-- Scroll progress iris / back-to-top -->
+<button class="scroll-iris" id="scrollIris" aria-label="Back to top">
+  <svg viewBox="0 0 60 60" width="44" height="44" aria-hidden="true">
+    <circle class="scroll-iris-track" cx="30" cy="30" r="26"></circle>
+    <circle class="scroll-iris-fill" cx="30" cy="30" r="26"></circle>
+  </svg>
+  <svg class="scroll-iris-arrow" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true">
+    <path d="M12 19V5M6 11l6-6 6 6" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+</button>
 
 <!-- Nav -->
 <header class="site-header">
@@ -63,7 +63,7 @@
       <li><a href="#about" data-num="01">About</a></li>
       <li><a href="#work" data-num="02">Selected Work</a></li>
       <li><a href="#photography" data-num="03">Photography</a></li>
-      <li><a href="#graphic" data-num="04">Graphic Design</a></li>
+      <li><a href="#graphic" data-num="04">Design</a></li>
       <li><a href="#camera" data-num="05">Behind the Camera</a></li>
       <li><a href="#equipment" data-num="06">Equipment</a></li>
       <li><a href="#contact" data-num="07">Contact</a></li>
@@ -92,7 +92,7 @@
         <span class="line reveal-line">worth waiting for.</span>
       </h1>
       <div class="hero-foot reveal-line">
-        <p class="hero-sub">AW3RY is the work of a photographer, filmmaker and designer based in Poland - shot frame by frame on a Fujifilm X-M5.</p>
+        <p class="hero-sub">AW3RY is the work of a photographer and designer based in Poland - exploring cars, motion and visual storytelling through a Fujifilm X-M5.</p>
         <a href="#work" class="btn-ghost">
           <span>View Selected Work</span>
           <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.4"/></svg>
@@ -129,7 +129,7 @@
 
       <div class="about-copy">
         <p class="lede">I'm a creative student from Poland, early into this - but all in. Cars are the thread through everything I shoot: the split second that makes a frame worth keeping.</p>
-        <p>I shoot on a Fujifilm X-M5, which I've had for a while now and which forces a certain discipline - no autofocus theatrics, no safety net, just timing and light. Two years running I've shot Banzai in Łódź, plus a car exhibition on the stadium grounds in Warsaw. Alongside that, private shoots for friends - where a lot of the real learning happens.</p>
+        <p>I shoot on a Fujifilm X-M5, a compact camera that keeps me focused on timing, composition and light. Two years running I've photographed Banzai in Łódź, plus a car exhibition on the stadium grounds in Warsaw. Alongside that, private shoots for friends - where a lot of the real learning happens.</p>
         <p>Graphic design is a side passion too - self-taught, worked out through personal projects like the AW3RY mark itself. Same instinct as behind the camera: figure out what to leave out.</p>
 
         <div class="about-stats">
@@ -139,7 +139,7 @@
           </div>
           <div class="stat">
             <span class="stat-num">3</span>
-            <span class="stat-label">Disciplines - photo, film, design</span>
+            <span class="stat-label">Creative fields - photography, video, design</span>
           </div>
           <div class="stat">
             <span class="stat-num">PL</span>
@@ -247,18 +247,13 @@
       </div>
       <div class="equipment-item">
         <span class="equipment-index">02</span>
-        <h3>Prime &amp; Zoom Lenses</h3>
-        <p>A small kit built around one fast prime for low light and one zoom for panning shots on track.</p>
+        <h3>Kit Lens</h3>
+        <p>Still shooting on the kit lens that came with the X-M5 - proof that timing and light matter more than glass.</p>
       </div>
       <div class="equipment-item">
         <span class="equipment-index">03</span>
-        <h3>Stabilized Rig</h3>
-        <p>Lightweight gimbal setup for rolling shots and behind-the-camera video content at events.</p>
-      </div>
-      <div class="equipment-item">
-        <span class="equipment-index">04</span>
         <h3>Edit Suite</h3>
-        <p>Lightroom for color, Premiere for cut - a restrained grade that favors contrast over saturation.</p>
+        <p>Lightroom and Affinity for stills, Premiere Pro and DaVinci Resolve for video editing.</p>
       </div>
     </div>
   </section>
@@ -284,7 +279,6 @@
 
 <footer class="site-footer">
   <p>© <span id="year"></span> AW3RY. Based in Poland.</p>
-  <button class="to-top" id="toTop" aria-label="Back to top">↑ Top</button>
 </footer>
 
 <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>

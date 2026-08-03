@@ -23,7 +23,9 @@
 }
 
 *{ box-sizing:border-box; margin:0; padding:0; }
-html{ scroll-behavior:smooth; background:var(--bg); }
+html{ scroll-behavior:smooth; background:var(--bg); scrollbar-width:none; -ms-overflow-style:none; }
+html::-webkit-scrollbar{ display:none; }
+body::-webkit-scrollbar{ display:none; }
 html.no-scroll{ overflow:hidden; }
 
 body{
@@ -87,16 +89,7 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
 }
 .loader-inner{ display:flex; flex-direction:column; align-items:center; gap:1.4rem; }
 
-.loader-iris{ transform:rotate(-90deg); }
-.iris-track{ stroke:var(--line); stroke-width:2; }
-.iris-fill{
-  stroke:var(--accent-light); stroke-width:2; stroke-linecap:round;
-  stroke-dasharray:552.9; stroke-dashoffset:552.9;
-  filter:drop-shadow(0 0 6px var(--accent-glow));
-}
-.iris-center{ fill:var(--accent-light); transform-origin:100px 100px; }
-
-.loader-word{ font-family:var(--font-display); font-size:1.6rem; letter-spacing:.5em; display:flex; }
+.loader-word{ font-family:var(--font-display); font-size:1.8rem; letter-spacing:.55em; display:flex; }
 .loader-letter{ opacity:0; transform:translateY(10px); display:inline-block; }
 .loader-count{ font-family:var(--font-mono); font-size:.75rem; color:var(--muted); letter-spacing:.1em; }
 
@@ -105,15 +98,28 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
    ========================================================================== */
 .scroll-iris{
   position:fixed; right:1.8rem; bottom:1.8rem; z-index:500;
-  opacity:0; transition:opacity .4s var(--ease);
-  transform:rotate(-90deg);
+  width:44px; height:44px;
+  display:flex; align-items:center; justify-content:center;
+  opacity:0; pointer-events:none;
+  transition:opacity .4s var(--ease), transform .4s var(--ease);
+  transform:scale(1);
 }
-.scroll-iris.is-visible{ opacity:1; }
+.scroll-iris.is-visible{ opacity:1; pointer-events:auto; }
+.scroll-iris svg:first-child{ position:absolute; inset:0; transform:rotate(-90deg); }
 .scroll-iris-track{ fill:none; stroke:var(--line); stroke-width:2; }
 .scroll-iris-fill{
   fill:none; stroke:var(--accent-light); stroke-width:2; stroke-linecap:round;
   stroke-dasharray:163.36; stroke-dashoffset:163.36;
+  transition:opacity .3s var(--ease);
 }
+.scroll-iris-arrow{
+  color:var(--accent-light); opacity:0; transform:translateY(4px);
+  transition:opacity .3s var(--ease), transform .3s var(--ease);
+}
+.scroll-iris.is-bottom{ transform:scale(1.18); }
+.scroll-iris.is-bottom .scroll-iris-fill{ opacity:0; }
+.scroll-iris.is-bottom .scroll-iris-arrow{ opacity:1; transform:translateY(0); }
+.scroll-iris:hover .scroll-iris-track{ stroke:var(--accent-light); }
 
 @media (max-width: 860px){ .scroll-iris{ display:none; } }
 
@@ -121,10 +127,12 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
    Header / Nav
    ========================================================================== */
 .site-header{
-  position:fixed; top:0; left:0; right:0; z-index:900;
+  position:fixed; top:0; left:0; right:0; z-index:960;
   display:flex; align-items:center; justify-content:space-between;
-  padding:1.6rem clamp(1.4rem,4vw,3rem);
-  mix-blend-mode:difference;
+  padding:1.2rem clamp(1.4rem,4vw,3rem);
+  background:linear-gradient(180deg, rgba(10,11,9,.65) 0%, rgba(10,11,9,0) 100%);
+  backdrop-filter:blur(6px);
+  -webkit-backdrop-filter:blur(6px);
 }
 .logo{
   font-family:var(--font-display); font-size:1.15rem; letter-spacing:.08em;
@@ -134,25 +142,31 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
 
 .menu-toggle{
   width:44px; height:44px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:6px;
-  z-index:901;
+  z-index:1;
 }
 .menu-toggle span{ width:22px; height:1px; background:var(--text); transition:transform .4s var(--ease), opacity .4s var(--ease); }
 .menu-toggle[aria-expanded="true"] span:first-child{ transform:translateY(3.5px) rotate(45deg); }
 .menu-toggle[aria-expanded="true"] span:last-child{ transform:translateY(-3.5px) rotate(-45deg); }
 
 .site-nav{
-  position:fixed; inset:0; z-index:800;
+  position:fixed; inset:0; z-index:900;
+  height:100dvh; overflow-y:auto;
   background:var(--bg-2);
   display:flex; flex-direction:column; justify-content:space-between;
   padding:8rem clamp(1.4rem,6vw,6rem) 4rem;
-  clip-path:inset(0 0 100% 0);
-  transition:clip-path .7s var(--ease);
+  transform:translateY(-100%);
+  visibility:hidden;
+  transition:transform .7s var(--ease), visibility 0s linear .7s;
 }
-.site-nav.is-open{ clip-path:inset(0 0 0% 0); }
+.site-nav.is-open{
+  transform:translateY(0);
+  visibility:visible;
+  transition:transform .7s var(--ease), visibility 0s linear 0s;
+}
 
 .site-nav ol{ display:flex; flex-direction:column; gap:.2rem; }
 .site-nav a{
-  font-family:var(--font-display); font-size:clamp(2.2rem,6vw,4.4rem); font-weight:400;
+  font-family:var(--font-display); font-size:clamp(1.8rem,5.6vw,4.4rem); font-weight:400;
   display:flex; align-items:baseline; gap:1.2rem;
   padding:.3rem 0; border-bottom:1px solid transparent;
   transition:color .3s var(--ease), border-color .3s var(--ease);
@@ -369,7 +383,7 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
    ========================================================================== */
 .equipment-grid{
   max-width:var(--container); margin:0 auto;
-  display:grid; grid-template-columns:repeat(4,1fr); gap:1px;
+  display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
   background:var(--line); border:1px solid var(--line); border-radius:4px; overflow:hidden;
 }
 .equipment-item{ background:var(--bg); padding:2.4rem 1.8rem; display:flex; flex-direction:column; gap:.9rem; }
@@ -377,8 +391,7 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
 .equipment-item h3{ font-family:var(--font-display); font-size:1.3rem; font-weight:400; }
 .equipment-item p{ color:var(--muted); font-size:.88rem; line-height:1.55; }
 
-@media (max-width: 960px){ .equipment-grid{ grid-template-columns:repeat(2,1fr); } }
-@media (max-width: 560px){ .equipment-grid{ grid-template-columns:1fr; } }
+@media (max-width: 760px){ .equipment-grid{ grid-template-columns:1fr; } }
 
 /* ==========================================================================
    Contact
@@ -421,8 +434,7 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
   font-family:var(--font-mono); font-size:.75rem; color:var(--muted);
   border-top:1px solid var(--line);
 }
-.to-top{ color:var(--muted); transition:color .3s var(--ease); }
-.to-top:hover{ color:var(--text); }
+
 
 /* ==========================================================================
    Reveal / scroll animation base states

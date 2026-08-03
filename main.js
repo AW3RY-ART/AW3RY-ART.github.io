@@ -8,7 +8,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initLoader();
   initCursor();
   initNav();
-  initToTop();
   initComingSoon();
   initScrollIris();
   if (window.gsap) {
@@ -32,17 +31,14 @@ function initLoader() {
   const loader = document.getElementById('loader');
   const pctEl = document.getElementById('loaderPct');
   const letters = document.querySelectorAll('.loader-letter');
-  const fill = document.querySelector('.iris-fill');
-  const circumference = 2 * Math.PI * 88;
-  if (fill) fill.style.strokeDasharray = circumference;
   document.documentElement.classList.add('no-scroll');
 
   let pct = 0;
-  const duration = 1400; // ms
+  const duration = 1300; // ms
   const start = performance.now();
 
   letters.forEach((l, i) => {
-    l.style.transition = `opacity .5s ease ${i * 0.06}s, transform .5s ease ${i * 0.06}s`;
+    l.style.transition = `opacity .6s ease ${i * 0.07}s, transform .6s ease ${i * 0.07}s`;
     requestAnimationFrame(() => {
       l.style.opacity = 1;
       l.style.transform = 'translateY(0)';
@@ -53,7 +49,6 @@ function initLoader() {
     const t = Math.min(1, (now - start) / duration);
     pct = Math.round(t * 100);
     if (pctEl) pctEl.textContent = pct;
-    if (fill) fill.style.strokeDashoffset = String(circumference * (1 - t));
 
     if (t < 1) {
       requestAnimationFrame(tick);
@@ -183,25 +178,18 @@ function initComingSoon() {
 }
 
 /* -------------------------------------------------------------------- */
-/* Back to top                                                           */
-/* -------------------------------------------------------------------- */
-function initToTop() {
-  const btn = document.getElementById('toTop');
-  if (!btn) return;
-  btn.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-}
-
-/* -------------------------------------------------------------------- */
-/* Scroll progress iris (signature element, reused from loader)          */
+/* Scroll progress iris (signature element) + back-to-top                */
 /* -------------------------------------------------------------------- */
 function initScrollIris() {
-  const wrap = document.querySelector('.scroll-iris');
+  const wrap = document.getElementById('scrollIris');
   const fill = document.querySelector('.scroll-iris-fill');
   if (!wrap || !fill) return;
 
   const circumference = 2 * Math.PI * 26;
   fill.style.strokeDasharray = circumference;
   fill.style.strokeDashoffset = circumference;
+
+  wrap.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
 
   window.addEventListener('scroll', () => {
     const scrollTop = window.scrollY;
@@ -210,6 +198,7 @@ function initScrollIris() {
 
     fill.style.strokeDashoffset = String(circumference * (1 - progress));
     wrap.classList.toggle('is-visible', scrollTop > window.innerHeight * 0.6);
+    wrap.classList.toggle('is-bottom', progress > 0.985);
   }, { passive: true });
 }
 
