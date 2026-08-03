@@ -385,6 +385,19 @@ button{ font-family:inherit; background:none; border:none; color:inherit; cursor
 .contact-links a:hover{ color:var(--text); }
 
 /* ==========================================================================
+   Coming soon toast
+   ========================================================================== */
+.soon-toast{
+  position:fixed; left:50%; bottom:2.4rem; z-index:9997;
+  transform:translate(-50%, 12px); opacity:0;
+  background:var(--panel); border:1px solid var(--line); color:var(--text);
+  font-family:var(--font-mono); font-size:.8rem; letter-spacing:.03em;
+  padding:.8rem 1.4rem; border-radius:100px;
+  transition:opacity .35s var(--ease), transform .35s var(--ease);
+}
+.soon-toast.is-in{ opacity:1; transform:translate(-50%, 0); }
+
+/* ==========================================================================
    Footer
    ========================================================================== */
 .site-footer{

@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initCursor();
   initNav();
   initToTop();
+  initComingSoon();
   initScrollIris();
   if (window.gsap) {
     gsap.registerPlugin(ScrollTrigger);
@@ -159,6 +160,29 @@ function initNav() {
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close();
+  });
+}
+
+/* -------------------------------------------------------------------- */
+/* "Coming soon" popup for links not live yet                            */
+/* -------------------------------------------------------------------- */
+function initComingSoon() {
+  let toast;
+  document.querySelectorAll('.js-soon').forEach(link => {
+    link.addEventListener('click', (e) => {
+      e.preventDefault();
+      const label = link.dataset.soon || 'This';
+      if (toast) toast.remove();
+      toast = document.createElement('div');
+      toast.className = 'soon-toast';
+      toast.textContent = `${label} — coming soon`;
+      document.body.appendChild(toast);
+      requestAnimationFrame(() => toast.classList.add('is-in'));
+      setTimeout(() => {
+        toast.classList.remove('is-in');
+        setTimeout(() => toast.remove(), 400);
+      }, 2200);
+    });
   });
 }
 
