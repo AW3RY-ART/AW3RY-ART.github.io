@@ -22,7 +22,7 @@
   "name": "Dawid Jagóra",
   "alternateName": "AW3RY",
   "jobTitle": "Automotive Photographer, Film Creator, Visual Designer",
-  "description": "AW3RY by Dawid Jagóra — automotive photography and film from Łódź, Poland.",
+  "description": "AW3RY by Dawid Jagóra - automotive photography and film from Łódź, Poland.",
   "url": "https://aw3ry.pl",
   "sameAs": [
     "https://www.linkedin.com/in/dawidjag%C3%B3ra/",
@@ -40,27 +40,27 @@
 
 <link rel="stylesheet" href="style.css">
 <script>
-  try{ var t=localStorage.getItem('aw3ry-theme'); if(t==='dark') document.documentElement.setAttribute('data-theme','dark'); }catch(e){}
+  try{ document.documentElement.removeAttribute('data-theme'); }catch(e){}
 </script>
 </head>
 <body>
 
 <div class="gate" id="gate">
-  <div class="gate-card">
-    <div class="gate-left">
-      <p class="gate-logo">AW3RY</p>
-      <h1 class="gate-title">Not live<br>yet.</h1>
-      <p class="gate-desc">This portfolio isn't public. If you've got the password, come in.</p>
+    <div class="gate-card">
+      <div class="gate-left">
+        <p class="gate-logo">AW3RY</p>
+        <h1 class="gate-title">Not live<br>yet.</h1>
+        <p class="gate-desc">This portfolio isn't public. If you've got the password, come in.</p>
+      </div>
+      <div class="gate-right">
+        <form id="gateForm">
+          <label for="gatePw">PASSWORD</label>
+          <input type="password" id="gatePw" autocomplete="off" spellcheck="false" placeholder="••••••••">
+          <p class="gate-error" id="gateError">Wrong password - try again.</p>
+          <button type="submit" class="btn-solid gate-submit">Enter</button>
+        </form>
+      </div>
     </div>
-    <div class="gate-right">
-      <form id="gateForm">
-        <label for="gatePw">PASSWORD</label>
-        <input type="password" id="gatePw" autocomplete="off" spellcheck="false" placeholder="••••••••">
-        <p class="gate-error" id="gateError">Wrong password — try again.</p>
-        <button type="submit" class="btn-solid gate-submit">Enter</button>
-      </form>
-    </div>
-  </div>
 </div>
 
 <div class="cursor" aria-hidden="true">
@@ -90,7 +90,6 @@
 <header class="site-header">
   <a href="#top" class="logo">AW3RY</a>
   <div class="header-actions">
-    <button class="theme-toggle" id="themeToggle" aria-label="Toggle day night theme">☾</button>
     <button class="menu-toggle" id="menuToggle" aria-expanded="false" aria-controls="siteNav" aria-label="Toggle navigation">
       <span></span><span></span>
     </button>
@@ -126,13 +125,13 @@
     </div>
 
     <div class="hero-content">
-      <p class="eyebrow reveal-line">AW3RY — Dawid Jagóra, Łódź</p>
+      <p class="eyebrow reveal-line">AW3RY - Dawid Jagóra, Łódź</p>
       <h1 class="hero-title">
         <span class="line reveal-line">Cars, caught</span>
         <span class="line reveal-line">at the right second.</span>
       </h1>
       <div class="hero-foot reveal-line">
-        <p class="hero-sub">Automotive photography and film from Łódź. Fujifilm X-M5, no crew — just showing up early and waiting.</p>
+        <p class="hero-sub">Automotive photography and film from Łódź. Fujifilm X-M5, no crew - just showing up early and waiting.</p>
         <a href="#work" class="btn-solid">
           <span>See the work</span>
           <svg width="14" height="14" viewBox="0 0 16 16" fill="none"><path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.6"/></svg>
@@ -148,8 +147,8 @@
 
   <div class="marquee-strip">
     <div class="marquee-track">
-      <span>Łódź — Track mornings — <em>Substance</em> — Automotive film — Night sessions — Visual design — Łódź — Track mornings — <em>Substance</em> — Automotive film — Night sessions — Visual design —</span>
-      <span>Łódź — Track mornings — <em>Substance</em> — Automotive film — Night sessions — Visual design — Łódź — Track mornings — <em>Substance</em> — Automotive film — Night sessions — Visual design —</span>
+      <span>Łódź - Track mornings - <em>Substance</em> - Automotive film - Night sessions - Visual design - Łódź - Track mornings - <em>Substance</em> - Automotive film - Night sessions - Visual design -</span>
+      <span>Łódź - Track mornings - <em>Substance</em> - Automotive film - Night sessions - Visual design - Łódź - Track mornings - <em>Substance</em> - Automotive film - Night sessions - Visual design -</span>
     </div>
   </div>
 
@@ -157,25 +156,25 @@
   <section class="section about tone-a" id="about">
     <div class="section-head">
       <span class="ghost-num">01</span>
-      <p class="section-eyebrow">01 — About</p>
+      <p class="section-eyebrow">01 - About</p>
       <h2 class="section-title">Just me, a camera,<br>and too many early mornings.</h2>
     </div>
 
     <div class="about-grid">
       <div class="about-portrait">
         <img loading="lazy" src="https://images.unsplash.com/photo-1583121274602-3e2820c69888?q=80&w=1400&auto=format&fit=crop" alt="AW3RY at a track day, shooting with the Fujifilm X-M5">
-        <p class="caption">Substance Łódź — August 2026</p>
+        <p class="caption">Substance Łódź - August 2026</p>
       </div>
 
       <div class="about-copy">
-        <p class="lede">I'm Dawid. I shoot cars — that's really the whole pitch.</p>
+        <p class="lede">I'm Dawid. I shoot cars - that's really the whole pitch.</p>
         <p>No studio, no crew, no fancy setup. I taught myself photography, editing and design by doing it badly first, then a bit less badly. AW3RY is just the name I put on that work.</p>
         <p>I study mechatronics too, and sure, it means I notice a car's proportions a little differently. But that's a footnote here, not the headline.</p>
 
         <div class="about-stats">
           <div class="stat"><span class="stat-num">Łódź</span><span class="stat-label">Home base, working anywhere</span></div>
-          <div class="stat"><span class="stat-num">Self-taught</span><span class="stat-label">No courses, no mentor — just repetition</span></div>
-          <div class="stat"><span class="stat-num">2024—</span><span class="stat-label">How long I've actually been doing this</span></div>
+          <div class="stat"><span class="stat-num">Self-taught</span><span class="stat-label">No courses, no mentor - just repetition</span></div>
+          <div class="stat"><span class="stat-num">2024-</span><span class="stat-label">How long I've actually been doing this</span></div>
         </div>
       </div>
     </div>
@@ -185,15 +184,15 @@
   <section class="section experience tone-b" id="experience">
     <div class="section-head">
       <span class="ghost-num">02</span>
-      <p class="section-eyebrow">02 — Experience</p>
+      <p class="section-eyebrow">02 - Experience</p>
       <h2 class="section-title">Where this has<br>actually happened.</h2>
     </div>
 
     <div class="about-copy">
       <p class="lede">Track mornings in Łódź, night shoots at Substance, a few private sessions in between.</p>
       <div class="about-stats">
-        <div class="stat"><span class="stat-num">2024–2025</span><span class="stat-label">Track meets in Łódź</span></div>
-        <div class="stat"><span class="stat-num">Warsaw</span><span class="stat-label">One exhibition — first time shooting that scale</span></div>
+        <div class="stat"><span class="stat-num">2024-2025</span><span class="stat-label">Track meets in Łódź</span></div>
+        <div class="stat"><span class="stat-num">Warsaw</span><span class="stat-label">One exhibition - first time shooting that scale</span></div>
         <div class="stat"><span class="stat-num">Private</span><span class="stat-label">Sessions for friends and their cars</span></div>
         <div class="stat"><span class="stat-num">Editing</span><span class="stat-label">Film work between all of it</span></div>
       </div>
@@ -205,13 +204,13 @@
   <section class="section work tone-a" id="work">
     <div class="section-head">
       <span class="ghost-num">03</span>
-      <p class="section-eyebrow">03 — Selected Work</p>
+      <p class="section-eyebrow">03 - Selected Work</p>
       <h2 class="section-title">A few things<br>worth showing.</h2>
     </div>
 
     <div class="work-list">
       <article class="work-item">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=2000&auto=format&fit=crop" alt="Placeholder — track day photography"></div>
+        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=2000&auto=format&fit=crop" alt="Placeholder - track day photography"></div>
         <div class="work-info">
           <h3>Track Mornings</h3>
           <p class="work-tags">Łódź · Photography</p>
@@ -220,43 +219,44 @@
       </article>
 
       <article class="work-item work-item--reverse">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2000&auto=format&fit=crop" alt="Placeholder — exhibition, stadium grounds"></div>
+        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2000&auto=format&fit=crop" alt="Placeholder - exhibition, stadium grounds"></div>
         <div class="work-info">
           <h3>Warsaw Exhibition</h3>
           <p class="work-tags">Warsaw · Exhibition</p>
-          <p class="work-desc">First time shooting something at that scale — crowds, tents, bad lighting, good lessons.</p>
+          <p class="work-desc">First time shooting something at that scale - crowds, tents, bad lighting, good lessons.</p>
         </div>
       </article>
 
       <article class="work-item">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=2000&auto=format&fit=crop" alt="Placeholder — private car photography session"></div>
+        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=2000&auto=format&fit=crop" alt="Placeholder - private car photography session"></div>
         <div class="work-info">
           <h3>Private Sessions</h3>
           <p class="work-tags">Personal Projects</p>
-          <p class="work-desc">One-on-one shoots for friends and their cars — low pressure, and honestly where most of the real learning happens.</p>
+          <p class="work-desc">One-on-one shoots for friends and their cars - low pressure, and honestly where most of the real learning happens.</p>
         </div>
       </article>
     </div>
   </section>
 
-  <!-- PHOTOGRAPHY — masonry grid -->
+  <!-- PHOTOGRAPHY - masonry grid -->
   <section class="section photography tone-b" id="photography">
     <div class="section-head">
       <span class="ghost-num">04</span>
-      <p class="section-eyebrow">04 — Photography</p>
+      <p class="section-eyebrow">04 - Photography</p>
       <h2 class="section-title">Shot on the<br>Fujifilm X-M5.</h2>
-      <p class="section-sub">A running archive from track days, meets, and quiet parking-lot sessions at 5am — before anyone else shows up.</p>
+      <p class="section-sub">A running archive from track days, meets, and quiet parking-lot sessions at 5am - before anyone else shows up.</p>
     </div>
 
     <div class="gallery" id="gallery">
       <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo — wheel detail"><figcaption>f/4 · 1/250 · ISO 400</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1400&auto=format&fit=crop" alt="Placeholder automotive photo — rear lights at dusk"><figcaption>f/1.8 · 1/1000 · ISO 160</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo — interior cockpit detail"><figcaption>f/2 · 1/125 · ISO 800</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1583267746897-2cf415887172?q=80&w=1400&auto=format&fit=crop" alt="Placeholder automotive photo — pit lane candid"><figcaption>f/2.8 · 1/2000 · ISO 200</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo — panning shot on track"><figcaption>f/8 · 1/60 · ISO 100</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo - wheel detail"><figcaption>f/4 · 1/250 · ISO 400</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1400&auto=format&fit=crop" alt="Placeholder automotive photo - rear lights at dusk"><figcaption>f/1.8 · 1/1000 · ISO 160</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo - interior cockpit detail"><figcaption>f/2 · 1/125 · ISO 800</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1583267746897-2cf415887172?q=80&w=1400&auto=format&fit=crop" alt="Placeholder automotive photo - pit lane candid"><figcaption>f/2.8 · 1/2000 · ISO 200</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo - panning shot on track"><figcaption>f/8 · 1/60 · ISO 100</figcaption></figure>
       <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1600&auto=format&fit=crop" alt="Placeholder automotive photo"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
       <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo"><figcaption>f/5.6 · 1/320 · ISO 200</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo - front three-quarter"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
     </div>
   </section>
 
@@ -264,7 +264,7 @@
   <section class="section services tone-a" id="services">
     <div class="section-head">
       <span class="ghost-num">05</span>
-      <p class="section-eyebrow">05 — Services</p>
+      <p class="section-eyebrow">05 - Services</p>
       <h2 class="section-title">What I can<br>do for you.</h2>
     </div>
 
@@ -274,7 +274,7 @@
         <div class="work-info">
           <h3>Automotive Photography</h3>
           <p class="work-tags">Editorial · Private</p>
-          <p class="work-desc">Photos of your car or event, shot with actual attention — not a template.</p>
+          <p class="work-desc">Photos of your car or event, shot with actual attention - not a template.</p>
         </div>
       </article>
 
@@ -283,7 +283,7 @@
         <div class="work-info">
           <h3>Automotive Film</h3>
           <p class="work-tags">Short-form · Event</p>
-          <p class="work-desc">Short edits that actually capture how a car sounds and moves — not just how it looks parked.</p>
+          <p class="work-desc">Short edits that actually capture how a car sounds and moves - not just how it looks parked.</p>
         </div>
       </article>
 
@@ -292,7 +292,7 @@
         <div class="work-info">
           <h3>Visual Design</h3>
           <p class="work-tags">Branding · Layout</p>
-          <p class="work-desc">Identity and design work for small automotive projects — built the same way this site was: from scratch.</p>
+          <p class="work-desc">Identity and design work for small automotive projects - built the same way this site was: from scratch.</p>
         </div>
       </article>
     </div>
@@ -300,7 +300,7 @@
 
   <section class="pull-quote tone-b">
     <div class="pull-quote-inner">
-      <blockquote>Most people show up when the cars roll in. I show up two hours earlier — that's when you actually get the shot.</blockquote>
+      <blockquote>Most people show up when the cars roll in. I show up two hours earlier - that's when you actually get the shot.</blockquote>
       <cite>Dawid</cite>
     </div>
   </section>
@@ -308,13 +308,13 @@
   <!-- EQUIPMENT -->
   <section class="section equipment tone-a" id="equipment">
     <div class="section-head">
-      <p class="section-eyebrow">06 — Equipment</p>
+      <p class="section-eyebrow">06 - Equipment</p>
       <h2 class="section-title">What's in the bag.</h2>
     </div>
 
     <div class="equipment-grid">
-      <div class="equipment-item"><span class="equipment-index">01</span><h3>Fujifilm X-M5</h3><p>Primary body. Compact, film-simulation color science, no viewfinder — which keeps me honest about composing fast.</p></div>
-      <div class="equipment-item"><span class="equipment-index">02</span><h3>Kit Lens</h3><p>Still shooting on the kit lens that came with the X-M5 — proof that timing and light matter more than glass.</p></div>
+      <div class="equipment-item"><span class="equipment-index">01</span><h3>Fujifilm X-M5</h3><p>Primary body. Compact, film-simulation color science, no viewfinder - which keeps me honest about composing fast.</p></div>
+      <div class="equipment-item"><span class="equipment-index">02</span><h3>Kit Lens</h3><p>Still shooting on the kit lens that came with the X-M5 - proof that timing and light matter more than glass.</p></div>
       <div class="equipment-item"><span class="equipment-index">03</span><h3>Edit Suite</h3><p>Lightroom and Affinity for stills, Premiere Pro and DaVinci Resolve for video editing.</p></div>
     </div>
   </section>
@@ -322,7 +322,7 @@
   <!-- CONTACT -->
   <section class="section contact tone-b" id="contact">
     <div class="contact-inner">
-      <p class="section-eyebrow">07 — Contact</p>
+      <p class="section-eyebrow">07 - Contact</p>
       <h2 class="contact-title">Have a car<br>worth shooting?</h2>
       <a href="mailto:AW3RY.art@gmail.com" class="contact-email">AW3RY.art@gmail.com</a>
 
@@ -345,7 +345,7 @@
 </main>
 
 <footer class="site-footer">
-  <p>© <span id="year"></span> AW3RY — Dawid Jagóra, Łódź.</p>
+  <p>© <span id="year"></span> AW3RY - Dawid Jagóra, Łódź.</p>
 </footer>
 
 <script src="https://unpkg.com/gsap@3.12.5/dist/gsap.min.js"></script>

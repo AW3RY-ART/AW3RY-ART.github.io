@@ -64,19 +64,7 @@ function initYear() {
 }
 
 function initTheme() {
-  const btn = document.getElementById('themeToggle');
-  if (!btn) return;
-  const apply = (dark) => {
-    if (dark) document.documentElement.setAttribute('data-theme', 'dark');
-    else document.documentElement.removeAttribute('data-theme');
-    btn.textContent = dark ? '☀' : '☾';
-  };
-  apply(document.documentElement.getAttribute('data-theme') === 'dark');
-  btn.addEventListener('click', () => {
-    const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-    apply(!isDark);
-    try { localStorage.setItem('aw3ry-theme', !isDark ? 'dark' : 'light'); } catch (e) {}
-  });
+  try { document.documentElement.removeAttribute('data-theme'); } catch (e) {}
 }
 
 function initLoader() {
@@ -182,7 +170,7 @@ function initComingSoon() {
       if (toast) toast.remove();
       toast = document.createElement('div');
       toast.className = 'soon-toast';
-      toast.textContent = `${label} — coming soon`;
+      toast.textContent = `${label} - coming soon`;
       document.body.appendChild(toast);
       requestAnimationFrame(() => toast.classList.add('is-in'));
       setTimeout(() => { toast.classList.remove('is-in'); setTimeout(() => toast.remove(), 400); }, 2200);
