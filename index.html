@@ -45,23 +45,7 @@
 </head>
 <body>
 
-<div class="gate" id="gate">
-    <div class="gate-card">
-      <div class="gate-left">
-        <p class="gate-logo">AW3RY</p>
-        <h1 class="gate-title">Not live<br>yet.</h1>
-        <p class="gate-desc">This portfolio isn't public. If you've got the password, come in.</p>
-      </div>
-      <div class="gate-right">
-        <form id="gateForm">
-          <label for="gatePw">PASSWORD</label>
-          <input type="password" id="gatePw" autocomplete="off" spellcheck="false" placeholder="••••••••">
-          <p class="gate-error" id="gateError">Wrong password - try again.</p>
-          <button type="submit" class="btn-solid gate-submit">Enter</button>
-        </form>
-      </div>
-    </div>
-</div>
+
 
 <div class="cursor" aria-hidden="true">
   <div class="cursor-ring"></div>
@@ -103,7 +87,8 @@
       <li><a href="#work" data-num="03">Work</a></li>
       <li><a href="#photography" data-num="04">Photography</a></li>
       <li><a href="#services" data-num="05">Services</a></li>
-      <li><a href="#contact" data-num="06">Contact</a></li>
+      <li><a href="#equipment" data-num="06">Equipment</a></li>
+      <li><a href="#contact" data-num="07">Contact</a></li>
     </ol>
     <div class="nav-footer">
       <div class="nav-meta">
@@ -114,13 +99,13 @@
   </nav>
 </header>
 
-<button class="nav-logout nav-logout--bottom" id="navLogout">Log out</button>
+
 
 <main id="top">
 
   <section class="hero" id="hero">
     <div class="hero-media">
-      <img src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=2400&auto=format&fit=crop" alt="Automotive photography by AW3RY" class="hero-img" id="heroImg">
+      <img src="zdjecie_1.jpg" alt="Automotive photography by AW3RY" class="hero-img" id="heroImg">
       <div class="hero-scrim"></div>
     </div>
 
@@ -152,7 +137,7 @@
     </div>
   </div>
 
-  <!-- ABOUT -->
+  <!-- About -->
   <section class="section about tone-a" id="about">
     <div class="section-head">
       <span class="ghost-num">01</span>
@@ -170,6 +155,7 @@
         <p class="lede">I'm Dawid. I shoot cars - that's really the whole pitch.</p>
         <p>No studio, no crew, no fancy setup. I taught myself photography, editing and design by doing it badly first, then a bit less badly. AW3RY is just the name I put on that work.</p>
         <p>I study mechatronics too, and sure, it means I notice a car's proportions a little differently. But that's a footnote here, not the headline.</p>
+        <p>I also run a YouTube channel under the same name - mostly a side project where I've dropped one video so far. Got 150k views total on it, which is honestly just a nice reminder that someone's watching. More coming when the time's right.</p>
 
         <div class="about-stats">
           <div class="stat"><span class="stat-num">Łódź</span><span class="stat-label">Home base, working anywhere</span></div>
@@ -180,7 +166,7 @@
     </div>
   </section>
 
-  <!-- EXPERIENCE -->
+  <!-- Experience -->
   <section class="section experience tone-b" id="experience">
     <div class="section-head">
       <span class="ghost-num">02</span>
@@ -200,7 +186,7 @@
     </div>
   </section>
 
-  <!-- SELECTED WORK -->
+  <!-- Selected work -->
   <section class="section work tone-a" id="work">
     <div class="section-head">
       <span class="ghost-num">03</span>
@@ -210,7 +196,7 @@
 
     <div class="work-list">
       <article class="work-item">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=2000&auto=format&fit=crop" alt="Placeholder - track day photography"></div>
+        <div class="work-media"><img loading="lazy" src="zdjecie_2.jpg" alt="Placeholder - track day photography"></div>
         <div class="work-info">
           <h3>Track Mornings</h3>
           <p class="work-tags">Łódź · Photography</p>
@@ -219,7 +205,7 @@
       </article>
 
       <article class="work-item work-item--reverse">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1552519507-da3b142c6e3d?q=80&w=2000&auto=format&fit=crop" alt="Placeholder - exhibition, stadium grounds"></div>
+        <div class="work-media"><img loading="lazy" src="zdjecie_3.jpg" alt="Placeholder - exhibition, stadium grounds"></div>
         <div class="work-info">
           <h3>Warsaw Exhibition</h3>
           <p class="work-tags">Warsaw · Exhibition</p>
@@ -228,7 +214,7 @@
       </article>
 
       <article class="work-item">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1542362567-b07e54358753?q=80&w=2000&auto=format&fit=crop" alt="Placeholder - private car photography session"></div>
+        <div class="work-media"><img loading="lazy" src="zdjecie_4.jpg" alt="Placeholder - private car photography session"></div>
         <div class="work-info">
           <h3>Private Sessions</h3>
           <p class="work-tags">Personal Projects</p>
@@ -238,7 +224,7 @@
     </div>
   </section>
 
-  <!-- PHOTOGRAPHY - masonry grid -->
+  <!-- Photography -->
   <section class="section photography tone-b" id="photography">
     <div class="section-head">
       <span class="ghost-num">04</span>
@@ -248,19 +234,19 @@
     </div>
 
     <div class="gallery" id="gallery">
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1580273916550-e323be2ae537?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo - wheel detail"><figcaption>f/4 · 1/250 · ISO 400</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1400&auto=format&fit=crop" alt="Placeholder automotive photo - rear lights at dusk"><figcaption>f/1.8 · 1/1000 · ISO 160</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1493238792000-8113da705763?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo - interior cockpit detail"><figcaption>f/2 · 1/125 · ISO 800</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1583267746897-2cf415887172?q=80&w=1400&auto=format&fit=crop" alt="Placeholder automotive photo - pit lane candid"><figcaption>f/2.8 · 1/2000 · ISO 200</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1553440569-bcc63803a83d?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo - panning shot on track"><figcaption>f/8 · 1/60 · ISO 100</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1600&auto=format&fit=crop" alt="Placeholder automotive photo"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1494905998402-395d579af36f?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo"><figcaption>f/5.6 · 1/320 · ISO 200</figcaption></figure>
-      <figure class="gallery-item"><img loading="lazy" src="https://images.unsplash.com/photo-1503376780353-7e6692767b70?q=80&w=1200&auto=format&fit=crop" alt="Placeholder automotive photo - front three-quarter"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_5.jpg" alt="Placeholder automotive photo"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_6.jpg" alt="Placeholder automotive photo - wheel detail"><figcaption>f/4 · 1/250 · ISO 400</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_7.jpg" alt="Placeholder automotive photo - rear lights at dusk"><figcaption>f/1.8 · 1/1000 · ISO 160</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_8.jpg" alt="Placeholder automotive photo - interior cockpit detail"><figcaption>f/2 · 1/125 · ISO 800</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_9.jpg" alt="Placeholder automotive photo - pit lane candid"><figcaption>f/2.8 · 1/2000 · ISO 200</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_10.jpg" alt="Placeholder automotive photo - panning shot on track"><figcaption>f/8 · 1/60 · ISO 100</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_11.jpg" alt="Placeholder automotive photo"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_12.jpg" alt="Placeholder automotive photo"><figcaption>f/5.6 · 1/320 · ISO 200</figcaption></figure>
+      <figure class="gallery-item"><img loading="lazy" src="zdjecie_13.jpg" alt="Placeholder automotive photo - front three-quarter"><figcaption>f/2.8 · 1/500 · ISO 200</figcaption></figure>
     </div>
   </section>
 
-  <!-- SERVICES -->
+  <!-- Services -->
   <section class="section services tone-a" id="services">
     <div class="section-head">
       <span class="ghost-num">05</span>
@@ -270,7 +256,7 @@
 
     <div class="work-list">
       <article class="work-item">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=2000&auto=format&fit=crop" alt="Automotive Photography service sample"></div>
+        <div class="work-media"><img loading="lazy" src="zdjecie_14.jpg" alt="Automotive Photography service sample"></div>
         <div class="work-info">
           <h3>Automotive Photography</h3>
           <p class="work-tags">Editorial · Private</p>
@@ -279,7 +265,7 @@
       </article>
 
       <article class="work-item work-item--reverse">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1544829099-b9a0c07fad1a?q=80&w=2000&auto=format&fit=crop" alt="Automotive Film service sample"></div>
+        <div class="work-media"><img loading="lazy" src="zdjecie_15.jpg" alt="Automotive Film service sample"></div>
         <div class="work-info">
           <h3>Automotive Film</h3>
           <p class="work-tags">Short-form · Event</p>
@@ -288,7 +274,7 @@
       </article>
 
       <article class="work-item">
-        <div class="work-media"><img loading="lazy" src="https://images.unsplash.com/photo-1519648023493-d82b5f8d7b8a?q=80&w=2000&auto=format&fit=crop" alt="Visual Design service sample"></div>
+        <div class="work-media"><img loading="lazy" src="zdjecie_16.jpg" alt="Visual Design service sample"></div>
         <div class="work-info">
           <h3>Visual Design</h3>
           <p class="work-tags">Branding · Layout</p>
@@ -298,14 +284,7 @@
     </div>
   </section>
 
-  <section class="pull-quote tone-b">
-    <div class="pull-quote-inner">
-      <blockquote>Most people show up when the cars roll in. I show up two hours earlier - that's when you actually get the shot.</blockquote>
-      <cite>Dawid</cite>
-    </div>
-  </section>
-
-  <!-- EQUIPMENT -->
+  <!-- Equipment -->
   <section class="section equipment tone-a" id="equipment">
     <div class="section-head">
       <p class="section-eyebrow">06 - Equipment</p>
@@ -319,7 +298,7 @@
     </div>
   </section>
 
-  <!-- CONTACT -->
+  <!-- Contact -->
   <section class="section contact tone-b" id="contact">
     <div class="contact-inner">
       <p class="section-eyebrow">07 - Contact</p>
