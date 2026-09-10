@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>404 - AW3RY</title>
+<meta name="description" content="This AW3RY page could not be found.">
+<link rel="stylesheet" href="style.css">
+<style>
+  .error-page{
+    min-height:100svh;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    position:relative;
+    overflow:hidden;
+    color:#f7f5f0;
+    background:#02000A;
+  }
+  .error-page::before{
+    content:"";
+    position:absolute;
+    inset:-1rem;
+    background:linear-gradient(90deg,rgba(2,0,10,.88),rgba(2,0,10,.54)),url('zdjecie_16.webp') center/cover;
+    filter:blur(8px) grayscale(.35) brightness(.55);
+    transform:scale(1.04);
+  }
+  .error-header,
+  .error-content,
+  .error-footer{ position:relative; z-index:1; }
+  .error-header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:1.15rem clamp(1.2rem,4vw,2.6rem);
+    border-bottom:1px solid rgba(247,245,240,.16);
+  }
+  .error-header .logo{ color:#f7f5f0; }
+  .error-code{ font-family:var(--font-mono); font-size:.72rem; letter-spacing:.1em; color:#7fe0b1; }
+  .error-content{ width:var(--container); margin:auto; padding:5rem clamp(1.2rem,4vw,2.6rem); }
+  .error-content h1{ font-family:var(--font-display); font-size:clamp(3.5rem,12vw,9rem); line-height:.86; letter-spacing:-.04em; margin:.4rem 0 1.5rem; }
+  .error-content p:not(.eyebrow){ max-width:32ch; color:rgba(247,245,240,.76); font-size:1rem; }
+  .error-content .btn-solid{ margin-top:2rem; }
+  .error-footer{ padding:1.5rem clamp(1.2rem,4vw,2.6rem) 2rem; font-family:var(--font-mono); font-size:.72rem; color:rgba(247,245,240,.58); }
+</style>
+</head>
+<body class="error-page">
+  <header class="error-header">
+    <a href="index.html" class="logo">AW3RY</a>
+    <span class="error-code">404</span>
+  </header>
+
+  <main class="error-content">
+    <p class="eyebrow">404 - Page not found</p>
+    <h1>Nothing<br>here.</h1>
+    <p>The page you are looking for has moved, disappeared, or never existed.</p>
+    <a href="index.html" class="btn-solid"><span>Back to AW3RY</span><span aria-hidden="true">↗</span></a>
+  </main>
+
+  <footer class="error-footer">AW3RY / Dawid, Lodz.</footer>
+</body>
+</html>

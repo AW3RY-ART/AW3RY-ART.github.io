@@ -8,12 +8,6 @@ function initSite() {
   initNav();
   initSectionDots();
   initBrandBar();
-
-  if (window.gsap) {
-    gsap.registerPlugin(ScrollTrigger);
-    initReveals();
-    initGalleryParallax();
-  }
 }
 
 function initYear() {
@@ -55,37 +49,20 @@ function initLoader() {
       loader.style.opacity = '0';
       loader.style.visibility = 'hidden';
       document.documentElement.classList.remove('no-scroll');
-      playHeroIntro();
       setTimeout(() => loader.remove(), 700);
     }, 200);
   }
 }
 
-function playHeroIntro() {
-  const lines = document.querySelectorAll('.hero-title .line');
-  const eyebrow = document.querySelector('.hero .eyebrow');
-  const foot = document.querySelector('.hero-foot');
-  if (!window.gsap) { lines.forEach(l => l.style.transform = 'none'); return; }
-
-  gsap.set(lines, { yPercent: 110 });
-  gsap.set([eyebrow, foot], { opacity: 0, y: 16 });
-  const tl = gsap.timeline({ defaults: { ease: 'power4.out' } });
-  tl.to(eyebrow, { opacity: 1, y: 0, duration: 0.6 })
-    .to(lines, { yPercent: 0, duration: 1, stagger: 0.08 }, '-=0.3')
-    .to(foot, { opacity: 1, y: 0, duration: 0.7 }, '-=0.4');
-}
-
 function initNav() {
   const toggle = document.getElementById('menuToggle');
   const nav = document.getElementById('siteNav');
-  const closeBtn = document.getElementById('navClose');
   if (!toggle || !nav) return;
 
   const open = () => { nav.classList.add('is-open'); toggle.setAttribute('aria-expanded', 'true'); document.documentElement.classList.add('no-scroll'); };
   const close = () => { nav.classList.remove('is-open'); toggle.setAttribute('aria-expanded', 'false'); document.documentElement.classList.remove('no-scroll'); };
 
   toggle.addEventListener('click', () => nav.classList.contains('is-open') ? close() : open());
-  if (closeBtn) closeBtn.addEventListener('click', close);
   nav.querySelectorAll('a').forEach(a => a.addEventListener('click', close));
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 }
@@ -163,23 +140,4 @@ function initBrandBar() {
   window.setTimeout(requestUpdate, 250);
 }
 
-function initReveals() {
-  const targets = [
-    '.section-eyebrow', '.section-title', '.section-sub',
-    '.about-portrait', '.lede', '.about-copy p', '.about-stats',
-    '.work-item', '.gallery-item', '.pull-quote-inner',
-    '.equipment-item', '.contact-inner > *'
-  ];
-  targets.forEach(sel => {
-    document.querySelectorAll(sel).forEach((el) => {
-      el.setAttribute('data-reveal', '');
-      ScrollTrigger.create({ trigger: el, start: 'top 88%', onEnter: () => el.classList.add('is-in'), once: true });
-    });
-  });
-}
 
-function initGalleryParallax() {
-  document.querySelectorAll('.gallery-item img').forEach((img) => {
-    gsap.fromTo(img, { scale: 1.1 }, { scale: 1, ease: 'none', scrollTrigger: { trigger: img, start: 'top bottom', end: 'bottom top', scrub: true } });
-  });
-}
