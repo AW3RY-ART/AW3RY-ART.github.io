@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  initCursor();
   initSite();
 });
 
@@ -7,12 +6,11 @@ function initSite() {
   initYear();
   initLoader();
   initNav();
-  initComingSoon();
-  initScrollIris();
+  initSectionDots();
+  initBrandBar();
 
   if (window.gsap) {
     gsap.registerPlugin(ScrollTrigger);
-    initHeroParallax();
     initReveals();
     initGalleryParallax();
   }
@@ -77,30 +75,6 @@ function playHeroIntro() {
     .to(foot, { opacity: 1, y: 0, duration: 0.7 }, '-=0.4');
 }
 
-function initCursor() {
-  const ring = document.querySelector('.cursor-ring');
-  const dot = document.querySelector('.cursor-dot');
-  const cursor = document.querySelector('.cursor');
-  if (!ring || !dot || window.matchMedia('(max-width: 860px)').matches) return;
-
-  let mx = 0, my = 0, rx = 0, ry = 0;
-  window.addEventListener('mousemove', (e) => {
-    mx = e.clientX; my = e.clientY;
-    dot.style.left = mx + 'px'; dot.style.top = my + 'px';
-  });
-  function raf() {
-    rx += (mx - rx) * 0.16; ry += (my - ry) * 0.16;
-    ring.style.left = rx + 'px'; ring.style.top = ry + 'px';
-    requestAnimationFrame(raf);
-  }
-  requestAnimationFrame(raf);
-
-  document.querySelectorAll('a, button, .gallery-item, .work-item').forEach(el => {
-    el.addEventListener('mouseenter', () => cursor.classList.add('is-active'));
-    el.addEventListener('mouseleave', () => cursor.classList.remove('is-active'));
-  });
-}
-
 function initNav() {
   const toggle = document.getElementById('menuToggle');
   const nav = document.getElementById('siteNav');
@@ -116,51 +90,77 @@ function initNav() {
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
 }
 
-function initComingSoon() {
-  let toast;
-  document.querySelectorAll('.js-soon').forEach(link => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const label = link.dataset.soon || 'This';
-      if (toast) toast.remove();
-      toast = document.createElement('div');
-      toast.className = 'soon-toast';
-      toast.textContent = `${label} - coming soon`;
-      document.body.appendChild(toast);
-      requestAnimationFrame(() => toast.classList.add('is-in'));
-      setTimeout(() => { toast.classList.remove('is-in'); setTimeout(() => toast.remove(), 400); }, 2200);
+function initSectionDots() {
+  const dots = [...document.querySelectorAll('.section-dots a')];
+  const sections = dots.map(dot => document.getElementById(dot.dataset.section)).filter(Boolean);
+  if (!dots.length || !sections.length) return;
+  let frame = 0;
+
+  const setActive = (id) => {
+    dots.forEach(dot => {
+      const isActive = dot.dataset.section === id;
+      dot.classList.toggle('is-active', isActive);
+      dot.setAttribute('aria-current', isActive ? 'location' : 'false');
     });
-  });
-}
-
-function initScrollIris() {
-  const wrap = document.getElementById('scrollIris');
-  const fill = document.querySelector('.scroll-iris-fill');
-  if (!wrap || !fill) return;
-  const circumference = 2 * Math.PI * 26;
-  fill.style.strokeDasharray = circumference;
-  fill.style.strokeDashoffset = circumference;
-
-  const updateFloatingControls = () => {
-    const scrollTop = window.scrollY;
-    const max = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = max > 0 ? scrollTop / max : 0;
-
-    fill.style.strokeDashoffset = String(circumference * (1 - progress));
-    wrap.classList.toggle('is-visible', scrollTop > window.innerHeight * 0.6);
-    wrap.classList.toggle('is-bottom', progress > 0.985);
   };
 
-  updateFloatingControls();
-  wrap.addEventListener('click', () => window.scrollTo({ top: 0, behavior: 'smooth' }));
-  window.addEventListener('scroll', updateFloatingControls, { passive: true });
-  window.addEventListener('resize', updateFloatingControls);
+  const updateActive = () => {
+    const marker = window.innerHeight * 0.42;
+    const current = sections.reduce((active, section) => {
+      return section.getBoundingClientRect().top <= marker ? section : active;
+    }, sections[0]);
+    setActive(current.id);
+  };
+
+  updateActive();
+  const requestUpdate = () => {
+    if (frame) return;
+    frame = requestAnimationFrame(() => {
+      frame = 0;
+      updateActive();
+    });
+  };
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
 }
 
-function initHeroParallax() {
-  const img = document.getElementById('heroImg');
-  if (!img) return;
-  gsap.to(img, { yPercent: 14, ease: 'none', scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: true } });
+function initBrandBar() {
+  const hero = document.getElementById('hero');
+  const bar = document.getElementById('brandBar');
+  const header = document.querySelector('.site-header');
+  const mark = bar ? bar.querySelector('.marquee-track span') : null;
+  if (!hero || !bar || !header || !mark) return;
+
+  let frame = 0;
+  const update = () => {
+    frame = 0;
+    if (window.scrollY <= 0) {
+      bar.style.height = '0px';
+      bar.style.opacity = '0';
+      bar.classList.remove('is-expanded');
+      header.classList.remove('is-bar-touching');
+      return;
+    }
+    const rawProgress = Math.max(0, Math.min(1, (window.scrollY / hero.offsetHeight - 0.12) / 0.88));
+    const easedProgress = rawProgress * rawProgress * (3 - 2 * rawProgress);
+    const maxHeight = Math.max(0, hero.offsetHeight - header.offsetHeight);
+    const height = maxHeight * easedProgress;
+    bar.style.height = `${height}px`;
+    bar.style.opacity = easedProgress > 0.01 ? '1' : '0';
+    bar.classList.toggle('is-expanded', height > 120);
+    const targetMarkBottom = hero.getBoundingClientRect().bottom - height / 2 + mark.offsetHeight / 2;
+    header.classList.toggle('is-bar-touching', targetMarkBottom <= header.getBoundingClientRect().bottom + 1);
+  };
+  const requestUpdate = () => {
+    if (!frame) frame = requestAnimationFrame(update);
+  };
+
+  update();
+  window.addEventListener('scroll', requestUpdate, { passive: true });
+  window.addEventListener('resize', requestUpdate);
+  window.addEventListener('pageshow', requestUpdate);
+  window.setTimeout(requestUpdate, 0);
+  window.setTimeout(requestUpdate, 250);
 }
 
 function initReveals() {
