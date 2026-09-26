@@ -12,21 +12,21 @@
         "gallery/kustom-movement/FXM50165.webp",
         "gallery/kustom-movement/FXM50175.webp",
         "gallery/kustom-movement/FXM50185.webp",
-        "gallery/kustom-movement/FXM50191 (1).webp",
-        "gallery/kustom-movement/FXM50197 (1).webp",
-        "gallery/kustom-movement/FXM50203 (1).webp",
+        "gallery/kustom-movement/FXM50191.webp",
+        "gallery/kustom-movement/FXM50197.webp",
+        "gallery/kustom-movement/FXM50203.webp",
         "gallery/kustom-movement/FXM50214.webp",
         "gallery/kustom-movement/FXM50233.webp",
-        "gallery/kustom-movement/FXM50241 (1).webp"
+        "gallery/kustom-movement/FXM50241.webp"
       ]
     },
     {
       "name": "substance",
       "title": "Substance",
       "images": [
-        "gallery/substance/_XM50026 (1).webp",
+        "gallery/substance/_XM50026.webp",
         "gallery/substance/_XM50033.webp",
-        "gallery/substance/_XM50045 (1).webp",
+        "gallery/substance/_XM50045.webp",
         "gallery/substance/_XM50081.webp",
         "gallery/substance/_XM50106.webp",
         "gallery/substance/_XM50119.webp",
@@ -40,10 +40,10 @@
         "gallery/substance/_XM50272.webp",
         "gallery/substance/_XM50273.webp",
         "gallery/substance/_XM50274.webp",
-        "gallery/substance/_XM50276 (2).webp",
-        "gallery/substance/_XM50279 (1).webp",
-        "gallery/substance/_XM50279 (2).webp",
+        "gallery/substance/_XM50276-(2).webp",
+        "gallery/substance/_XM50279.webp",
         "gallery/substance/_XM50291.webp",
+        "gallery/substance/_XM50296.webp",
         "gallery/substance/_XM50305.webp",
         "gallery/substance/_XM50311.webp",
         "gallery/substance/_XM50343.webp",
@@ -110,19 +110,19 @@
     {
       "album": "kustom-movement",
       "albumTitle": "Kustom Movement",
-      "image": "gallery/kustom-movement/FXM50191 (1).webp",
+      "image": "gallery/kustom-movement/FXM50191.webp",
       "label": "09"
     },
     {
       "album": "kustom-movement",
       "albumTitle": "Kustom Movement",
-      "image": "gallery/kustom-movement/FXM50197 (1).webp",
+      "image": "gallery/kustom-movement/FXM50197.webp",
       "label": "10"
     },
     {
       "album": "kustom-movement",
       "albumTitle": "Kustom Movement",
-      "image": "gallery/kustom-movement/FXM50203 (1).webp",
+      "image": "gallery/kustom-movement/FXM50203.webp",
       "label": "11"
     },
     {
@@ -140,13 +140,13 @@
     {
       "album": "kustom-movement",
       "albumTitle": "Kustom Movement",
-      "image": "gallery/kustom-movement/FXM50241 (1).webp",
+      "image": "gallery/kustom-movement/FXM50241.webp",
       "label": "14"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50026 (1).webp",
+      "image": "gallery/substance/_XM50026.webp",
       "label": "01"
     },
     {
@@ -158,7 +158,7 @@
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50045 (1).webp",
+      "image": "gallery/substance/_XM50045.webp",
       "label": "03"
     },
     {
@@ -242,25 +242,25 @@
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50276 (2).webp",
+      "image": "gallery/substance/_XM50276-(2).webp",
       "label": "17"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50279 (1).webp",
+      "image": "gallery/substance/_XM50279.webp",
       "label": "18"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50279 (2).webp",
+      "image": "gallery/substance/_XM50291.webp",
       "label": "19"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50291.webp",
+      "image": "gallery/substance/_XM50296.webp",
       "label": "20"
     },
     {
