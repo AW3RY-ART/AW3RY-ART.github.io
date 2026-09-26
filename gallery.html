@@ -5,10 +5,40 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f7f5f0">
   <meta name="robots" content="index, follow">
-  <title>Gallery | AW3RY</title>
-  <meta name="description" content="AW3RY gallery — selected automotive photography and visual studies by Dawid Jagóra.">
+  <title>Gallery | AW3RY — Automotive Photography by Dawid Jagóra</title>
+  <meta name="description" content="AW3RY gallery — selected automotive photography and visual studies by Dawid Jagóra, based in Łódź, Poland.">
+  <meta name="author" content="Dawid Jagóra">
+  <meta name="publisher" content="AW3RY">
   <link rel="canonical" href="https://aw3ry.art/gallery.html">
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="AW3RY">
+  <meta property="og:locale" content="en_GB">
+  <meta property="og:url" content="https://aw3ry.art/gallery.html">
+  <meta property="og:title" content="Gallery | AW3RY — Automotive Photography by Dawid Jagóra">
+  <meta property="og:description" content="Selected automotive photography and visual studies by Dawid Jagóra / AW3RY, Łódź.">
+  <meta property="og:image" content="https://aw3ry.art/gallery/substance/_XM50033.webp">
+  <meta property="og:image:alt" content="AW3RY automotive photography gallery preview">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gallery | AW3RY — Automotive Photography by Dawid Jagóra">
+  <meta name="twitter:description" content="Selected automotive photography and visual studies by Dawid Jagóra / AW3RY, Łódź.">
+  <meta name="twitter:image" content="https://aw3ry.art/gallery/substance/_XM50033.webp">
+
+  <link rel="icon" href="assets/favicon/favicon.svg" type="image/svg+xml">
+  <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="stylesheet" href="css/style.css">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ImageGallery",
+    "name": "AW3RY Gallery",
+    "url": "https://aw3ry.art/gallery.html",
+    "author": { "@type": "Person", "name": "Dawid Jagóra" },
+    "publisher": { "@type": "Organization", "name": "AW3RY" }
+  }
+  </script>
   <style>
     :root {
       --gallery-gap: clamp(0.75rem, 1.5vw, 1.1rem);
@@ -661,7 +691,7 @@
           item.dataset.event = button.dataset.filter;
           item.setAttribute('aria-label', `${album.title || album.name || 'Gallery'} image ${index + 1}`);
           item.innerHTML = `
-            <img src="${imagePath}" alt="${album.title || album.name || 'Gallery'} image ${index + 1}">
+            <img src="${imagePath}" alt="AW3RY ${album.title || album.name || 'Gallery'} automotive photography by Dawid Jagóra, image ${index + 1}">
             <span class="gallery-label">${String(index + 1).padStart(2, '0')}</span>
           `;
 
