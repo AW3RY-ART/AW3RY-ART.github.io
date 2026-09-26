@@ -7,6 +7,7 @@ import re
 ROOT = Path(__file__).resolve().parent
 GALLERY_ROOT = ROOT / "gallery"
 OUTPUT_FILE = ROOT / "gallery-data.json"
+JS_OUTPUT_FILE = ROOT / "gallery-data.js"
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".bmp"}
 
 
@@ -59,7 +60,11 @@ def main() -> None:
     }
 
     OUTPUT_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
-    print(f"Saved {len(albums)} albums and {len(items)} images to {OUTPUT_FILE.name}")
+    JS_OUTPUT_FILE.write_text(
+        "window.galleryData = " + json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + ";\n",
+        encoding="utf-8",
+    )
+    print(f"Saved {len(albums)} albums and {len(items)} images to {OUTPUT_FILE.name} and {JS_OUTPUT_FILE.name}")
 
 
 if __name__ == "__main__":

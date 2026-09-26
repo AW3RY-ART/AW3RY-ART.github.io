@@ -28,6 +28,7 @@
   <link rel="icon" href="assets/favicon/favicon.svg" type="image/svg+xml">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="stylesheet" href="css/style.css">
+  <script src="gallery-data.js"></script>
 
   <script type="application/ld+json">
   {
@@ -651,18 +652,24 @@
         ]
       };
 
-      let data = fallbackData;
+      const preloadedData = typeof window !== 'undefined' && window.galleryData && Array.isArray(window.galleryData.albums)
+        ? window.galleryData
+        : null;
 
-      try {
-        const response = await fetch('gallery-data.json', { cache: 'no-store' });
-        if (response.ok) {
-          const json = await response.json();
-          if (json && Array.isArray(json.albums)) {
-            data = json;
+      let data = preloadedData || fallbackData;
+
+      if (window.location.protocol !== 'file:') {
+        try {
+          const response = await fetch('gallery-data.json', { cache: 'no-store' });
+          if (response.ok) {
+            const json = await response.json();
+            if (json && Array.isArray(json.albums)) {
+              data = json;
+            }
           }
+        } catch (error) {
+          console.warn('Gallery JSON not found, using fallback gallery data.', error);
         }
-      } catch (error) {
-        console.warn('Gallery JSON not found, using fallback gallery data.', error);
       }
 
       if (!galleryFilterBar || !galleryGrid) return;
