@@ -1,0 +1,731 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#f7f5f0">
+  <meta name="robots" content="index, follow">
+  <title>Gallery | AW3RY</title>
+  <meta name="description" content="AW3RY gallery — selected automotive photography and visual studies by Dawid Jagóra.">
+  <link rel="canonical" href="https://aw3ry.art/gallery.html">
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    :root {
+      --gallery-gap: clamp(0.75rem, 1.5vw, 1.1rem);
+    }
+
+    body {
+      background: #0d0d0d;
+      color: #f4f1eb;
+    }
+
+    .gallery-shell {
+      width: 100%;
+      margin: 0 auto;
+      padding: 0 0 clamp(3rem, 5vw, 5rem);
+      background: transparent;
+      position: relative;
+      z-index: 1;
+      display: flex;
+      justify-content: center;
+    }
+
+    .gallery-shell main {
+      width: min(100%, 1220px);
+      margin: 0 auto;
+      padding-left: clamp(1rem, 2vw, 2rem);
+      padding-right: clamp(1rem, 2vw, 2rem);
+    }
+
+    .gallery-topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.2rem 0 2.2rem;
+      border-bottom: 1px solid rgba(255,255,255,0.12);
+      margin-bottom: clamp(2rem, 5vw, 4rem);
+    }
+
+    .gallery-brand {
+      color: #f4f1eb;
+      font-family: 'Atavian', Arial, sans-serif;
+      font-size: clamp(1.5rem, 2vw, 2rem);
+      letter-spacing: -.05em;
+    }
+
+    .gallery-nav {
+      display: flex;
+      align-items: center;
+      gap: 1.1rem;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(244, 241, 235, 0.78);
+    }
+
+    .gallery-nav a {
+      transition: opacity 180ms ease, color 180ms ease;
+      color: rgba(244, 241, 235, 0.78);
+    }
+
+    .gallery-nav a:hover {
+      opacity: 1;
+      color: #fff;
+    }
+
+    .gallery-hero {
+      position: relative;
+      width: 100vw;
+      min-height: 100vh;
+      display: block;
+      padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
+      margin: 0 calc(50% - 50vw) clamp(4rem, 7vw, 6rem);
+      overflow: hidden;
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+      background: #0d0d0d;
+      text-align: center;
+    }
+
+    .gallery-hero-media {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+      background: #000;
+    }
+
+    .gallery-hero-slide {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      opacity: 0;
+      transform: scale(1.12);
+      transition: opacity 2.4s ease, transform 9s ease;
+      filter: grayscale(1) brightness(.52) contrast(1.05);
+    }
+
+    .gallery-hero-slide.is-active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .gallery-hero::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(circle at center, rgba(255,255,255,0.12), rgba(0,0,0,0.22) 42%, rgba(0,0,0,0.74) 100%);
+      filter: grayscale(1) brightness(.54) contrast(1.05);
+      transform: scale(1.05);
+      z-index: 1;
+    }
+
+    .gallery-hero::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.32));
+      pointer-events: none;
+    }
+
+    .gallery-hero-copy {
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      width: min(90vw, 700px);
+      text-align: center;
+      transform: translate(-50%, -50%);
+    }
+
+    .gallery-kicker {
+      margin: 0 0 0.7rem;
+      color: rgba(244, 241, 235, 0.7);
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .gallery-mode-label {
+      width: min(100%, 1220px);
+      margin: 0 auto 0.8rem;
+      padding: 0 clamp(1.2rem, 2vw, 2rem);
+      color: rgba(244, 241, 235, 0.7);
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+    }
+
+    .gallery-current-mode {
+      width: min(100%, 1220px);
+      margin: 0 auto 2rem;
+      padding: 0 clamp(1.2rem, 2vw, 2rem);
+      color: #f4f1eb;
+      font-family: 'Atavian', Arial, sans-serif;
+      font-size: clamp(2.8rem, 7vw, 6rem);
+      line-height: .88;
+      letter-spacing: -.06em;
+      font-weight: 400;
+      display: inline-block;
+      opacity: 1;
+      transform: translateY(0);
+      transition: opacity 220ms ease, transform 220ms ease;
+    }
+
+    .gallery-current-mode.is-changing {
+      opacity: 0;
+      transform: translateY(12px);
+    }
+
+    .gallery-filter-bar {
+      width: min(100%, 1220px);
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
+      margin: 0 auto 4rem;
+      padding: 1.2rem clamp(1.2rem, 2vw, 2rem) 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      scroll-margin-top: 110px;
+    }
+
+    .gallery-grid {
+      scroll-margin-top: 110px;
+    }
+
+    .gallery-filter {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 2rem;
+      padding: 0.2rem 0;
+      background: transparent;
+      border: none;
+      color: rgba(244, 241, 235, 0.62);
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      transition: color 180ms ease;
+    }
+
+    .gallery-filter::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -0.35rem;
+      height: 1px;
+      background: rgba(255,255,255,0.7);
+      transform: scaleX(0);
+      transform-origin: center;
+      transition: transform 220ms ease;
+    }
+
+    .gallery-filter:hover,
+    .gallery-filter:focus-visible {
+      color: rgba(255,255,255,0.96);
+    }
+
+    .gallery-filter.is-active {
+      color: #fff;
+    }
+
+    .gallery-filter.is-active::after {
+      transform: scaleX(1);
+    }
+
+    .gallery-title {
+      margin: 0;
+      color: #f3f0eb;
+      font-family: 'Atavian', Arial, sans-serif;
+      font-size: clamp(42px, 4.2vw, 60px);
+      line-height: .91;
+      letter-spacing: .01em;
+      font-weight: 400;
+      text-transform: uppercase;
+    }
+
+    .gallery-scroll {
+      position: absolute;
+      left: 50%;
+      bottom: clamp(22px, 3.6vh, 38px);
+      z-index: 2;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 3.5rem;
+      height: 3.5rem;
+      transform: translateX(-50%);
+      color: rgba(244, 241, 235, 0.9);
+      transition: opacity 200ms ease, transform 200ms ease;
+    }
+
+    .gallery-scroll:hover,
+    .gallery-scroll:focus-visible {
+      opacity: 1;
+      transform: translateX(-50%) translateY(2px);
+    }
+
+    .gallery-scroll svg {
+      display: block;
+      width: 2.7rem;
+      height: auto;
+      stroke: currentColor;
+      stroke-width: 1.6;
+      fill: none;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .gallery-grid {
+      width: min(100%, 1220px);
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: clamp(1.1rem, 2vw, 2rem);
+      margin: 0 auto;
+      justify-items: center;
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+      transition: opacity 260ms ease, filter 260ms ease, transform 260ms ease;
+    }
+
+    .gallery-grid.is-transitioning {
+      opacity: 0.12;
+      filter: blur(12px) brightness(0.75);
+      transform: scale(0.985);
+      transition: opacity 500ms ease 110ms, filter 500ms ease 110ms, transform 500ms ease 110ms;
+    }
+
+    .gallery-item {
+      position: relative;
+      display: block;
+      overflow: hidden;
+      background: #121212;
+      border: 1px solid rgba(255,255,255,0.08);
+      text-decoration: none;
+      transition: transform 220ms ease, border-color 220ms ease, box-shadow 220ms ease;
+      margin: 0;
+      padding: 0;
+      aspect-ratio: 3 / 4;
+    }
+
+    .gallery-item:hover {
+      transform: translateY(-2px);
+      border-color: rgba(255,255,255,0.18);
+      box-shadow: 0 18px 34px rgba(0,0,0,0.18);
+    }
+
+    .gallery-item img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      filter: contrast(1.08) saturate(.72) brightness(.9) grayscale(.1);
+      aspect-ratio: 3 / 4;
+      margin: 0;
+      border: 0;
+      transition: transform 700ms cubic-bezier(.16, 1, .3, 1), filter 700ms ease;
+    }
+
+    .gallery-item:hover img {
+      transform: scale(1.02);
+      filter: contrast(1.12) saturate(.8) brightness(.96) grayscale(0);
+    }
+
+    .gallery-label {
+      position: absolute;
+      left: 1rem;
+      bottom: 1rem;
+      padding: 0.5rem 0.7rem;
+      background: rgba(15,15,15,0.7);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: #f4f1eb;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      font-family: Arial, sans-serif;
+      backdrop-filter: blur(10px);
+    }
+
+    @media (max-width: 900px) {
+      .gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .gallery-topbar {
+        display: block;
+      }
+
+      .gallery-nav {
+        margin-top: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .gallery-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .gallery-item,
+      .gallery-item img {
+        aspect-ratio: 1.05;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page-loader" aria-hidden="true">
+    <div class="page-loader-brand">Gallery</div>
+  </div>
+
+  <header class="site-header" aria-label="Site header">
+    <div class="header-side header-side--left">
+      <button class="menu-button" id="menuToggle" type="button" aria-label="Open menu" aria-expanded="false" aria-controls="siteNav">
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+
+    <a class="header-link header-link--left is-active" href="gallery.html" aria-current="page" aria-label="Open gallery" data-scroll-top="true">Gallery</a>
+
+    <a class="logo" href="index.html" aria-label="AW3RY home">AW3RY<sup>*</sup></a>
+
+    <a class="header-link header-link--right" href="index.html#about" data-gallery-about="true" aria-label="Scroll to about section">About me</a>
+
+    <div class="header-side header-side--right">
+      <a class="envelope-button" href="index.html#contact" aria-label="Open contact section">
+        <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.1">
+          <rect x="2" y="5" width="16" height="11" />
+          <path d="M2.5 6 10 12 17.5 6" />
+        </svg>
+      </a>
+    </div>
+  </header>
+
+  <nav class="site-nav" id="siteNav" aria-label="Main navigation">
+    <div class="site-nav-panel">
+      <a href="#top" style="--i:0">Home</a>
+      <a href="#galleryFilterBar" style="--i:1">Filters</a>
+      <a href="#gallery" style="--i:2">Gallery</a>
+
+      <div class="site-nav-footer" style="--i:3">
+        © 2026 AW3RY / Dawid, Łódź.
+      </div>
+    </div>
+  </nav>
+
+  <div class="gallery-shell" id="top">
+    <main>
+      <section class="gallery-hero" aria-labelledby="gallery-title">
+        <div class="gallery-hero-media" aria-hidden="true">
+          <img class="gallery-hero-slide is-active" src="gallery/substance/_XM50033.webp" alt="">
+          <img class="gallery-hero-slide" src="gallery/kustom-movement/_XM50105.webp" alt="">
+          <img class="gallery-hero-slide" src="gallery/kustom-movement/FXM50165.webp" alt="">
+        </div>
+
+        <div class="media-controls" aria-label="Media controls">
+          <button class="media-button play-button" type="button" aria-label="Pause animation" aria-pressed="false">
+            <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+              <path class="pause-icon" d="M6.5 4v12M13.5 4v12" />
+              <path class="play-icon" d="m7 4.5 8 5.5-8 5.5z" />
+            </svg>
+          </button>
+        </div>
+
+        <button class="media-button sound-button" type="button" aria-label="Unmute sound" aria-pressed="true">
+          <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 8v4h3l4 3V5L6 8H3z" />
+            <path class="sound-wave" d="M13 8.5c1 1 1 2 0 3M15 6.5c2 2 2 5 0 7" />
+            <path class="sound-slash" d="m14 8.5 4 4M18 8.5l-4 4" />
+          </svg>
+        </button>
+
+        <div class="gallery-hero-copy">
+          <p class="gallery-kicker">Selected frames</p>
+          <h1 id="gallery-title" class="gallery-title">Gallery</h1>
+        </div>
+
+        <a class="gallery-scroll" href="#" aria-label="Scroll down slightly">
+          <svg viewBox="0 0 60 40" aria-hidden="true">
+            <path d="M12 12L30 28L48 12" />
+          </svg>
+        </a>
+      </section>
+
+      <p class="gallery-mode-label">Current Filter</p>
+      <h2 class="gallery-current-mode" id="galleryCurrentMode">All</h2>
+
+      <div class="gallery-filter-bar" id="galleryFilterBar" aria-label="Gallery filters">
+        <button class="gallery-filter is-active" type="button" data-filter="all">All</button>
+      </div>
+
+      <section class="gallery-grid" id="gallery" aria-label="AW3RY gallery"></section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <p>© <span id="year"></span> AW3RY / Dawid, Łódź.</p>
+  </footer>
+
+  <script src="js/main.js"></script>
+  <script>
+    const year = document.getElementById('year');
+    if (year) year.textContent = new Date().getFullYear();
+
+    const galleryHeader = document.querySelector('.site-header');
+    const galleryShell = document.querySelector('.gallery-shell');
+    const galleryFilterBar = document.getElementById('galleryFilterBar');
+    const galleryGrid = document.getElementById('gallery');
+    const galleryCurrentMode = document.getElementById('galleryCurrentMode');
+    const galleryHeroSlides = Array.from(document.querySelectorAll('.gallery-hero-slide'));
+    const galleryNavLink = document.querySelector('[data-scroll-top="true"]');
+    const galleryAboutLink = document.querySelector('[data-gallery-about="true"]');
+    const galleryNavAnchors = document.querySelectorAll('a[href="#top"], a[href="#gallery"], a[href="#galleryFilterBar"]');
+    let galleryHeroTimer = null;
+    let galleryAlbums = [];
+
+    function updateGalleryHeader() {
+      if (!galleryHeader || !galleryShell) return;
+      const earlyScrollThreshold = 24;
+      galleryHeader.classList.toggle('is-scrolled', window.scrollY > earlyScrollThreshold);
+    }
+
+    function slugify(value) {
+      return String(value)
+        .toLowerCase()
+        .trim()
+        .replace(/[_\s]+/g, '-')
+        .replace(/[^a-z0-9-]/g, '');
+    }
+
+    function getAllGalleryImages() {
+      return (galleryAlbums || []).flatMap((album) => Array.isArray(album.images) ? album.images : []);
+    }
+
+    function getRandomHeroImages(sourceImages = []) {
+      const images = sourceImages.length ? [...sourceImages] : getAllGalleryImages();
+      if (!images.length) return [];
+
+      for (let i = images.length - 1; i > 0; i -= 1) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [images[i], images[j]] = [images[j], images[i]];
+      }
+
+      return images.slice(0, Math.min(3, images.length));
+    }
+
+    function updateHeroSlides(images) {
+      const heroImages = images && images.length ? images : getRandomHeroImages();
+
+      galleryHeroSlides.forEach((slide, index) => {
+        slide.src = heroImages[index % heroImages.length] || heroImages[0];
+        slide.classList.remove('is-active');
+      });
+
+      window.setTimeout(() => {
+        galleryHeroSlides.forEach((slide, index) => {
+          slide.classList.toggle('is-active', index === 0);
+          void slide.offsetWidth;
+        });
+      }, 30);
+
+      if (galleryHeroTimer) {
+        clearInterval(galleryHeroTimer);
+      }
+
+      galleryHeroTimer = window.setInterval(() => {
+        if (!galleryHeroSlides.length) return;
+        const activeIndex = galleryHeroSlides.findIndex((slide) => slide.classList.contains('is-active'));
+        const nextIndex = activeIndex >= 0 ? (activeIndex + 1) % galleryHeroSlides.length : 0;
+
+        galleryHeroSlides.forEach((slide, index) => {
+          slide.classList.remove('is-active');
+        });
+
+        window.setTimeout(() => {
+          galleryHeroSlides.forEach((slide, index) => {
+            slide.classList.toggle('is-active', index === nextIndex);
+            void slide.offsetWidth;
+          });
+        }, 30);
+      }, 6500);
+    }
+
+    function updateHeroForFilter(filterName) {
+      const selectedAlbum = galleryAlbums.find((album) => slugify(album.name || album.title || 'album') === filterName);
+      const albumImages = selectedAlbum && Array.isArray(selectedAlbum.images) ? selectedAlbum.images : getRandomHeroImages(getAllGalleryImages());
+      updateHeroSlides(albumImages);
+    }
+
+    function applyGalleryFilters() {
+      const filterButtons = galleryFilterBar ? galleryFilterBar.querySelectorAll('.gallery-filter') : [];
+      const galleryItems = galleryGrid ? galleryGrid.querySelectorAll('.gallery-item') : [];
+
+      filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          const selectedFilter = button.dataset.filter;
+          const selectedLabel = button.textContent.trim();
+
+          if (galleryCurrentMode) {
+            galleryCurrentMode.classList.add('is-changing');
+
+            window.setTimeout(() => {
+              galleryCurrentMode.textContent = selectedLabel;
+              galleryCurrentMode.classList.remove('is-changing');
+            }, 120);
+          }
+
+          updateHeroForFilter(selectedFilter);
+
+          if (!galleryGrid) return;
+
+          galleryGrid.classList.add('is-transitioning');
+
+          window.setTimeout(() => {
+            filterButtons.forEach((item) => item.classList.toggle('is-active', item === button));
+
+            galleryItems.forEach((item) => {
+              const matches = selectedFilter === 'all' || item.dataset.event === selectedFilter;
+              item.style.display = matches ? '' : 'none';
+            });
+
+            galleryGrid.classList.remove('is-transitioning');
+          }, 220);
+        });
+      });
+    }
+
+    async function loadGalleryData() {
+      const fallbackData = {
+        albums: [
+          {
+            name: 'substance',
+            title: 'Substance',
+            images: ['gallery/substance/_XM50033.webp', 'gallery/substance/_XM50106.webp', 'gallery/substance/_XM50395.webp']
+          },
+          {
+            name: 'kustom-movement',
+            title: 'Kustom Movement',
+            images: ['gallery/kustom-movement/_XM50105.webp', 'gallery/kustom-movement/FXM50165.webp', 'gallery/kustom-movement/FXM50233.webp']
+          }
+        ]
+      };
+
+      let data = fallbackData;
+
+      try {
+        const response = await fetch('gallery-data.json', { cache: 'no-store' });
+        if (response.ok) {
+          const json = await response.json();
+          if (json && Array.isArray(json.albums)) {
+            data = json;
+          }
+        }
+      } catch (error) {
+        console.warn('Gallery JSON not found, using fallback gallery data.', error);
+      }
+
+      if (!galleryFilterBar || !galleryGrid) return;
+
+      galleryFilterBar.innerHTML = '<button class="gallery-filter is-active" type="button" data-filter="all">All</button>';
+      galleryGrid.innerHTML = '';
+
+      const albums = Array.isArray(data.albums) ? data.albums : [];
+      galleryAlbums = albums;
+
+      albums.forEach((album) => {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'gallery-filter';
+        button.dataset.filter = slugify(album.name || album.title || 'album');
+        button.textContent = album.title || album.name || 'Gallery';
+        galleryFilterBar.appendChild(button);
+
+        (album.images || []).forEach((imagePath, index) => {
+          const item = document.createElement('a');
+          item.className = 'gallery-item';
+          if (index % 3 === 1) {
+            item.classList.add('gallery-item--tall');
+          }
+          item.href = 'index.html#instagram';
+          item.dataset.event = button.dataset.filter;
+          item.setAttribute('aria-label', `${album.title || album.name || 'Gallery'} image ${index + 1}`);
+          item.innerHTML = `
+            <img src="${imagePath}" alt="${album.title || album.name || 'Gallery'} image ${index + 1}">
+            <span class="gallery-label">${String(index + 1).padStart(2, '0')}</span>
+          `;
+
+          galleryGrid.appendChild(item);
+        });
+      });
+
+      applyGalleryFilters();
+      updateHeroForFilter('all');
+    }
+
+    if (galleryNavLink) {
+      galleryNavLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.scrollTo({
+          top: 0,
+          left: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+
+    if (galleryAboutLink) {
+      galleryAboutLink.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.location.href = 'index.html#about';
+      });
+    }
+
+    galleryNavAnchors.forEach((anchor) => {
+      anchor.addEventListener('click', (event) => {
+        const targetId = anchor.getAttribute('href');
+        if (!targetId || !targetId.startsWith('#')) return;
+        const target = document.querySelector(targetId);
+        if (!target) return;
+
+        event.preventDefault();
+
+        const offset = targetId === '#top' ? 0 : 96;
+        const targetTop = target.getBoundingClientRect().top + window.scrollY - offset;
+
+        window.scrollTo({
+          top: targetTop,
+          left: 0,
+          behavior: 'smooth'
+        });
+      });
+    });
+
+    const galleryScroll = document.querySelector('.gallery-scroll');
+    if (galleryScroll) {
+      galleryScroll.addEventListener('click', (event) => {
+        event.preventDefault();
+        window.scrollBy({
+          top: 180,
+          left: 0,
+          behavior: 'smooth'
+        });
+      });
+    }
+
+    window.addEventListener('scroll', updateGalleryHeader, { passive: true });
+    updateGalleryHeader();
+    loadGalleryData();
+  </script>
+</body>
+</html>
