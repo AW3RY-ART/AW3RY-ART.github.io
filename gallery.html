@@ -28,7 +28,11 @@
   <link rel="icon" href="assets/favicon/favicon.svg" type="image/svg+xml">
   <link rel="sitemap" type="application/xml" href="/sitemap.xml">
   <link rel="stylesheet" href="css/style.css">
-  <script src="gallery-data.js"></script>
+  <script>
+    const galleryDataScript = document.createElement('script');
+    galleryDataScript.src = 'gallery-data.js?v=' + Date.now();
+    document.head.appendChild(galleryDataScript);
+  </script>
 
   <script type="application/ld+json">
   {
@@ -694,11 +698,16 @@
           if (index % 3 === 1) {
             item.classList.add('gallery-item--tall');
           }
-          item.href = 'index.html#instagram';
+          item.href = '#';
           item.dataset.event = button.dataset.filter;
           item.setAttribute('aria-label', `${album.title || album.name || 'Gallery'} image ${index + 1}`);
+          item.addEventListener('click', (event) => {
+            event.preventDefault();
+            event.stopPropagation();
+          });
+          const encodedImagePath = encodeURI(imagePath);
           item.innerHTML = `
-            <img src="${imagePath}" alt="AW3RY ${album.title || album.name || 'Gallery'} automotive photography by Dawid Jagóra, image ${index + 1}">
+            <img src="${encodedImagePath}" alt="AW3RY ${album.title || album.name || 'Gallery'} automotive photography by Dawid Jagóra, image ${index + 1}">
             <span class="gallery-label">${String(index + 1).padStart(2, '0')}</span>
           `;
 
