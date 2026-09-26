@@ -43,7 +43,6 @@
         "gallery/substance/_XM50276 (2).webp",
         "gallery/substance/_XM50279 (1).webp",
         "gallery/substance/_XM50279 (2).webp",
-        "gallery/substance/_XM50279.webp",
         "gallery/substance/_XM50291.webp",
         "gallery/substance/_XM50305.webp",
         "gallery/substance/_XM50311.webp",
@@ -55,7 +54,6 @@
         "gallery/substance/zdjecie_11.webp",
         "gallery/substance/zdjecie_5.webp",
         "gallery/substance/zdjecie_6.webp",
-        "gallery/substance/zdjecie_7.webp",
         "gallery/substance/zdjecie_8.webp"
       ]
     }
@@ -262,86 +260,74 @@
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50279.webp",
+      "image": "gallery/substance/_XM50291.webp",
       "label": "20"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50291.webp",
+      "image": "gallery/substance/_XM50305.webp",
       "label": "21"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50305.webp",
+      "image": "gallery/substance/_XM50311.webp",
       "label": "22"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50311.webp",
+      "image": "gallery/substance/_XM50343.webp",
       "label": "23"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50343.webp",
+      "image": "gallery/substance/_XM50351.webp",
       "label": "24"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50351.webp",
+      "image": "gallery/substance/_XM50354.webp",
       "label": "25"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50354.webp",
+      "image": "gallery/substance/_XM50371.webp",
       "label": "26"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50371.webp",
+      "image": "gallery/substance/_XM50395.webp",
       "label": "27"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/_XM50395.webp",
+      "image": "gallery/substance/zdjecie_11.webp",
       "label": "28"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/zdjecie_11.webp",
+      "image": "gallery/substance/zdjecie_5.webp",
       "label": "29"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/zdjecie_5.webp",
+      "image": "gallery/substance/zdjecie_6.webp",
       "label": "30"
     },
     {
       "album": "substance",
       "albumTitle": "Substance",
-      "image": "gallery/substance/zdjecie_6.webp",
-      "label": "31"
-    },
-    {
-      "album": "substance",
-      "albumTitle": "Substance",
-      "image": "gallery/substance/zdjecie_7.webp",
-      "label": "32"
-    },
-    {
-      "album": "substance",
-      "albumTitle": "Substance",
       "image": "gallery/substance/zdjecie_8.webp",
-      "label": "33"
+      "label": "31"
     }
   ]
 }
