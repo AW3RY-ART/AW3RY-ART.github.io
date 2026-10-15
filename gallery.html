@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#f7f5f0">
+  <meta name="theme-color" content="#f7f7f7">
   <meta name="robots" content="index, follow">
   <title>Gallery | AW3RY — Automotive Photography by Dawid Jagóra</title>
   <meta name="description" content="AW3RY gallery — selected automotive photography and visual studies by Dawid Jagóra, based in Łódź, Poland.">
@@ -435,7 +435,7 @@
 
     <a class="logo" href="index.html" aria-label="AW3RY home">AW3RY<sup>*</sup></a>
 
-    <a class="header-link header-link--right" href="index.html#about" data-gallery-about="true" aria-label="Scroll to about section">About me</a>
+    <a class="header-link header-link--right" href="index.html#about" aria-label="About Dawid">About me</a>
 
     <div class="header-side header-side--right">
       <a class="envelope-button" href="index.html#contact" aria-label="Open contact section">
@@ -524,7 +524,6 @@
     const galleryCurrentMode = document.getElementById('galleryCurrentMode');
     const galleryHeroSlides = Array.from(document.querySelectorAll('.gallery-hero-slide'));
     const galleryNavLink = document.querySelector('[data-scroll-top="true"]');
-    const galleryAboutLink = document.querySelector('[data-gallery-about="true"]');
     const galleryNavAnchors = document.querySelectorAll('a[href="#top"], a[href="#gallery"], a[href="#galleryFilterBar"]');
     let galleryHeroTimer = null;
     let galleryAlbums = [];
@@ -715,8 +714,27 @@
         });
       });
 
+      if (!albums.some((album) => slugify(album.name || album.title || 'album') === 'bring-the-nine')) {
+        const button = document.createElement('button');
+        button.type = 'button';
+        button.className = 'gallery-filter';
+        button.dataset.filter = 'bring-the-nine';
+        button.textContent = 'Bring The Nine';
+        galleryFilterBar.appendChild(button);
+      }
+
       applyGalleryFilters();
       updateHeroForFilter('all');
+      const requestedFilter = new URLSearchParams(window.location.search).get('filter');
+      const requestedButton = Array.from(galleryFilterBar.querySelectorAll('.gallery-filter'))
+        .find((button) => button.dataset.filter === requestedFilter);
+      if (requestedButton) {
+        requestedButton.click();
+        window.setTimeout(() => {
+          const targetTop = galleryGrid.getBoundingClientRect().top + window.scrollY - 350;
+          window.scrollTo({ top: targetTop, behavior: 'smooth' });
+        }, 240);
+      }
     }
 
     if (galleryNavLink) {
@@ -727,13 +745,6 @@
           left: 0,
           behavior: 'smooth'
         });
-      });
-    }
-
-    if (galleryAboutLink) {
-      galleryAboutLink.addEventListener('click', (event) => {
-        event.preventDefault();
-        window.location.href = 'index.html#about';
       });
     }
 
