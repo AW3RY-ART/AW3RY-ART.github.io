@@ -40,6 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initWheelSmoothing();
   initAboutTextReveal();
   initAboutTitleScrollReveal();
+  initContactTitleReveal();
   initAboutCopyScrollReveal();
   initAboutParallax();
   initInstagramParallax();
@@ -242,7 +243,7 @@ function initAboutTitleScrollReveal() {
           mask.classList.add('about-title-word--instagram');
           inner.classList.add('about-title-word-inner--instagram');
         }
-        if (about.id === 'services' && word.toLowerCase() === 'you') {
+        if (about.id === 'services' && word.toLowerCase() === 'here') {
           inner.classList.add('about-title-word-inner--accent');
         }
         inner.textContent = word;
@@ -295,6 +296,32 @@ function initAboutTitleScrollReveal() {
     window.addEventListener('resize', scheduleUpdate);
     scheduleUpdate();
   });
+}
+
+function initContactTitleReveal() {
+  const title = document.querySelector('#contact .contact-title');
+  if (!title || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  title.classList.add('is-reveal-ready');
+  let animationFrame = null;
+  const updateReveal = () => {
+    const viewportHeight = window.innerHeight;
+    const titleTop = title.getBoundingClientRect().top;
+    const start = viewportHeight * 0.92;
+    const end = viewportHeight * 0.42;
+    const progress = Math.min(1, Math.max(0, (start - titleTop) / (start - end)));
+    const easedProgress = progress * progress * (3 - 2 * progress);
+    title.style.setProperty('--contact-title-reveal', easedProgress);
+    animationFrame = null;
+  };
+  const scheduleUpdate = () => {
+    if (animationFrame !== null) return;
+    animationFrame = window.requestAnimationFrame(updateReveal);
+  };
+
+  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+  window.addEventListener('resize', scheduleUpdate);
+  scheduleUpdate();
 }
 
 function initAboutCopyScrollReveal() {
@@ -391,12 +418,16 @@ function initInstagramParallax() {
 }
 
 function initSectionParallaxGlows() {
-  const glowLayers = document.querySelectorAll('.section-parallax-glow [data-section-parallax-depth]');
-  if (!glowLayers.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const glowLayers = document.querySelectorAll('.section-parallax-glow [data-section-parallax-depth], .closing-atmosphere-pattern [data-section-parallax-depth]');
+  const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!glowLayers.length) return;
+  const closingGlow = document.querySelector('.closing-atmosphere-glow');
+  if (closingGlow && !reducedMotion) closingGlow.classList.add('is-scroll-reveal-ready');
+  if (reducedMotion) return;
 
   const sections = new Map();
   glowLayers.forEach((layer) => {
-    const section = layer.closest('section');
+    const section = layer.closest('.closing-atmosphere, section');
     if (!section) return;
     const layers = sections.get(section) || [];
     layers.push(layer);
@@ -406,8 +437,30 @@ function initSectionParallaxGlows() {
   let animationFrame = null;
   const updateParallax = () => {
     sections.forEach((layers, section) => {
-      const sectionProgress = (window.innerHeight - section.getBoundingClientRect().top) / (window.innerHeight + section.offsetHeight);
-      const scrollDistance = (sectionProgress - 0.5) * 260;
+      const sectionTop = section.getBoundingClientRect().top;
+      const sectionProgress = (window.innerHeight - sectionTop) / (window.innerHeight + section.offsetHeight);
+      const parallaxRange = Number(section.dataset.sectionParallaxRange) || 260;
+      const scrollDistance = section.matches('.closing-atmosphere')
+        ? -Math.min(1, Math.max(0, -sectionTop / Math.max(1, section.offsetHeight - window.innerHeight))) * parallaxRange
+        : (sectionProgress - 0.5) * parallaxRange;
+      const services = section.matches('.closing-atmosphere') ? section.querySelector('.services') : null;
+      if (services) {
+        const cutoffStart = Number(section.dataset.sectionCutoffStart) || 0;
+        const cutoffEnd = Number(section.dataset.sectionCutoffEnd) || 1;
+        const servicesProgress = (window.innerHeight - services.getBoundingClientRect().top) / (window.innerHeight + services.offsetHeight);
+        const cutoffProgress = Math.min(1, Math.max(0, (servicesProgress - cutoffStart) / Math.max(0.001, cutoffEnd - cutoffStart)));
+        if (closingGlow) {
+          const glowRevealStart = Math.max(0, cutoffStart - 0.18);
+          const glowProgress = Math.min(1, Math.max(0, (servicesProgress - glowRevealStart) / (1 - glowRevealStart)));
+          const easedReveal = glowProgress * glowProgress * (3 - 2 * glowProgress);
+          closingGlow.style.setProperty('--closing-glow-reveal', easedReveal);
+        }
+        const currentShift = Number.parseFloat(getComputedStyle(services).getPropertyValue('--services-cutoff-shift')) || 0;
+        const currentPanelHeight = Number.parseFloat(getComputedStyle(services, '::before').height);
+        const cutoffRange = Math.max(0, services.offsetHeight - currentPanelHeight + currentShift);
+        const easedCutoffProgress = cutoffProgress * cutoffProgress * (3 - 2 * cutoffProgress);
+        services.style.setProperty('--services-cutoff-shift', `${easedCutoffProgress * cutoffRange}px`);
+      }
       layers.forEach((layer) => {
         const depth = Number(layer.dataset.sectionParallaxDepth);
         layer.style.transform = `translate3d(0, ${scrollDistance * depth}px, 0)`;
@@ -460,12 +513,14 @@ function initServicesComingSoon() {
   const section = document.querySelector('#services.services');
   const notification = document.querySelector('#servicesComingSoon');
   const serviceButtons = section?.querySelectorAll('.service-pill');
-  if (!notification || !serviceButtons?.length) return;
+  if (!serviceButtons?.length) return;
 
   let dismissTimer = null;
   let hideTimer = null;
   serviceButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      if (!notification) return;
+
       window.clearTimeout(dismissTimer);
       window.clearTimeout(hideTimer);
       notification.textContent = 'Coming soon';
