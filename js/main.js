@@ -41,6 +41,13 @@ document.addEventListener('DOMContentLoaded', () => {
   initAboutTextReveal();
   initAboutTitleScrollReveal();
   initAboutCopyScrollReveal();
+  initAboutParallax();
+  initInstagramParallax();
+  initSectionParallaxGlows();
+  initFutureGoalReveal();
+  initFutureMarquee();
+  initServicesComingSoon();
+  initDriverLicenseToast();
   initFutureTransition();
   initGalleryProjectLoop();
   initCursorGlow();
@@ -99,6 +106,7 @@ function initGalleryProjectLoop() {
   let maxTrackOffset = 0;
   let sectionDocumentTop = showcase.getBoundingClientRect().top + window.scrollY;
   let animationFrame = null;
+  const disableScrollBlur = window.matchMedia('(max-width: 760px) and (pointer: coarse)').matches;
 
   const getScrollDistance = () => Math.max(1, showcase.offsetHeight - stickyContent.offsetHeight);
   const buildTrack = () => {
@@ -137,7 +145,7 @@ function initGalleryProjectLoop() {
       const edgeRatio = Math.min(1, distance / (windowBounds.height * .5));
       const scaleProgress = Math.log1p(9 * edgeRatio) / Math.log(10);
       const scale = 1 - scaleProgress * .1;
-      const blur = Math.max(0, (edgeRatio - .55) / .45) * 4;
+      const blur = disableScrollBlur ? 0 : Math.max(0, (edgeRatio - .55) / .45) * 4;
       title.style.setProperty('--project-title-weight', `${(weight * 100).toFixed(1)}%`);
       title.style.setProperty('--project-title-scale', scale.toFixed(3));
       title.style.setProperty('--project-title-blur', `${blur.toFixed(2)}px`);
@@ -214,49 +222,109 @@ function initAboutTextReveal() {
 }
 
 function initAboutTitleScrollReveal() {
-  const about = document.querySelector('#about.about');
-  const title = about?.querySelector('.section-title');
-  const titleLines = title?.querySelectorAll('.about-title-line');
-  if (!about || !title || !titleLines?.length) return;
+  const aboutSections = document.querySelectorAll('#about.about, #instagram.instagram-feature, #services.services');
+  aboutSections.forEach((about) => {
+    const title = about.querySelector('.section-title');
+    const titleLines = title?.querySelectorAll('.about-title-line');
+    if (!title || !titleLines?.length) return;
 
-  about.classList.add('has-about-title-scroll-reveal');
-  const words = [];
-  titleLines.forEach((line) => {
-    const lineWords = line.textContent.trim().split(/\s+/);
-    line.replaceChildren();
-    lineWords.forEach((word, index) => {
-      const mask = document.createElement('span');
-      const inner = document.createElement('span');
-      mask.className = 'about-title-word';
-      inner.className = 'about-title-word-inner';
-      inner.textContent = word;
-      mask.append(inner);
-      line.append(mask);
-      if (index < lineWords.length - 1) line.append(document.createTextNode(' '));
-      words.push(inner);
+    about.classList.add('has-about-title-scroll-reveal');
+    const words = [];
+    titleLines.forEach((line) => {
+      const lineWords = line.textContent.trim().split(/\s+/);
+      line.replaceChildren();
+      lineWords.forEach((word, index) => {
+        const mask = document.createElement('span');
+        const inner = document.createElement('span');
+        mask.className = 'about-title-word';
+        inner.className = 'about-title-word-inner';
+        if (about.id === 'instagram' && word.toLowerCase() === 'instagram') {
+          mask.classList.add('about-title-word--instagram');
+          inner.classList.add('about-title-word-inner--instagram');
+        }
+        if (about.id === 'services' && word.toLowerCase() === 'you') {
+          inner.classList.add('about-title-word-inner--accent');
+        }
+        inner.textContent = word;
+        mask.append(inner);
+        line.append(mask);
+        if (index < lineWords.length - 1) line.append(document.createTextNode(' '));
+        words.push(inner);
+      });
     });
+
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      words.forEach((word) => {
+        word.style.setProperty('--about-title-progress', '0%');
+        word.style.setProperty('--about-title-opacity', '1');
+        word.style.setProperty('--about-title-blur', '0px');
+        word.style.setProperty('--about-title-bleed', '0');
+      });
+      return;
+    }
+
+    let animationFrame = null;
+    const updateReveal = () => {
+      const viewportHeight = window.innerHeight;
+      const titleTop = title.getBoundingClientRect().top;
+      const isServicesTitle = about.id === 'services';
+      const revealStart = viewportHeight * (isServicesTitle ? 1 : 0.92);
+      const revealEnd = viewportHeight * (isServicesTitle ? 0.365 : 0.2);
+      const overallProgress = Math.min(1, Math.max(0, (revealStart - titleTop) / (revealStart - revealEnd)));
+      const overlap = 3.4;
+      const wordStep = 1 / Math.max(1, words.length - 1 + overlap);
+      const wordDuration = wordStep * overlap;
+
+      words.forEach((word, index) => {
+        const progress = Math.min(1, Math.max(0, (overallProgress - index * wordStep) / wordDuration));
+        word.style.setProperty('--about-title-progress', `${(1 - progress) * -110}%`);
+        word.style.setProperty('--about-title-opacity', `${progress}`);
+        const finalBlur = word.classList.contains('about-title-word-inner--instagram') ? .6 : 0;
+        word.style.setProperty('--about-title-blur', `${(1 - progress) * 8 + progress * finalBlur}px`);
+        word.style.setProperty('--about-title-bleed', `${(1 - progress) * 0.2}`);
+      });
+      animationFrame = null;
+    };
+
+    const scheduleUpdate = () => {
+      if (animationFrame !== null) return;
+      animationFrame = window.requestAnimationFrame(updateReveal);
+    };
+
+    window.addEventListener('scroll', scheduleUpdate, { passive: true });
+    window.addEventListener('resize', scheduleUpdate);
+    scheduleUpdate();
   });
+}
+
+function initAboutCopyScrollReveal() {
+  const about = document.querySelector('#about.about');
+  const copy = about?.querySelector('.about-copy-scroll');
+  if (!about || !copy) return;
 
   if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    words.forEach((word) => word.style.setProperty('--about-title-progress', '0%'));
+    copy.style.setProperty('--about-copy-scroll-y', '0px');
+    copy.style.setProperty('--about-copy-scroll-blur', '0px');
+    copy.style.setProperty('--about-copy-bg-blur', '0px');
+    copy.style.setProperty('--about-copy-bg-opacity', '0');
+    about.style.setProperty('--about-parallax-blur', '0px');
     return;
   }
 
   let animationFrame = null;
   const updateReveal = () => {
     const viewportHeight = window.innerHeight;
-    const titleTop = title.getBoundingClientRect().top;
-    const revealStart = viewportHeight * 0.92;
-    const revealEnd = viewportHeight * 0.2;
-    const overallProgress = Math.min(1, Math.max(0, (revealStart - titleTop) / (revealStart - revealEnd)));
-    const overlap = 3.4;
-    const wordStep = 1 / Math.max(1, words.length - 1 + overlap);
-    const wordDuration = wordStep * overlap;
-
-    words.forEach((word, index) => {
-      const progress = Math.min(1, Math.max(0, (overallProgress - index * wordStep) / wordDuration));
-      word.style.setProperty('--about-title-progress', `${(1 - progress) * -110}%`);
-    });
+    const copyTop = copy.getBoundingClientRect().top;
+    const revealStart = viewportHeight * 0.78;
+    const revealEnd = viewportHeight * 0.28;
+    const progress = Math.min(1, Math.max(0, (revealStart - copyTop) / (revealStart - revealEnd)));
+    const blurProgress = Math.min(1, progress / 0.75);
+    copy.style.setProperty('--about-copy-scroll-y', `${(1 - progress) * 100}px`);
+    copy.style.setProperty('--about-copy-scroll-blur', `${(1 - blurProgress) * 3}px`);
+    copy.style.setProperty('--about-copy-bg-blur', `${blurProgress * 8}px`);
+    copy.style.setProperty('--about-copy-bg-opacity', `${progress * 0.55}`);
+    const parallaxBlurProgress = Math.max(0, (blurProgress - 0.55) / 0.45);
+    about.style.setProperty('--about-parallax-blur', `${parallaxBlurProgress * parallaxBlurProgress * 2}px`);
     animationFrame = null;
   };
 
@@ -270,35 +338,234 @@ function initAboutTitleScrollReveal() {
   scheduleUpdate();
 }
 
-function initAboutCopyScrollReveal() {
-  const about = document.querySelector('#about.about');
-  const copy = about?.querySelector('.about-copy-scroll');
-  if (!about || !copy) return;
-
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    copy.style.setProperty('--about-copy-scroll-y', '0px');
-    return;
-  }
+function initAboutParallax() {
+  const about = document.querySelector('#about.about-feature');
+  const shapes = about?.querySelectorAll('[data-parallax-depth]');
+  if (!about || !shapes?.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   let animationFrame = null;
-  const updateReveal = () => {
-    const viewportHeight = window.innerHeight;
-    const copyTop = copy.getBoundingClientRect().top;
-    const revealStart = viewportHeight * 1.12;
-    const revealEnd = viewportHeight * 0.48;
-    const progress = Math.max(0, (revealStart - copyTop) / (revealStart - revealEnd));
-    copy.style.setProperty('--about-copy-scroll-y', `${(1 - progress) * 100}px`);
+  const updateParallax = () => {
+    const sectionProgress = (window.innerHeight - about.getBoundingClientRect().top) / (window.innerHeight + about.offsetHeight);
+    const scrollDistance = (sectionProgress - 0.5) * 420;
+    shapes.forEach((shape) => {
+      const depth = Number(shape.dataset.parallaxDepth);
+      shape.style.transform = `translate3d(0, ${scrollDistance * depth}px, 0)`;
+    });
     animationFrame = null;
   };
 
   const scheduleUpdate = () => {
     if (animationFrame !== null) return;
-    animationFrame = window.requestAnimationFrame(updateReveal);
+    animationFrame = window.requestAnimationFrame(updateParallax);
   };
 
   window.addEventListener('scroll', scheduleUpdate, { passive: true });
   window.addEventListener('resize', scheduleUpdate);
   scheduleUpdate();
+}
+
+function initInstagramParallax() {
+  const section = document.querySelector('#instagram.instagram-feature');
+  const parallaxItems = section?.querySelectorAll('[data-instagram-parallax], [data-instagram-orb-depth]');
+  if (!section || !parallaxItems?.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  let animationFrame = null;
+  const updateParallax = () => {
+    const sectionProgress = (window.innerHeight - section.getBoundingClientRect().top) / (window.innerHeight + section.offsetHeight);
+    const scrollDistance = (sectionProgress - 0.5) * 480;
+    parallaxItems.forEach((item) => {
+      const depth = Number(item.dataset.instagramParallax ?? item.dataset.instagramOrbDepth);
+      item.style.transform = `translate3d(0, ${scrollDistance * depth}px, 0)`;
+    });
+    animationFrame = null;
+  };
+
+  const scheduleUpdate = () => {
+    if (animationFrame !== null) return;
+    animationFrame = window.requestAnimationFrame(updateParallax);
+  };
+
+  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+  window.addEventListener('resize', scheduleUpdate);
+  scheduleUpdate();
+}
+
+function initSectionParallaxGlows() {
+  const glowLayers = document.querySelectorAll('.section-parallax-glow [data-section-parallax-depth]');
+  if (!glowLayers.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const sections = new Map();
+  glowLayers.forEach((layer) => {
+    const section = layer.closest('section');
+    if (!section) return;
+    const layers = sections.get(section) || [];
+    layers.push(layer);
+    sections.set(section, layers);
+  });
+
+  let animationFrame = null;
+  const updateParallax = () => {
+    sections.forEach((layers, section) => {
+      const sectionProgress = (window.innerHeight - section.getBoundingClientRect().top) / (window.innerHeight + section.offsetHeight);
+      const scrollDistance = (sectionProgress - 0.5) * 260;
+      layers.forEach((layer) => {
+        const depth = Number(layer.dataset.sectionParallaxDepth);
+        layer.style.transform = `translate3d(0, ${scrollDistance * depth}px, 0)`;
+      });
+    });
+    animationFrame = null;
+  };
+  const scheduleUpdate = () => {
+    if (animationFrame !== null) return;
+    animationFrame = window.requestAnimationFrame(updateParallax);
+  };
+
+  window.addEventListener('scroll', scheduleUpdate, { passive: true });
+  window.addEventListener('resize', scheduleUpdate);
+  scheduleUpdate();
+}
+
+function initFutureGoalReveal() {
+  const grid = document.querySelector('.future-goals-grid');
+  const cells = grid?.querySelectorAll('.future-goal-cell');
+  if (!grid || !cells?.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  grid.classList.add('has-future-goal-reveal');
+  cells.forEach((cell, index) => {
+    cell.style.setProperty('--future-goal-reveal-delay', `${(index % 4) * 90}ms`);
+  });
+
+  const observer = new IntersectionObserver((entries, currentObserver) => {
+    entries.forEach((entry) => {
+      if (!entry.isIntersecting) return;
+      entry.target.classList.add('is-visible');
+      currentObserver.unobserve(entry.target);
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -8% 0px' });
+
+  cells.forEach((cell) => observer.observe(cell));
+}
+
+function initFutureMarquee() {
+  const marquee = document.querySelector('.future-marquee');
+  if (!marquee || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+  const observer = new IntersectionObserver(([entry]) => {
+    marquee.classList.toggle('is-active', entry.isIntersecting);
+  });
+  observer.observe(marquee);
+}
+
+function initServicesComingSoon() {
+  const section = document.querySelector('#services.services');
+  const notification = document.querySelector('#servicesComingSoon');
+  const serviceButtons = section?.querySelectorAll('.service-pill');
+  if (!notification || !serviceButtons?.length) return;
+
+  let dismissTimer = null;
+  let hideTimer = null;
+  serviceButtons.forEach((button) => {
+    button.addEventListener('click', () => {
+      window.clearTimeout(dismissTimer);
+      window.clearTimeout(hideTimer);
+      notification.textContent = 'Coming soon';
+      notification.hidden = false;
+      requestAnimationFrame(() => notification.classList.add('is-visible'));
+      dismissTimer = window.setTimeout(() => {
+        notification.classList.remove('is-visible');
+        hideTimer = window.setTimeout(() => {
+          notification.hidden = true;
+        }, 440);
+      }, 2400);
+    });
+  });
+}
+
+function initDriverLicenseToast() {
+  const hero = document.querySelector('.page');
+  const toast = document.querySelector('#driverLicenseToast');
+  const toggle = toast?.querySelector('.driver-license-toggle');
+  const details = toast?.querySelector('.driver-license-toast-details');
+  if (!hero || !toast || !toggle || !details) return;
+  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
+  const hasReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  toggle.addEventListener('click', () => {
+    const isExpanded = toggle.getAttribute('aria-expanded') === 'true';
+    toggle.setAttribute('aria-expanded', String(!isExpanded));
+    details.setAttribute('aria-hidden', String(isExpanded));
+    details.inert = isExpanded;
+    toast.classList.toggle('is-expanded', !isExpanded);
+  });
+
+  let visibilityFrame = null;
+  let magnetFrame = null;
+  let targetOffset = 0;
+  let currentOffset = 0;
+  const maxOffset = 12;
+  const activationDistance = 80;
+
+  const animateMagnet = () => {
+    currentOffset += (targetOffset - currentOffset) * .16;
+    if (Math.abs(targetOffset - currentOffset) < .1) currentOffset = targetOffset;
+    toast.style.setProperty('--magnetic-x', `${currentOffset.toFixed(2)}px`);
+    if (currentOffset !== targetOffset) {
+      magnetFrame = window.requestAnimationFrame(animateMagnet);
+    } else {
+      magnetFrame = null;
+    }
+  };
+  const setMagnetTarget = (offset) => {
+    targetOffset = offset;
+    if (magnetFrame === null) magnetFrame = window.requestAnimationFrame(animateMagnet);
+  };
+  const updateMagnet = (event) => {
+    if (event.pointerType !== 'mouse' || !toast.classList.contains('is-visible')) return;
+    const bounds = toast.getBoundingClientRect();
+    const nearestX = Math.max(bounds.left, Math.min(event.clientX, bounds.right));
+    const nearestY = Math.max(bounds.top, Math.min(event.clientY, bounds.bottom));
+    const distanceX = event.clientX - nearestX;
+    const distanceY = event.clientY - nearestY;
+    const distance = Math.hypot(distanceX, distanceY);
+    if (distance > activationDistance) {
+      setMagnetTarget(0);
+      return;
+    }
+    const attraction = 1 - distance / activationDistance;
+    const distanceFromCenter = event.clientX - (bounds.left + bounds.width / 2);
+    const baseCenter = bounds.left + bounds.width / 2 - currentOffset;
+    const minOffset = 12 + bounds.width / 2 - baseCenter;
+    const maxViewportOffset = window.innerWidth - 12 - bounds.width / 2 - baseCenter;
+    const offset = distanceFromCenter * .15 * attraction;
+    setMagnetTarget(Math.max(Math.max(minOffset, -maxOffset), Math.min(maxOffset, maxViewportOffset, offset)));
+  };
+  const resetMagnet = () => setMagnetTarget(0);
+
+  if (hasFinePointer && !hasReducedMotion) {
+    window.addEventListener('pointermove', updateMagnet, { passive: true });
+    window.addEventListener('pointerleave', resetMagnet);
+  }
+
+  const updateVisibility = () => {
+    const hasLeftHero = hero.getBoundingClientRect().bottom <= 0;
+    toast.classList.toggle('is-visible', hasLeftHero);
+    if (!hasLeftHero) resetMagnet();
+    if (!hasLeftHero && toggle.getAttribute('aria-expanded') === 'true') {
+      toggle.setAttribute('aria-expanded', 'false');
+      details.setAttribute('aria-hidden', 'true');
+      details.inert = true;
+      toast.classList.remove('is-expanded');
+    }
+    visibilityFrame = null;
+  };
+  const scheduleVisibilityUpdate = () => {
+    if (visibilityFrame !== null) return;
+    visibilityFrame = window.requestAnimationFrame(updateVisibility);
+  };
+
+  window.addEventListener('scroll', scheduleVisibilityUpdate, { passive: true });
+  window.addEventListener('resize', scheduleVisibilityUpdate);
+  scheduleVisibilityUpdate();
 }
 
 window.addEventListener('load', () => {

@@ -128,6 +128,26 @@
           </svg>
         </a>
       </div>
+
+      <aside class="driver-license-toast" id="driverLicenseToast">
+        <button class="driver-license-toggle" type="button" aria-expanded="false" aria-controls="driverLicenseDetails">
+          <span>Driver's licence</span>
+          <span class="driver-license-toggle-progress">9%</span>
+          <span class="driver-license-toggle-icon" aria-hidden="true">+</span>
+        </button>
+        <div class="driver-license-toast-details" id="driverLicenseDetails" aria-hidden="true" inert>
+          <div class="driver-license-toast-content">
+            <h2 id="driver-license-title">Help me get my driver's licence.</h2>
+            <div class="driver-license-progress" aria-label="Progress toward getting a driver's licence">
+              <div class="driver-license-bar" role="progressbar" aria-valuenow="9" aria-valuemin="0" aria-valuemax="100">
+                <span class="driver-license-fill" style="width: 9%"></span>
+              </div>
+              <p class="driver-license-note">A practical step toward more freedom, more mobility, and more time behind the wheel.</p>
+              <a class="driver-license-support" href="https://buymeacoffee.com/aw3ryartw" target="_blank" rel="noopener noreferrer">Support the goal</a>
+            </div>
+          </div>
+        </div>
+      </aside>
     </header>
 
     <nav class="site-nav" id="siteNav" aria-label="Main navigation">
@@ -172,6 +192,19 @@
     <a class="intro-link" href="#contact">Contact me</a>
   </main>
   <section class="section about about-feature tone-a" id="about">
+    <div class="section-parallax-glow section-parallax-glow--about" aria-hidden="true">
+      <span data-section-parallax-depth="0.12"></span>
+      <span data-section-parallax-depth="0.2"></span>
+    </div>
+    <div class="about-parallax" aria-hidden="true">
+      <span class="about-parallax-shape about-parallax-frame" data-parallax-depth="0.18"></span>
+      <span class="about-parallax-shape about-parallax-frame" data-parallax-depth="0.42"></span>
+      <span class="about-parallax-shape about-parallax-frame" data-parallax-depth="0.27"></span>
+      <span class="about-parallax-shape about-parallax-plus" data-parallax-depth="0.58">+</span>
+      <span class="about-parallax-shape about-parallax-plus" data-parallax-depth="0.32">+</span>
+      <span class="about-parallax-shape about-parallax-plus" data-parallax-depth="0.72">+</span>
+      <span class="about-parallax-shape about-parallax-plus" data-parallax-depth="0.22">+</span>
+    </div>
     <div class="section-head">
       <h2 class="section-title" aria-label="I'm Dawid Jagóra. A graphic designer and the person behind AW3RY.">
         <span class="about-title-line">I'm Dawid Jagóra.</span>
@@ -198,6 +231,10 @@
   </div>
 
   <section class="future-goals" id="future" aria-labelledby="future-title">
+    <div class="section-parallax-glow section-parallax-glow--future" aria-hidden="true">
+      <span data-section-parallax-depth="0.1"></span>
+      <span data-section-parallax-depth="0.18"></span>
+    </div>
     <h2 class="visually-hidden" id="future-title">What I’m aiming for next</h2>
     <div class="future-marquee" aria-hidden="true">
       <div class="future-marquee-track">
@@ -268,46 +305,75 @@
     </div>
   </section>
 
-  <section class="section photography tone-b" id="instagram">
+  <section class="section photography tone-b instagram-feature" id="instagram">
     <div class="section-head">
-      <h2 class="section-title">Selected from<br>Instagram.</h2>
-      <p class="section-sub">A running selection from the Substance project.</p>
+      <h2 class="section-title" aria-label="Selected from Instagram">
+        <span class="about-title-line">Selected from</span>
+        <span class="about-title-line">Instagram</span>
+      </h2>
     </div>
-
-    <div class="instagram-gallery" id="gallery">
-      <a class="instagram-post" href="https://www.instagram.com/p/DcpFel6CAfR/?img_index=1" target="_blank" rel="noopener" aria-label="Open Substance post 1 on Instagram"><img loading="eager" src="assets/images/zdjecie_5.webp" alt="AW3RY Substance automotive photography by Dawid Jagóra, Łódź"><span class="instagram-fallback">Open post</span></a>
-      <a class="instagram-post" href="https://www.instagram.com/p/DdCnaheCEKu/?img_index=1" target="_blank" rel="noopener" aria-label="Open Substance post 2 on Instagram"><img loading="eager" src="assets/images/zdjecie_6.webp" alt="AW3RY Substance automotive photography by Dawid Jagóra, Łódź"><span class="instagram-fallback">Open post</span></a>
-      <a class="instagram-post" href="https://www.instagram.com/p/DcmohYWCNhg/?img_index=1" target="_blank" rel="noopener" aria-label="Open Substance post 3 on Instagram"><img loading="eager" src="assets/images/zdjecie_7.webp" alt="AW3RY Substance automotive photography by Dawid Jagóra, Łódź"><span class="instagram-fallback">Open post</span></a>
+    <div class="instagram-layout-preserver">
+      <div class="instagram-parallax-glow" aria-hidden="true">
+        <span class="instagram-parallax-orb instagram-parallax-orb--warm" data-instagram-orb-depth="0.12"></span>
+        <span class="instagram-parallax-orb instagram-parallax-orb--cool" data-instagram-orb-depth="0.2"></span>
+        <span class="instagram-parallax-orb instagram-parallax-orb--pink" data-instagram-orb-depth="0.08"></span>
+        <span class="instagram-parallax-orb instagram-parallax-orb--sunset" data-instagram-orb-depth="0.16"></span>
+        <span class="instagram-parallax-orb instagram-parallax-orb--violet" data-instagram-orb-depth="0.24"></span>
+      </div>
+      <div class="instagram-layout-grid">
+        <article class="instagram-layout-item" data-instagram-parallax="0.22">
+          <div class="instagram-layout-caption"><span>Photography</span><span>Substance</span></div>
+          <a class="instagram-post" href="https://www.instagram.com/p/DcpFel6CAfR/?img_index=1" target="_blank" rel="noopener noreferrer" aria-label="Open Substance automotive photography on Instagram">
+            <img loading="lazy" src="assets/images/zdjecie_5.webp" alt="Automotive photography from the Substance project">
+          </a>
+        </article>
+        <article class="instagram-layout-item" data-instagram-parallax="0.46">
+          <div class="instagram-layout-caption"><span>Photography</span><span>Substance</span></div>
+          <a class="instagram-post" href="https://www.instagram.com/p/DdCnaheCEKu/?img_index=1" target="_blank" rel="noopener noreferrer" aria-label="Open Substance automotive photography on Instagram">
+            <img loading="lazy" src="assets/images/zdjecie_6.webp" alt="Automotive photography from the Substance project">
+          </a>
+        </article>
+        <article class="instagram-layout-item" data-instagram-parallax="0.3">
+          <div class="instagram-layout-caption"><span>Photography</span><span>Substance</span></div>
+          <a class="instagram-post" href="https://www.instagram.com/p/DcmohYWCNhg/?img_index=1" target="_blank" rel="noopener noreferrer" aria-label="Open Substance automotive photography on Instagram">
+            <img loading="lazy" src="assets/images/zdjecie_7.webp" alt="Automotive photography from the Substance project">
+          </a>
+        </article>
+      </div>
     </div>
-
-    <a class="instagram-more" href="https://www.instagram.com/aw3ry.art/" target="_blank" rel="noopener">More on Instagram <span aria-hidden="true">↗</span></a>
   </section>
 
   <section class="section services tone-a" id="services">
+    <div class="section-parallax-glow section-parallax-glow--services" aria-hidden="true">
+      <span data-section-parallax-depth="0.12"></span>
+      <span data-section-parallax-depth="0.2"></span>
+    </div>
     <div class="section-head">
-      <h2 class="section-title">What I can<br>do for you.</h2>
+      <h2 class="section-title">
+        <span class="about-title-line">What I can do for you</span>
+      </h2>
     </div>
 
-    <div class="work-list">
-      <article class="work-item">
-        <div class="work-media"><img loading="lazy" src="assets/images/zdjecie_15.webp" alt="Automotive photography service sample"></div>
-        <div class="work-info">
-          <h3>Automotive Photography</h3>
-          <p class="work-tags">Editorial / Private</p>
-          <p class="work-desc">Photos of your car or event. Shot with actual attention, not a template.</p>
-        </div>
-      </article>
-
-      <article class="work-item work-item--reverse work-item--coming-soon">
-        <div class="work-media"><img loading="lazy" src="assets/images/zdjecie.webp" alt="Automotive film service sample"><span class="coming-soon-label">COMING SOON</span></div>
-        <div class="work-info">
-          <h3>Cinematic Video</h3>
-          <p class="work-tags">Short / Long-form / Event</p>
-          <p class="work-desc">Edits that capture how a car sounds and moves, not just how it looks parked.</p>
-        </div>
-      </article>
+    <div class="services-pills">
+      <button class="service-pill" type="button" aria-describedby="service-desc-photography">
+        <span class="service-pill-title">Automotive Photography</span>
+        <span class="service-pill-description" id="service-desc-photography">Automotive portraits, event coverage, and visual stories built around the car.</span>
+      </button>
+      <button class="service-pill" type="button" aria-describedby="service-desc-graphic">
+        <span class="service-pill-title">Graphic design</span>
+        <span class="service-pill-description" id="service-desc-graphic">Visual identities, posters, and digital graphics with a distinctive point of view.</span>
+      </button>
+      <button class="service-pill" type="button" aria-describedby="service-desc-cinematic">
+        <span class="service-pill-title">Cinematic design</span>
+        <span class="service-pill-description" id="service-desc-cinematic">Moving images and edits that capture atmosphere, sound, and motion.</span>
+      </button>
+      <button class="service-pill" type="button" aria-describedby="service-desc-audio">
+        <span class="service-pill-title">Audio design</span>
+        <span class="service-pill-description" id="service-desc-audio">Sound selection and shaping that give each visual piece its own character.</span>
+      </button>
     </div>
   </section>
+  <p class="services-coming-soon" id="servicesComingSoon" role="status" aria-live="polite" hidden></p>
 
   <style>
     .camera-showcase {
@@ -315,28 +381,11 @@
     }
   </style>
 
-  <section class="section driver-license tone-b" aria-labelledby="driver-license-title">
-    <div class="driver-license-inner">
-      <div class="driver-license-copy">
-        <p class="section-eyebrow">Current goal</p>
-        <h2 id="driver-license-title" class="section-title">Help me get my driver's licence.</h2>
-      </div>
-
-      <div class="driver-license-progress" aria-label="Progress toward getting a driver's licence">
-        <div class="driver-license-meta">
-          <span>Progress</span>
-          <strong>9%</strong>
-        </div>
-        <div class="driver-license-bar" role="progressbar" aria-valuenow="9" aria-valuemin="0" aria-valuemax="100">
-          <span class="driver-license-fill" style="width: 9%"></span>
-        </div>
-        <p class="driver-license-note">A practical step toward more freedom, more mobility, and more time behind the wheel.</p>
-        <a class="driver-license-support" href="https://buymeacoffee.com/aw3ryartw" target="_blank" rel="noopener noreferrer">Support the goal</a>
-      </div>
-    </div>
-  </section>
-
   <section class="section contact tone-b" id="contact">
+    <div class="section-parallax-glow section-parallax-glow--contact" aria-hidden="true">
+      <span data-section-parallax-depth="0.1"></span>
+      <span data-section-parallax-depth="0.18"></span>
+    </div>
     <div class="contact-inner">
       <h2 class="contact-title">Let’s create<br>something worth<br>keeping.</h2>
       <a href="mailto:AW3RY.art@gmail.com" class="contact-email">AW3RY.art@gmail.com</a>
@@ -384,9 +433,12 @@
       let timelinePosition = 0;
       let animationFrame = null;
       let previousFrameTime = 0;
-      let paused = false;
+      let paused = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       let dragging = false;
       let pointerStart = null;
+      let heroIsVisible = window.scrollY < hero.offsetHeight;
+      const renderedProgress = slides.map(() => null);
+      const renderedOpacity = slides.map(() => null);
 
       const progressFills = slides.map(() => {
         const segment = document.createElement('span');
@@ -405,7 +457,10 @@
 
         progressFills.forEach((fill, fillIndex) => {
           const fillProgress = fillIndex < index ? 1 : fillIndex === index ? slideProgress : 0;
-          fill.style.transform = `scaleX(${fillProgress})`;
+          if (renderedProgress[fillIndex] !== fillProgress) {
+            fill.style.transform = `scaleX(${fillProgress})`;
+            renderedProgress[fillIndex] = fillProgress;
+          }
         });
         slides.forEach((slide, slideIndex) => {
           const phase = ((position - slideIndex * slideDuration) % cycleDuration + cycleDuration) % cycleDuration;
@@ -418,11 +473,15 @@
           } else if (phase > cycleDuration - transitionDuration) {
             opacity = (phase - (cycleDuration - transitionDuration)) / transitionDuration;
           }
-          const scaleProgress = phase < slideDuration ? phase / slideDuration : 0;
-          const scale = 1.06 - scaleProgress * .06;
-          slide.style.setProperty('--slide-opacity', opacity.toFixed(4));
-          slide.style.setProperty('--slide-scale', scale.toFixed(4));
-          slide.classList.toggle('is-active', opacity > 0);
+          if (renderedOpacity[slideIndex] !== opacity) {
+            slide.style.setProperty('--slide-opacity', opacity.toFixed(4));
+            renderedOpacity[slideIndex] = opacity;
+            if (opacity > 0) {
+              slide.classList.add('is-active');
+            } else {
+              slide.classList.remove('is-active');
+            }
+          }
         });
       };
 
@@ -445,8 +504,17 @@
       };
 
       const startAnimation = () => {
-        if (!paused && !dragging && animationFrame === null) {
+        if (!paused && !dragging && heroIsVisible && document.visibilityState === 'visible' && animationFrame === null) {
           animationFrame = window.requestAnimationFrame(animate);
+        }
+      };
+
+      const updateAnimationVisibility = () => {
+        heroIsVisible = window.scrollY < hero.offsetHeight;
+        if (heroIsVisible && document.visibilityState === 'visible') {
+          startAnimation();
+        } else {
+          stopAnimation();
         }
       };
 
@@ -491,7 +559,13 @@
 
       if (slides.length > 1) {
         renderTimeline();
+        if (paused) {
+          playButton?.setAttribute('aria-pressed', 'true');
+          playButton?.setAttribute('aria-label', 'Play animation');
+        }
         startAnimation();
+        window.addEventListener('scroll', updateAnimationVisibility, { passive: true });
+        document.addEventListener('visibilitychange', updateAnimationVisibility);
         hero.addEventListener('pointerdown', beginDrag);
         hero.addEventListener('pointermove', moveDrag);
         hero.addEventListener('pointerup', endDrag);
