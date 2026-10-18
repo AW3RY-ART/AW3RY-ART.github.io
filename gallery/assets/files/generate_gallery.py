@@ -4,10 +4,11 @@ import json
 from pathlib import Path
 import re
 
-ROOT = Path(__file__).resolve().parent
+ROOT = Path(__file__).resolve().parents[3]
 GALLERY_ROOT = ROOT / "gallery"
-OUTPUT_FILE = ROOT / "gallery-data.json"
-JS_OUTPUT_FILE = ROOT / "gallery-data.js"
+OUTPUT_DIR = Path(__file__).resolve().parent
+OUTPUT_FILE = OUTPUT_DIR / "gallery-data.json"
+JS_OUTPUT_FILE = OUTPUT_DIR / "gallery-data.js"
 IMAGE_EXTS = {".jpg", ".jpeg", ".png", ".webp", ".gif", ".avif", ".bmp"}
 
 
@@ -59,6 +60,7 @@ def main() -> None:
         "items": items,
     }
 
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     OUTPUT_FILE.write_text(json.dumps(payload, indent=2), encoding="utf-8")
     JS_OUTPUT_FILE.write_text(
         "window.galleryData = " + json.dumps(payload, ensure_ascii=False, separators=(",", ":")) + ";\n",

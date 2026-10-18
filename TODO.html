@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex, nofollow">
+  <title>TODO | AW3RY</title>
+  <link rel="stylesheet" href="css/style.css">
+  <style>
+    .todo-page {
+      min-height: 100svh;
+      padding: clamp(2rem, 8vw, 7rem) var(--page-pad);
+      background: #f7f7f7;
+      color: #171512;
+    }
+
+    .todo-content {
+      width: min(100%, 760px);
+      margin: 0 auto;
+    }
+
+    .todo-kicker {
+      margin: 0 0 1rem;
+      color: #716c63;
+      font-size: 10px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+
+    .todo-content h1 {
+      margin: 0 0 3rem;
+      color: #171512;
+      font-family: 'Atavian', Arial, sans-serif;
+      font-size: clamp(3rem, 9vw, 6rem);
+      font-weight: 400;
+      line-height: .95;
+      text-align: left;
+      text-transform: uppercase;
+    }
+
+    .todo-item {
+      padding: 1.4rem 0;
+      border-top: 1px solid rgba(23, 21, 18, .2);
+    }
+
+    .todo-item h2 {
+      margin: 0 0 .8rem;
+      font-size: 1rem;
+      font-weight: 500;
+    }
+
+    .todo-item ul {
+      margin: 0;
+      padding-left: 1.2rem;
+      color: rgba(23, 21, 18, .74);
+      font-size: .92rem;
+      line-height: 1.8;
+    }
+
+    .todo-back {
+      display: inline-block;
+      margin-top: 2.5rem;
+      padding-bottom: .35rem;
+      border-bottom: 1px solid currentColor;
+      font-size: .72rem;
+      letter-spacing: .1em;
+      text-transform: uppercase;
+    }
+  </style>
+</head>
+<body>
+  <main class="todo-page">
+    <div class="todo-content">
+      <p class="todo-kicker">AW3RY / notes for later</p>
+      <h1>TODO</h1>
+      <section class="todo-item" aria-labelledby="todo-sfx-title">
+        <h2 id="todo-sfx-title">Revisit site sound effects</h2>
+        <ul>
+          <li>Keep SFX disabled and out of the site settings for now.</li>
+          <li>Design distinct, clearly audible menu-open and menu-close sounds.</li>
+          <li>Add a short clock-like tick as each “Some of my work” title reaches full highlight while scrolling.</li>
+          <li>Trigger scroll ticks immediately at the highlight point; never queue them behind other sounds.</li>
+          <li>Consider a small set of restrained sounds for other useful interface interactions, with an adjustable volume.</li>
+          <li>Test timing and audibility on desktop and mobile before enabling SFX again.</li>
+        </ul>
+      </section>
+      <a class="todo-back" href="index.html">Back to AW3RY</a>
+    </div>
+  </main>
+</body>
+</html>

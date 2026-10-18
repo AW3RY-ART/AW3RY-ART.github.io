@@ -34,8 +34,9 @@
   <meta name="twitter:image:alt" content="Automotive photography by Dawid Jagóra for AW3RY">
 
   <link rel="icon" href="assets/favicon/favicon.svg" type="image/svg+xml">
-  <link rel="alternate icon" href="assets/favicon/favicon.svg">
+  <link rel="alternate icon" href="assets/favicon/favicon-96.png" type="image/png" sizes="96x96">
 
+  <script src="js/preferences.js"></script>
   <link rel="stylesheet" href="css/style.css">
 
   <script type="application/ld+json">
@@ -97,7 +98,7 @@
     <div class="page-loader-brand">AW3RY</div>
   </div>
 
-  <main class="page">
+  <main class="page" id="top">
     <div class="background-video background-slideshow" aria-hidden="true">
       <img class="background-slide is-active" src="gallery/substance/_XM50045.webp" alt="" draggable="false">
       <img class="background-slide" src="assets/images/zdjecie_3.webp" alt="" draggable="false">
@@ -116,7 +117,7 @@
 
       <a class="header-link header-link--left" href="gallery.html" aria-label="Open gallery">Gallery</a>
 
-      <a class="logo" href="index.html" aria-label="AW3RY home">AW3RY<sup>*</sup></a>
+      <a class="logo" href="#top" aria-label="AW3RY home">AW3RY</a>
 
       <a class="header-link header-link--right" href="#about" aria-label="About Dawid">About me</a>
 
@@ -133,7 +134,6 @@
         <button class="driver-license-toggle" type="button" aria-expanded="false" aria-controls="driverLicenseDetails">
           <span>Driver's licence</span>
           <span class="driver-license-toggle-progress">9%</span>
-          <span class="driver-license-toggle-icon" aria-hidden="true">+</span>
         </button>
         <div class="driver-license-toast-details" id="driverLicenseDetails" aria-hidden="true" inert>
           <div class="driver-license-toast-content">
@@ -157,9 +157,34 @@
         <a href="#future" style="--i:2">Future</a>
         <a href="#services" style="--i:3">Services</a>
         <a href="#contact" style="--i:4">Contact</a>
+        <a href="#melancholia" data-melancholia-trigger style="--i:5">melancholia</a>
 
-        <div class="site-nav-footer" style="--i:5">
-          © 2026 AW3RY / Dawid, Łódź.
+        <section class="site-nav-settings" aria-labelledby="site-settings-title">
+          <h2 id="site-settings-title">Settings</h2>
+          <label class="site-setting-toggle" for="settingVisualizer">
+            <span>Visualizer</span>
+            <input id="settingVisualizer" type="checkbox" data-preference="visualizerEnabled">
+          </label>
+          <label class="site-setting-toggle" for="settingMusic">
+            <span>Music</span>
+            <input id="settingMusic" type="checkbox" data-preference="musicEnabled">
+          </label>
+          <label class="site-setting-toggle" for="settingVfx">
+            <span>VFX</span>
+            <input id="settingVfx" type="checkbox" data-preference="vfxEnabled">
+          </label>
+          <label class="site-setting-toggle" for="settingPopup">
+            <span>Driver's licence popup</span>
+            <input id="settingPopup" type="checkbox" data-preference="popupEnabled">
+          </label>
+          <label class="site-setting-volume" for="settingMusicVolume">
+            <span>Music volume</span>
+            <input id="settingMusicVolume" type="range" min="0" max="1" step="0.01" data-preference="volume">
+          </label>
+        </section>
+
+        <div class="site-nav-footer" style="--i:6">
+          <a href="TODO.html">© 2026 AW3RY / Dawid, Łódź.</a>
         </div>
       </div>
     </nav>
@@ -176,7 +201,7 @@
     <div class="hero-progress" aria-hidden="true">
     </div>
 
-    <button class="media-button sound-button" type="button" aria-label="Unmute sound" aria-pressed="true">
+    <button class="media-button sound-button" type="button" aria-label="Mute music" aria-pressed="false">
       <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
         <path d="M3 8v4h3l4 3V5L6 8H3z" />
         <path class="sound-wave" d="M13 8.5c1 1 1 2 0 3M15 6.5c2 2 2 5 0 7" />
@@ -191,6 +216,47 @@
 
     <a class="intro-link" href="#contact">Contact me</a>
   </main>
+  <canvas class="music-visualizer" aria-hidden="true"></canvas>
+  <aside class="music-player" aria-label="Music player">
+    <div class="music-player-details" id="musicPlayerDetails" aria-hidden="true" inert>
+      <div class="music-player-details-content">
+        <a class="music-player-author" href="https://pixabay.com/pl/music/pu%C5%82apka-elit-motion-trap-motion-619695/" target="_blank" rel="noopener noreferrer">author <span aria-hidden="true">→</span></a>
+        <div class="music-player-control-row">
+          <div class="music-player-controls">
+            <button class="music-player-button music-player-previous" type="button" aria-label="Previous track">
+              <svg viewBox="0 0 20 20" aria-hidden="true" fill="currentColor"><path d="M5 4h2v12H5zm10 0v12L7 10z" /></svg>
+            </button>
+            <button class="music-player-button music-player-toggle" type="button" aria-label="Play music" aria-pressed="false">
+              <svg class="music-player-play-icon" viewBox="0 0 20 20" aria-hidden="true" fill="currentColor"><path d="m6 3 11 7-11 7z" /></svg>
+              <svg class="music-player-pause-icon" viewBox="0 0 20 20" aria-hidden="true" fill="currentColor"><path d="M5 4h4v12H5zm7 0h4v12h-4z" /></svg>
+            </button>
+            <button class="music-player-button music-player-next" type="button" aria-label="Next track">
+              <svg viewBox="0 0 20 20" aria-hidden="true" fill="currentColor"><path d="M13 4h2v12h-2zM5 4l8 6-8 6z" /></svg>
+            </button>
+          </div>
+          <div class="music-player-volume">
+            <button class="music-player-button music-player-mute" type="button" aria-label="Mute music" aria-pressed="false">
+              <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M2 8v4h3l4 3V5L5 8H2zM12 7c2 1.5 2 4.5 0 6M14 5c3 2.5 3 7.5 0 10" />
+                <path class="music-player-muted-icon" d="m13 8 4 4m0-4-4 4" />
+              </svg>
+            </button>
+            <input class="music-player-volume-slider" type="range" min="0" max="1" step="0.01" value="0.1" aria-label="Music volume" aria-valuetext="10%">
+          </div>
+        </div>
+        <p class="music-player-status" aria-live="polite"></p>
+      </div>
+    </div>
+    <button class="music-player-expand-toggle" type="button" aria-label="Open music player" aria-expanded="false" aria-controls="musicPlayerDetails">
+      <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M10 18V5l10-2v13" />
+        <circle cx="7" cy="18" r="3" />
+        <circle cx="17" cy="16" r="3" />
+      </svg>
+    </button>
+    <audio class="music-player-audio" preload="metadata" src="assets/music/SONG1.mp3" hidden></audio>
+  </aside>
+
   <section class="section about about-feature tone-a" id="about">
     <div class="section-parallax-glow section-parallax-glow--about" aria-hidden="true">
       <span data-section-parallax-depth="0.12"></span>
@@ -379,6 +445,10 @@
   </style>
 
     <section class="section contact tone-b" id="contact">
+      <div class="section-parallax-glow contact-circles" aria-hidden="true">
+        <span class="contact-circle contact-circle--left" data-section-parallax-depth="0.22"></span>
+        <span class="contact-circle contact-circle--right" data-section-parallax-depth="0.3"></span>
+      </div>
       <div class="contact-inner">
         <h2 class="contact-title">Let’s create<br>something worth<br>keeping.</h2>
         <a href="mailto:AW3RY.art@gmail.com" class="contact-email about-read-more cursor-glow-target">AW3RY.art@gmail.com</a>
@@ -403,13 +473,12 @@
     </footer>
     </div>
   </div>
-  <script src="gallery-data.js"></script>
+  <script src="gallery/assets/files/gallery-data.js"></script>
   <script src="js/main.js"></script>
   <script>
     const siteHeader = document.querySelector('.site-header');
     const hero = document.querySelector('.page');
     const playButton = document.querySelector('.play-button');
-    const soundButton = document.querySelector('.sound-button');
     const slideshow = document.querySelector('.background-slideshow');
 
     function updateHeader() {
@@ -577,13 +646,6 @@
         } else {
           startAnimation();
         }
-      });
-
-      soundButton?.addEventListener('click', () => {
-        const isMuted = soundButton.getAttribute('aria-pressed') === 'true';
-        soundButton.setAttribute('aria-pressed', String(!isMuted));
-        soundButton.setAttribute('aria-label', isMuted ? 'Unmute sound' : 'Mute sound');
-        soundButton.classList.toggle('is-muted', !isMuted);
       });
     }
   </script>

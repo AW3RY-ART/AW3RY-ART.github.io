@@ -1,4 +1,7 @@
 User-agent: *
 Allow: /
+Disallow: /404.html
+Disallow: /TODO.html
+Disallow: /gallery.html
 
 Sitemap: https://aw3ry.art/sitemap.xml
