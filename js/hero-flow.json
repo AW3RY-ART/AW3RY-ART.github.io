@@ -1,0 +1,291 @@
+{
+  "history": [
+    {
+      "layerType": "flattened",
+      "id": "flat_0",
+      "compiledFragmentShaders": [
+        "#version 300 es\n// Copyright (c) Unicorn Studio. Licensed under the Unicorn Studio Commercial License.\n// Unauthorized copying, redistribution, or use in competing products is prohibited.\nprecision highp float;\nin vec2 vTextureCoord;\nin vec3 vVertexPosition;\n\nuniform vec2 uMousePos;\nuniform vec2 uSeed;\nuniform float uL0_ElemOpacity;\nuniform float uL1_Time;\nuniform vec2 uResolution;\nuniform float uL1_ElemOpacity;\n\nconst float PI = 3.14159265359;\nconst float TAU = 6.28318530718;\n\nout vec4 fragColor;\n\nvec2 rotate_L0(vec2 coord, float angle) {\nfloat s = sin(angle);\nfloat c = cos(angle);\nreturn vec2(\ncoord.x * c - coord.y * s,\ncoord.x * s + coord.y * c\n);\n}\nvec3 getBgColor_L0(vec2 uv) {\nreturn vec3(0.035, 0.04, 0.05);\n}\nuvec2 pcg2d_L1(uvec2 v) {\nv = v * 1664525u + 1013904223u;\nv.x += v.y * v.y * 1664525u + 1013904223u;\nv.y += v.x * v.x * 1664525u + 1013904223u;\nv ^= v >> 16;\nv.x += v.y * v.y * 1664525u + 1013904223u;\nv.y += v.x * v.x * 1664525u + 1013904223u;\nreturn v;\n}\nfloat randFibo_L1(vec2 p) {\nuvec2 v = floatBitsToUint(p);\nv = pcg2d_L1(v);\nuint r = v.x ^ v.y;\nreturn float(r) / float(0xffffffffu);\n}\nfloat deband_L1() {\nreturn (randFibo_L1(gl_FragCoord.xy + uSeed * uResolution) - 0.5) / 255.0;\n}\nvec3 getNoiseColor_L1(float t, vec3 col1, vec3 col2, float chroma) {\nvec3 mid = 0.5 * (col1 + col2);\nvec3 axisAmp = 0.5 * (col2 - col1);\nvec3 base = mid + axisAmp * cos(TAU * t);\nvec3 axis = length(axisAmp) > 0.0001 ? normalize(axisAmp) : vec3(1.0, 0.0, 0.0);\nvec3 ref = abs(axis.x) > 0.9 ? vec3(0.0, 1.0, 0.0) : vec3(1.0, 0.0, 0.0);\nvec3 tangent1 = normalize(cross(axis, ref));\nvec3 tangent2 = normalize(cross(axis, tangent1));\nfloat richness = 0.24 * length(axisAmp) + 0.02;\nvec3 ripple =\ntangent1 * sin(TAU * (t * 2.0 + 0.123)) +\ntangent2 * sin(TAU * (t * 2.0 + 0.437));\nvec3 col = base + (richness * chroma) * ripple;\ncol = clamp(col, -10.0, 10.0);\ncol = 1./(1. + exp(-col * 4. + 0.25) * 7.5);\nreturn clamp(col, 0.0, 1.0);\n}\nmat2 rot_L1(float a) {\nreturn mat2(cos(a),-sin(a),sin(a),cos(a));\n}\nvec3 hash3_L1(vec2 p) {\nvec3 q = vec3(dot(p,vec2(129.4,308.2)),\ndot(p,vec2(266.1,185.7)),\ndot(p,vec2(422.6,369.3)));\nreturn fract(sin(q)*43758.5453);\n}\nfloat voronoise_L1(vec2 uv, float driftVal, float time, float direction, float scale, float phase) {\nfloat u = 1.;\nfloat v = 1.;\nvec2 d = vec2(0, driftVal * time * 0.008);\nvec2 skew = vec2(direction, 1.0 - direction);\nvec2 x = (uv * skew * 2.) - d * mix(1., 14., scale) * 2.;\nvec2 p = floor(x);\nvec2 f = fract(x);\nfloat k = 1.0 + 63.0 * pow(1.0-v,4.0);\nfloat va = 0.0;\nfloat wt = 0.0;\nfor( int j=-2;\nj<=2;\nj++ )\nfor( int i=-2;\ni<=2;\ni++ ) {\nvec2 g = vec2( float(i),float(j) );\nvec3 o = hash3_L1( p + g + uSeed ) * vec3(u,u,1.0);\no.xy += 0.5 * vec2(sin(time * 0.1 + phase + o.x * 6.28));\nvec2 r = g - f + o.xy;\nfloat dd = dot(r,r);\nfloat ww = pow( 1.0-smoothstep(0.0,1.414,sqrt(dd)), k );\nva += o.z*ww;\nwt += ww;\n}\nreturn va / max(wt, 1e-5);\n}\nfloat getVoronoiNoise_L1(vec2 uv, float turbulence, float driftVal, float time, float direction, float scale, float phase) {\nfloat turb = turbulence * 2.5;\nfloat noise = voronoise_L1(uv, driftVal, time, direction, scale, phase);\nreturn mix(0.5, noise, turb);\n}\nfloat getNoise_L1(vec2 uv, float turbulence, float driftVal, float time, float scale, float direction, float phase) {\nreturn getVoronoiNoise_L1(uv, turbulence, driftVal, time, direction, scale, phase);\n}\n\nvec4 computeLayer_L0(vec2 uv) {\nvec2 pos = vec2(0.5, 0.5) + mix(vec2(0), (uMousePos-0.5), 0.0000);\nuv -= pos;\nuv /= max(0.5000*2., 1e-5);\nuv = rotate_L0(uv, (0.0000 - 0.5) * 2. * PI);\nvec4 color = vec4(getBgColor_L0(uv), 1.0) * 1.0000;\nreturn color;\n}\nvec4 computeLayer_L1(vec2 uv, vec4 prevLayerColor, float sharedDither) {\nfloat aspectRatio = uResolution.x/uResolution.y;\nvec2 aspect = vec2(aspectRatio, 1.0);\nvec2 mPos = vec2(0.5, 0.5) + mix(vec2(0), (uMousePos-0.5), 0.0000);\nvec2 pos = mix(vec2(0.5, 0.5), mPos, 0.0000);\nfloat scale = mix(1., 14., 0.1200);\nvec2 drift = vec2(0, 0.0000 * uL1_Time * 0.0125);\nmat2 rotation = rot_L1(0.0000 * 2. * PI);\nvec2 st = (uv - pos) * aspect * scale * rotation;\nfloat noise = getNoise_L1(st, 0.5400, 0.0000, uL1_Time, 0.1200, 0.5000, 0.0000);\nvec4 color = prevLayerColor;\nvec4 bg = color;\nfloat shift = 0.3600 + (1.0000 * uL1_Time * 0.01);\nvec3 noiseColor = getNoiseColor_L1(noise + shift, vec3(0.10, 0.105, 0.12), vec3(0.18, 0.19, 0.21), 0.55);\ncolor.rgb = noiseColor.rgb;\nfloat dither = sharedDither;\ncolor.rgb += dither * 0.5;\ncolor = (clamp(color, 0.0, 1.0)) * (0.4000);\nreturn color;\n}\n\nvoid main() {\nvec2 uv = vTextureCoord;\nfloat sharedDither = deband_L1();\nvec4 result = vec4(0.0);\nvec4 c0 = computeLayer_L0(uv);\nc0 *= uL0_ElemOpacity;\nresult = c0 + result * (1.0 - c0.a);\nvec4 c1 = computeLayer_L1(uv, result, sharedDither);\nc1 *= uL1_ElemOpacity;\nresult = c1 + result * (1.0 - c1.a);\nfragColor = result;\n}"
+      ],
+      "compiledVertexShaders": [
+        "#version 300 es\n// Copyright (c) Unicorn Studio. Licensed under the Unicorn Studio Commercial License.\n// Unauthorized copying, redistribution, or use in competing products is prohibited.\nprecision highp float;\nin vec3 aVertexPosition;\nin vec2 aTextureCoord;\nuniform mat4 uMVMatrix;\nuniform mat4 uPMatrix;\nout vec2 vTextureCoord;\nout vec3 vVertexPosition;\nvoid main() {\ngl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\nvVertexPosition = aVertexPosition;\nvTextureCoord = aTextureCoord;\n}"
+      ],
+      "sublayers": [
+        {
+          "id": "b227bbfd-43de-4d81-a690-a776da5b82ce",
+          "publicId": "gradient",
+          "layerType": "effect",
+          "type": "gradient",
+          "sublayerIndex": 0,
+          "opacity": 1,
+          "animating": false
+        },
+        {
+          "id": "32dd966c-f7f4-4a58-814c-392a1e6b9ec5",
+          "publicId": "noise_fill",
+          "layerType": "effect",
+          "type": "noiseFill",
+          "sublayerIndex": 1,
+          "opacity": 1,
+          "animating": true
+        }
+      ],
+      "data": {
+        "uniforms": {
+          "resolution": {
+            "name": "uResolution",
+            "type": "2f",
+            "value": {
+              "type": "Vec2",
+              "_x": 1080,
+              "_y": 1080
+            }
+          },
+          "mousePos": {
+            "name": "uMousePos",
+            "type": "2f",
+            "value": {
+              "type": "Vec2",
+              "_x": 0.5,
+              "_y": 0.5
+            }
+          },
+          "L0_elemOpacity": {
+            "name": "uL0_ElemOpacity",
+            "type": "1f",
+            "value": 1
+          },
+          "L1_time": {
+            "name": "uL1_Time",
+            "type": "1f",
+            "value": 0
+          },
+          "L1_elemOpacity": {
+            "name": "uL1_ElemOpacity",
+            "type": "1f",
+            "value": 1
+          }
+        },
+        "textures": [],
+        "timeUniforms": [],
+        "mouseUniforms": [],
+        "hasMouseTracking": false,
+        "hasVideoSublayers": false,
+        "estimatedSublayerWorkRaw": 25.475,
+        "occlusion": {
+          "candidateLayers": 0
+        }
+      },
+      "states": {
+        "appear": [],
+        "scroll": [],
+        "hover": [],
+        "mousemove": []
+      },
+      "breakpoints": [],
+      "userDownsample": 1,
+      "visible": true
+    },
+    {
+      "layerType": "flattened",
+      "id": "flat_2",
+      "compiledFragmentShaders": [
+        "#version 300 es\n// Copyright (c) Unicorn Studio. Licensed under the Unicorn Studio Commercial License.\n// Unauthorized copying, redistribution, or use in competing products is prohibited.\nprecision highp float;\nin vec2 vTextureCoord;\nin vec3 vVertexPosition;\n\nuniform sampler2D uBgTexture;\nuniform vec2 uArtboardResolution;\nuniform float uL0_Width;\nuniform float uL0_Top;\nuniform vec2 uL0_MousePos;\nuniform float uL0_TrackMouse;\nuniform float uL0_ElemOpacity;\nuniform float uL1_Scale;\nuniform float uL1_Time;\nuniform vec2 uL1_Pos;\nuniform vec2 uMousePos;\nuniform vec2 uSeed;\nuniform vec2 uResolution;\nuniform float uL1_ElemOpacity;\n\nconst float TAU = 6.28318530718;\nconst float PI = 3.14159265359;\nconst int MAX_ITERATIONS = 8;\n\nout vec4 fragColor;\n\nvec3 blend_L0 (int blendMode, vec3 src, vec3 dst) {\nreturn vec3((dst.x <= 0.5) ? (2.0 * src.x * dst.x) : (1.0 - 2.0 * (1.0 - dst.x) * (1.0 - src.x)), (dst.y <= 0.5) ? (2.0 * src.y * dst.y) : (1.0 - 2.0 * (1.0 - dst.y) * (1.0 - src.y)), (dst.z <= 0.5) ? (2.0 * src.z * dst.z) : (1.0 - 2.0 * (1.0 - dst.z) * (1.0 - src.z)));\n}\nvec2 rotate2D_L0(vec2 p, float angle) {\nfloat s = sin(angle);\nfloat c = cos(angle);\nreturn vec2(p.x * c - p.y * s, p.x * s + p.y * c);\n}\nvec2 getAnchorOffsets_L0() {\nreturn vec2(0.5, 0.5);\n}\nvec3 getFillColor_L0(vec2 localPos, vec2 elementSize, float signedDist, float maxInset) {\nvec2 halfSize = elementSize * 0.5;\nvec2 p = localPos - halfSize;\nreturn vec3(0.38, 0.39, 0.42);\n}\nfloat sdBox_L0(vec2 p, vec2 b) {\nvec2 d = abs(p) - b;\nreturn length(max(d, 0.0)) + min(max(d.x, d.y), 0.0);\n}\nfloat sdRegularPolygon_L0(vec2 p, int n) {\nint sides = max(n, 3);\nfloat fn = float(sides);\nfloat an = PI / fn;\nfloat bn = TAU / fn;\nfloat a = atan(p.y, p.x + 1e-9) + (PI * 0.5 - an);\na = mod(a + an, bn) - an;\nreturn length(p) * cos(a) - cos(an);\n}\nfloat sdShape_L0(vec2 canvasPosPx, vec2 elementPosPx, vec2 elementSizePx, float rotationTurns) {\nvec2 p = vec2(0.0);\nvec2 halfSize = vec2(0.0);\nelementSizePx = abs(elementSizePx);\nvec2 centerPx = elementPosPx + elementSizePx * 0.5;\nvec2 rel = canvasPosPx - centerPx;\nvec2 local = rotate2D_L0(rel, -rotationTurns * TAU) + elementSizePx * 0.5;\np = local - elementSizePx * 0.5;\nhalfSize = elementSizePx * 0.5;\nvec2 pn = vec2(p.x / max(halfSize.x, 0.00001), p.y / max(halfSize.y, 0.00001));\nfloat d = sdRegularPolygon_L0(pn, int(3.0000));\nreturn d * min(halfSize.x, halfSize.y);\nreturn sdBox_L0(p, halfSize);\n}\nvec4 sampleShape_L0(vec2 canvasUV) {\nvec2 canvasPosPx = vec2(canvasUV.x * uArtboardResolution.x, (1.0 - canvasUV.y) * uArtboardResolution.y);\nfloat absWidth = uL0_Width * uArtboardResolution.x;\nfloat absHeight = 0.9012 * uArtboardResolution.y;\nabsHeight = absWidth / 1.0256;\nvec2 elementSizePx = vec2(absWidth, absHeight);\nvec2 elementPosPx = vec2(0.5000, uL0_Top) * uArtboardResolution - getAnchorOffsets_L0() * elementSizePx;\nfloat dist = sdShape_L0(canvasPosPx, elementPosPx, elementSizePx, 0.0000);\nfloat aa = max(length(vec2(dFdx(dist), dFdy(dist))), 0.75);\nfloat uvGrad = max(length(dFdx(canvasUV)), length(dFdy(canvasUV)));\nfloat seamFactor = smoothstep(0.01, 0.03, uvGrad);\naa = mix(aa, 0.75, seamFactor);\nfloat fillAlpha = 1.0 - smoothstep(mix(0.0, -150., 1.0000), mix(aa, 150., 1.0000), dist);\nfillAlpha = mix(fillAlpha, step(dist, 0.0), seamFactor);\nvec2 localPos;\nlocalPos = rotate2D_L0(canvasPosPx - (elementPosPx + elementSizePx * 0.5), 0.0000 * -TAU) + elementSizePx * 0.5;\nvec2 localSize;\nlocalSize = elementSizePx;\nvec2 centerPx;\ncenterPx = elementPosPx + elementSizePx * 0.5;\nfloat centerDist = sdShape_L0(centerPx, elementPosPx, elementSizePx, 0.0000);\nfloat maxInset = max(-centerDist, 0.00001);\nmaxInset = min(localSize.x, localSize.y) * 0.5;\nvec3 fillRgb = getFillColor_L0(localPos, localSize, dist, maxInset);\nfloat finalFillAlpha = fillAlpha * 1.0000;\nvec4 fill = vec4(fillRgb * finalFillAlpha, finalFillAlpha);\nfloat strokeAlpha = 0.0;\nvec4 stroke = vec4(vec3(0.10980392156862745, 0.10980392156862745, 0.10588235294117647) * strokeAlpha, strokeAlpha);\nvec4 col = stroke + fill * (1.0 - stroke.a);\nreturn col;\n}\nfloat ease_L1 (int easingFunc, float t) {\nreturn t;\n}\nvec3 hash33_L1(vec3 p3) {\np3 = fract(p3 * vec3(0.1031, 0.11369, 0.13787) + vec3(0.17, 0.31, 0.23));\np3 += dot(p3, p3.yxz + 19.19);\nreturn -1.0 + 2.0 * fract(vec3(\n(p3.x + p3.y) * p3.z,\n(p3.x + p3.z) * p3.y,\n(p3.y + p3.z) * p3.x\n));\n}\nfloat perlin_noise_L1(vec3 p) {\nvec3 pi = floor(p);\nvec3 pf = p - pi;\nvec3 w = pf * pf * (3.0 - 2.0 * pf);\nfloat n000 = dot(pf - vec3(0.0, 0.0, 0.0), hash33_L1(pi + vec3(uSeed, 0.0)));\nfloat n100 = dot(pf - vec3(1.0, 0.0, 0.0), hash33_L1(pi + vec3(1.0 + uSeed.x, uSeed.y, 0.0)));\nfloat n010 = dot(pf - vec3(0.0, 1.0, 0.0), hash33_L1(pi + vec3(uSeed.x, 1.0 + uSeed.y, 0.0)));\nfloat n110 = dot(pf - vec3(1.0, 1.0, 0.0), hash33_L1(pi + vec3(1.0 + uSeed.x, 1.0 + uSeed.y, 0.0)));\nfloat n001 = dot(pf - vec3(0.0, 0.0, 1.0), hash33_L1(pi + vec3(uSeed.x, uSeed.y, 1.0)));\nfloat n101 = dot(pf - vec3(1.0, 0.0, 1.0), hash33_L1(pi + vec3(1.0 + uSeed.x, uSeed.y, 1.0)));\nfloat n011 = dot(pf - vec3(0.0, 1.0, 1.0), hash33_L1(pi + vec3(uSeed.x, 1.0 + uSeed.y, 1.0)));\nfloat n111 = dot(pf - vec3(1.0, 1.0, 1.0), hash33_L1(pi + vec3(1.0 + uSeed.x, 1.0 + uSeed.y, 1.0)));\nfloat nx00 = mix(n000, n100, w.x);\nfloat nx01 = mix(n001, n101, w.x);\nfloat nx10 = mix(n010, n110, w.x);\nfloat nx11 = mix(n011, n111, w.x);\nfloat nxy0 = mix(nx00, nx10, w.y);\nfloat nxy1 = mix(nx01, nx11, w.y);\nfloat nxyz = mix(nxy0, nxy1, w.z);\nreturn nxyz;\n}\nvec2 distortUV_L1(vec2 uv) {\nvec2 st = uv;\nfloat aspectRatio = uResolution.x / max(uResolution.y, 0.001);\nvec2 aspectVec = vec2(aspectRatio, 1.);\nvec2 mPos = uL1_Pos + mix(vec2(0), (uMousePos-0.5), 0.0000);\nfloat mixRadiusStep = step(1.0, 1.0000);\nvec2 pos = mix(uL1_Pos, mPos, mixRadiusStep);\nfloat dist = ease_L1(0, max(0.,1. - length(st * aspectVec - mPos * aspectVec) * 4. * (1. - 1.0000)));\nfloat sprd = (uL1_Scale + 0.01) / ((aspectRatio + 1.) / 2.);\nfloat amt = (1.0000 * 2.0) * 0.01 * dist;\nif(amt <= 0.) {\nreturn st;\n}\nvec2 invPos = 1. - pos;\nfloat freq = 5. * sprd;\nfloat t = 0.0000 * 5. + uL1_Time * 0.0166;\nfloat degrees = 360. * (0.5000 * 6.);\nfloat rad = degrees * PI / 180.;\nfor (int i = 0;\ni < MAX_ITERATIONS;\ni++) {\nvec2 clampedSt = clamp(st, -1., 2.);\nvec2 scaled = (clampedSt - 0.5) * aspectVec + invPos;\nfloat perlin = perlin_noise_L1(vec3((scaled - 0.5) * freq, t)) - 0.5;\nfloat ang = perlin * rad;\nst += vec2(cos(ang), sin(ang)) * amt;\n}\nreturn mix(uv, clamp(st, 0., 1.), 1.0000);\n}\n\nvec4 computeLayer_L0(vec2 uv) {\nvec2 pos = (uL0_MousePos - 0.5) * uL0_TrackMouse;\nuv -= pos;\nvec4 color = sampleShape_L0(uv);\nreturn color;\n}\n\nvoid main() {\nvec2 uv = vTextureCoord;\nvec2 uv_z1_raw = distortUV_L1(uv);\nvec2 uv_z1 = mix(uv, uv_z1_raw, clamp(uL1_ElemOpacity, 0.0, 1.0));\nvec4 result = texture(uBgTexture, uv_z1);\nvec4 c0 = computeLayer_L0(uv_z1);\n{\nvec3 _s = c0.rgb / max(c0.a, 0.0001);\nvec3 _d = result.rgb;\nc0 = vec4(vec3((_d.x <= 0.5) ? (2.0 * _s.x * _d.x) : (1.0 - 2.0 * (1.0 - _d.x) * (1.0 - _s.x)), (_d.y <= 0.5) ? (2.0 * _s.y * _d.y) : (1.0 - 2.0 * (1.0 - _d.y) * (1.0 - _s.y)), (_d.z <= 0.5) ? (2.0 * _s.z * _d.z) : (1.0 - 2.0 * (1.0 - _d.z) * (1.0 - _s.z))), 1.0) * (c0.a * uL0_ElemOpacity);\n}\nresult = c0 + result * (1.0 - c0.a);\nfragColor = result;\n}"
+      ],
+      "compiledVertexShaders": [
+        "#version 300 es\n// Copyright (c) Unicorn Studio. Licensed under the Unicorn Studio Commercial License.\n// Unauthorized copying, redistribution, or use in competing products is prohibited.\nprecision highp float;\nin vec3 aVertexPosition;\nin vec2 aTextureCoord;\nuniform mat4 uMVMatrix;\nuniform mat4 uPMatrix;\nout vec2 vTextureCoord;\nout vec3 vVertexPosition;\nvoid main() {\ngl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\nvVertexPosition = aVertexPosition;\nvTextureCoord = aTextureCoord;\n}"
+      ],
+      "sublayers": [
+        {
+          "id": "be5d7c43-8bb8-4934-a945-2b3acb205d81",
+          "publicId": "shape",
+          "layerType": "shape",
+          "sublayerIndex": 0,
+          "opacity": 1,
+          "blendMode": "OVERLAY",
+          "animating": false,
+          "width": 0.5776388888888888,
+          "widthMode": 0,
+          "height": 0.9011934293097082,
+          "heightMode": 2,
+          "left": 0.5,
+          "top": 0.49999999999999994,
+          "anchorPoint": 8,
+          "aspectRatio": 1.0255536626916524
+        },
+        {
+          "id": "51df0a9c-0134-49d0-9bee-173b786634c6",
+          "publicId": "flow_field",
+          "layerType": "effect",
+          "type": "flowField",
+          "sublayerIndex": 1,
+          "opacity": 1,
+          "animating": true
+        }
+      ],
+      "data": {
+        "uniforms": {
+          "resolution": {
+            "name": "uResolution",
+            "type": "2f",
+            "value": {
+              "type": "Vec2",
+              "_x": 1080,
+              "_y": 1080
+            }
+          },
+          "mousePos": {
+            "name": "uMousePos",
+            "type": "2f",
+            "value": {
+              "type": "Vec2",
+              "_x": 0.5,
+              "_y": 0.5
+            }
+          },
+          "artboardResolution": {
+            "name": "uArtboardResolution",
+            "type": "2f",
+            "value": {
+              "type": "Vec2",
+              "_x": 1440,
+              "_y": 900
+            }
+          },
+          "L0_aspectRatio": {
+            "name": "uAspectRatio",
+            "type": "1f",
+            "value": 1.0255536626916524
+          },
+          "L0_top": {
+            "name": "uL0_Top",
+            "type": "1f",
+            "value": 0.49999999999999994
+          },
+          "L0_trackMouse": {
+            "name": "uL0_TrackMouse",
+            "type": "1f",
+            "value": 0
+          },
+          "L0_width": {
+            "name": "uL0_Width",
+            "type": "1f",
+            "value": 0.5776388888888888
+          },
+          "L0_elemOpacity": {
+            "name": "uL0_ElemOpacity",
+            "type": "1f",
+            "value": 1
+          },
+          "L1_spread": {
+            "name": "uL1_Scale",
+            "type": "1f",
+            "value": 0.25
+          },
+          "L1_pos": {
+            "name": "uL1_Pos",
+            "type": "2f",
+            "value": {
+              "type": "Vec2",
+              "_x": 0.5,
+              "_y": 0.5
+            }
+          },
+          "L1_time": {
+            "name": "uL1_Time",
+            "type": "1f",
+            "value": 0
+          },
+          "L1_elemOpacity": {
+            "name": "uL1_ElemOpacity",
+            "type": "1f",
+            "value": 1
+          },
+          "L0_mousePos": {
+            "name": "uL0_MousePos",
+            "type": "2f",
+            "value": {
+              "type": "Vec2",
+              "_x": 0.5,
+              "_y": 0.5
+            }
+          }
+        },
+        "textures": [],
+        "timeUniforms": [
+          {
+            "key": "L1_time",
+            "speed": 0.2,
+            "animating": true
+          }
+        ],
+        "mouseUniforms": [
+          {
+            "key": "L0_mousePos",
+            "momentum": 1.8,
+            "spring": 0,
+            "trackAxes": "xy"
+          }
+        ],
+        "hasMouseTracking": true,
+        "hasVideoSublayers": false,
+        "estimatedSublayerWorkRaw": 69.84999999999998,
+        "occlusion": {
+          "candidateLayers": 0
+        }
+      },
+      "states": {
+        "appear": [],
+        "scroll": [],
+        "hover": [],
+        "mousemove": []
+      },
+      "breakpoints": [
+        {
+          "name": "Desktop",
+          "min": 992,
+          "max": null,
+          "props": {
+            "L0_top": 0.49999999999999994,
+            "L0_trackMouse": 1,
+            "L0_width": 0.5776388888888888,
+            "L1_spread": 0.36,
+            "L1_pos": {
+              "type": "Vec2",
+              "_x": 0.4958162343528197,
+              "_y": 0.5059919989676087
+            }
+          }
+        },
+        {
+          "name": "Mobile",
+          "min": 0,
+          "max": 575,
+          "props": {
+            "L0_top": 0.5,
+            "L0_trackMouse": 0,
+            "L0_width": 0.951924168959944,
+            "L1_spread": 0.304,
+            "L1_pos": {
+              "type": "Vec2",
+              "_x": 0.5214344679710533,
+              "_y": 0.4164034435875842
+            }
+          }
+        }
+      ],
+      "userDownsample": 1,
+      "visible": true
+    }
+  ],
+  "options": {
+    "name": "Flow gradient (Remix)",
+    "fps": 60,
+    "dpi": 1,
+    "scale": 0.75,
+    "includeLogo": false,
+    "isProduction": false,
+    "flatten": true
+  },
+  "version": "2.2.14",
+  "id": "oJCcJds41vZmulPTjsiB"
+}

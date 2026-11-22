@@ -23,11 +23,9 @@ function initHashNavigation() {
   const target = document.querySelector(hash);
   if (!target) return;
 
+  const behavior = window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth';
   requestAnimationFrame(() => {
-    target.scrollIntoView({ behavior: 'auto', block: 'start' });
-    requestAnimationFrame(() => {
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    });
+    target.scrollIntoView({ behavior, block: 'start' });
   });
 }
 
@@ -35,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
   resetPageScroll();
   initHashNavigation();
   initYear();
+  initAboutStoryExpansion();
   initNav();
   initMusicPlayer();
   initSiteSettings();
@@ -50,11 +49,12 @@ document.addEventListener('DOMContentLoaded', () => {
   initInstagramParallax();
   initSectionParallaxGlows();
   initFutureGoalReveal();
+  initFutureGoalStats();
   initFutureMarquee();
   initServicesComingSoon();
   initDriverLicenseToast();
   initFutureTransition();
-  initGalleryProjectLoop();
+  initSocialLoop();
   initCursorGlow();
   initGoalCardMagnets();
   disableContextMenu();
@@ -122,6 +122,7 @@ function initMusicPlayer() {
   const heroPlayButton = document.querySelector('.play-button');
   const heroMuteButton = document.querySelector('.sound-button');
   const expandButton = player?.querySelector('.music-player-expand-toggle');
+  const tiktokLink = player?.querySelector('.music-player-tiktok');
   const details = player?.querySelector('.music-player-details');
   const volumeSlider = player?.querySelector('.music-player-volume-slider');
   const authorLink = player?.querySelector('.music-player-author');
@@ -134,7 +135,7 @@ function initMusicPlayer() {
   }
   if (
     !audio || !visualizer || !canvasContext || !playButton || !previousButton || !nextButton ||
-    !muteButton || !expandButton || !details || !volumeSlider || !authorLink || !status
+    !muteButton || !expandButton || !tiktokLink || !details || !volumeSlider || !authorLink || !status
   ) {
     console.error('Music player could not initialize because a required control is missing.');
     return;
@@ -177,7 +178,7 @@ function initMusicPlayer() {
     muteButton.setAttribute('aria-label', isMuted ? 'Unmute music' : 'Mute music');
     if (heroMuteButton) {
       heroMuteButton.setAttribute('aria-pressed', String(isMuted));
-      heroMuteButton.setAttribute('aria-label', isMuted ? 'Unmute music' : 'Mute music');
+      heroMuteButton.setAttribute('aria-label', isMuted ? 'Włącz muzykę' : 'Wycisz muzykę');
       heroMuteButton.classList.toggle('is-muted', isMuted);
     }
     volumeSlider.value = String(audio.volume);
@@ -213,11 +214,12 @@ function initMusicPlayer() {
     window.addEventListener('pointermove', (event) => {
       if (event.pointerType !== 'mouse' || !player.classList.contains('is-visible')) return;
       const buttonDistance = distanceToBounds(expandButton.getBoundingClientRect(), event.clientX, event.clientY);
+      const tiktokDistance = distanceToBounds(tiktokLink.getBoundingClientRect(), event.clientX, event.clientY);
       const isExpanded = expandButton.getAttribute('aria-expanded') === 'true';
       const detailsDistance = isExpanded
         ? distanceToBounds(details.getBoundingClientRect(), event.clientX, event.clientY)
         : Infinity;
-      const isNearExpandedPlayer = Math.min(buttonDistance, detailsDistance) <= expandedDistance;
+      const isNearExpandedPlayer = Math.min(buttonDistance, tiktokDistance, detailsDistance) <= expandedDistance;
       if (isExpanded && !isNearExpandedPlayer) {
         setExpanded(false);
         if (document.activeElement instanceof HTMLElement && player.contains(document.activeElement)) {
@@ -226,7 +228,7 @@ function initMusicPlayer() {
       }
       player.classList.toggle(
         'is-approaching',
-        buttonDistance <= revealDistance || (isExpanded && isNearExpandedPlayer)
+        Math.min(buttonDistance, tiktokDistance) <= revealDistance || (isExpanded && isNearExpandedPlayer)
       );
     }, { passive: true });
     window.addEventListener('pointerleave', () => {
@@ -435,50 +437,56 @@ function disableContextMenu() {
   });
 }
 
-function initGalleryProjectLoop() {
-  const showcase = document.querySelector('.project-showcase');
-  const stickyContent = showcase?.querySelector('.project-showcase-sticky');
-  const listWindow = showcase?.querySelector('.project-list-window');
-  const track = showcase?.querySelector('.project-title-track');
+function initSocialLoop() {
+  const showcase = document.querySelector('.social-showcase');
+  const stickyContent = showcase?.querySelector('.social-showcase-sticky');
+  const listWindow = showcase?.querySelector('.social-list-window');
+  const track = showcase?.querySelector('.social-title-track');
   const accessibleList = showcase?.querySelector('.visually-hidden');
-  const albums = window.galleryData?.albums;
   if (!showcase || !stickyContent || !listWindow || !track || !accessibleList) return;
-  if (!Array.isArray(albums) || albums.length === 0) {
-    console.error('Gallery project list could not load: gallery data has no albums.');
-    return;
-  }
-
-  const titles = albums
-    .map((album) => album.title || album.name)
-    .filter((title) => typeof title === 'string' && title.trim());
-  if (!titles.includes('Bring The Nine')) titles.push('Bring The Nine');
-  if (titles.length === 0) {
-    console.error('Gallery project list could not load: albums have no titles.');
-    return;
-  }
+  const socialSuffixes = ['.CLIPS', '.TWITCH', '.TIKTOK', '.YOUTUBE', '.INSTAGRAM', '.FACEBOOK', '.LINKEDIN'];
   track.replaceChildren();
   accessibleList.replaceChildren();
 
-  titles.forEach((title) => {
+  socialSuffixes.forEach((suffix) => {
     const item = document.createElement('li');
-    item.textContent = title;
+    item.textContent = `AW3RY${suffix}`;
     accessibleList.append(item);
   });
 
   const firstGroup = document.createElement('div');
-  firstGroup.className = 'project-title-group';
-  titles.forEach((title) => {
+  firstGroup.className = 'social-title-group';
+  socialSuffixes.forEach((suffix) => {
     const item = document.createElement('span');
-    item.className = 'project-title';
-    item.textContent = title;
+    item.className = 'social-title';
+    item.textContent = suffix;
     firstGroup.append(item);
   });
   track.append(firstGroup);
 
+  track.addEventListener('pointerover', (event) => {
+    const title = event.target.closest('.social-title');
+    if (!title) return;
+    if (title.contains(event.relatedTarget)) return;
+    window.clearTimeout(Number(title.dataset.hoverLeaveTimer));
+    title.classList.remove('is-leaving');
+    title.classList.add('is-hovering');
+  });
+
+  track.addEventListener('pointerout', (event) => {
+    const title = event.target.closest('.social-title');
+    if (!title) return;
+    if (title.contains(event.relatedTarget)) return;
+    title.classList.remove('is-hovering');
+    title.classList.add('is-leaving');
+    title.dataset.hoverLeaveTimer = String(window.setTimeout(() => {
+      title.classList.remove('is-leaving');
+      delete title.dataset.hoverLeaveTimer;
+    }, 820));
+  });
+
   let initialTrackOffset = 0;
   let rowHeight = 1;
-  let maxTrackOffset = 0;
-  let sectionDocumentTop = showcase.getBoundingClientRect().top + window.scrollY;
   let animationFrame = null;
   const disableScrollBlur = window.matchMedia('(max-width: 760px) and (pointer: coarse)').matches;
 
@@ -486,7 +494,7 @@ function initGalleryProjectLoop() {
   const buildTrack = () => {
     const sourceGroup = track.firstElementChild;
     const groupHeight = sourceGroup?.getBoundingClientRect().height;
-    const firstTitle = sourceGroup?.querySelector('.project-title');
+    const firstTitle = sourceGroup?.querySelector('.social-title');
     if (!sourceGroup || !groupHeight || !firstTitle) return false;
 
     rowHeight = Number.parseFloat(getComputedStyle(firstTitle).lineHeight) || firstTitle.getBoundingClientRect().height || 1;
@@ -500,19 +508,20 @@ function initGalleryProjectLoop() {
     while (track.scrollHeight < requiredHeight) {
       track.append(sourceGroup.cloneNode(true));
     }
-    maxTrackOffset = Math.min(getScrollDistance(), track.scrollHeight - listWindow.clientHeight - initialTrackOffset);
     return true;
   };
 
   const updateList = () => {
     animationFrame = null;
+    const sectionDocumentTop = showcase.getBoundingClientRect().top + window.scrollY;
     const progress = Math.min(1, Math.max(0, (window.scrollY - sectionDocumentTop) / getScrollDistance()));
-    const trackOffset = initialTrackOffset + maxTrackOffset * progress;
+    const cyclePosition = progress * socialSuffixes.length * 3;
+    const trackOffset = initialTrackOffset + rowHeight * cyclePosition;
     const windowBounds = listWindow.getBoundingClientRect();
     const centerY = windowBounds.top + windowBounds.height / 2;
 
     track.style.transform = `translate3d(0, ${-trackOffset.toFixed(2)}px, 0)`;
-    track.querySelectorAll('.project-title').forEach((title) => {
+    track.querySelectorAll('.social-title').forEach((title) => {
       const bounds = title.getBoundingClientRect();
       const distance = Math.abs(bounds.top + bounds.height / 2 - centerY);
       const weight = Math.max(0, Math.min(1, 1 - distance / rowHeight));
@@ -520,24 +529,11 @@ function initGalleryProjectLoop() {
       const scaleProgress = Math.log1p(9 * edgeRatio) / Math.log(10);
       const scale = 1 - scaleProgress * .1;
       const blur = disableScrollBlur ? 0 : Math.max(0, (edgeRatio - .55) / .45) * 4;
-      title.style.setProperty('--project-title-weight', `${(weight * 100).toFixed(1)}%`);
-      title.style.setProperty('--project-title-scale', scale.toFixed(3));
-      title.style.setProperty('--project-title-blur', `${blur.toFixed(2)}px`);
+      title.style.setProperty('--social-title-weight', `${(weight * 100).toFixed(1)}%`);
+      title.style.setProperty('--social-title-scale', scale.toFixed(3));
+      title.style.setProperty('--social-title-blur', `${blur.toFixed(2)}px`);
     });
   };
-
-  const openGalleryFilter = (title) => {
-    const album = albums.find((item) => (item.title || item.name) === title);
-    const filter = album
-      ? String(album.name || album.title).toLowerCase().trim().replace(/[_\s]+/g, '-').replace(/[^a-z0-9-]/g, '')
-      : title.toLowerCase().trim().replace(/[_\s]+/g, '-').replace(/[^a-z0-9-]/g, '');
-    window.location.href = `gallery.html?filter=${encodeURIComponent(filter)}`;
-  };
-
-  track.addEventListener('click', (event) => {
-    const title = event.target.closest('.project-title');
-    if (title) openGalleryFilter(title.textContent.trim());
-  });
 
   const scheduleUpdate = () => {
     if (animationFrame === null) animationFrame = window.requestAnimationFrame(updateList);
@@ -545,11 +541,11 @@ function initGalleryProjectLoop() {
 
   const rebuildTrack = () => {
     const sourceGroup = track.firstElementChild.cloneNode(true);
-    sourceGroup.querySelectorAll('.project-title').forEach((title) => {
+    sourceGroup.querySelectorAll('.social-title').forEach((title) => {
       title.classList.remove('is-active');
-      title.style.removeProperty('--project-title-weight');
-      title.style.removeProperty('--project-title-scale');
-      title.style.removeProperty('--project-title-blur');
+      title.style.removeProperty('--social-title-weight');
+      title.style.removeProperty('--social-title-scale');
+      title.style.removeProperty('--social-title-blur');
     });
     track.replaceChildren(sourceGroup);
     buildTrack();
@@ -558,8 +554,6 @@ function initGalleryProjectLoop() {
 
   window.addEventListener('scroll', scheduleUpdate, { passive: true });
   window.addEventListener('resize', () => {
-    const sectionTop = showcase.getBoundingClientRect().top + window.scrollY;
-    sectionDocumentTop = sectionTop;
     rebuildTrack();
   });
   buildTrack();
@@ -612,9 +606,9 @@ function initAboutTitleScrollReveal() {
         const inner = document.createElement('span');
         mask.className = 'about-title-word';
         inner.className = 'about-title-word-inner';
-        if (about.id === 'instagram' && word.toLowerCase() === 'instagram') {
-          mask.classList.add('about-title-word--instagram');
-          inner.classList.add('about-title-word-inner--instagram');
+        if (about.id === 'instagram' && word.toLowerCase() === 'gallery') {
+          mask.classList.add('about-title-word--gallery');
+          inner.classList.add('about-title-word-inner--gallery');
         }
         if (about.id === 'services' && word.toLowerCase() === 'here') {
           inner.classList.add('about-title-word-inner--accent');
@@ -653,7 +647,7 @@ function initAboutTitleScrollReveal() {
         const progress = Math.min(1, Math.max(0, (overallProgress - index * wordStep) / wordDuration));
         word.style.setProperty('--about-title-progress', `${(1 - progress) * -110}%`);
         word.style.setProperty('--about-title-opacity', `${progress}`);
-        const finalBlur = word.classList.contains('about-title-word-inner--instagram') ? .6 : 0;
+        const finalBlur = word.classList.contains('about-title-word-inner--gallery') ? .6 : 0;
         word.style.setProperty('--about-title-blur', `${(1 - progress) * 8 + progress * finalBlur}px`);
         word.style.setProperty('--about-title-bleed', `${(1 - progress) * 0.2}`);
       });
@@ -791,15 +785,40 @@ function initAboutCopyScrollReveal() {
 function initAboutParallax() {
   const about = document.querySelector('#about.about-feature');
   const shapes = about?.querySelectorAll('[data-parallax-depth]');
-  if (!about || !shapes?.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const storyItems = about?.querySelectorAll('[data-about-story-parallax]');
+  if (!about || (!shapes?.length && !storyItems?.length) || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   let animationFrame = null;
   const updateParallax = () => {
-    const sectionProgress = (window.innerHeight - about.getBoundingClientRect().top) / (window.innerHeight + about.offsetHeight);
-    const scrollDistance = (sectionProgress - 0.5) * 420;
-    shapes.forEach((shape) => {
+    const viewportHeight = window.innerHeight;
+    const sectionProgress = (viewportHeight - about.getBoundingClientRect().top) / (viewportHeight + about.offsetHeight);
+    const scrollDistance = (sectionProgress - 0.5) * 2400;
+    const horizontalDistance = (sectionProgress - 0.5) * 500;
+    const storyScrollDistance = (sectionProgress - 0.5) * 720;
+    shapes?.forEach((shape) => {
       const depth = Number(shape.dataset.parallaxDepth);
-      shape.style.transform = `translate3d(0, ${scrollDistance * depth}px, 0)`;
+      shape.style.transform = `translate3d(${horizontalDistance * depth}px, ${scrollDistance * depth}px, 0)`;
+    });
+    storyItems?.forEach((item) => {
+      const mobileParallaxScale = window.innerWidth <= 760 ? 0.75 : 1;
+      const depth = Number(item.dataset.aboutStoryParallax) * mobileParallaxScale;
+      item.style.setProperty('--about-story-parallax-y', `${storyScrollDistance * depth}px`);
+      const rect = item.getBoundingClientRect();
+      const fadeDistance = viewportHeight * 0.3;
+      const fadeInProgress = Math.min(1, Math.max(0, (viewportHeight * 0.9 - rect.top) / fadeDistance));
+      const fadeOutProgress = Math.min(1, Math.max(0, rect.bottom / fadeDistance));
+      const fadeIn = fadeInProgress * fadeInProgress * (3 - 2 * fadeInProgress);
+      const fadeOut = fadeOutProgress * fadeOutProgress * (3 - 2 * fadeOutProgress);
+      const visibility = Math.min(fadeIn, fadeOut);
+      item.style.opacity = String(visibility);
+      item.style.filter = `blur(${(1 - visibility) * 12}px)`;
+      const direction = item.matches(':nth-child(even)') ? -1 : 1;
+      const currentSlide = Number.parseFloat(item.style.getPropertyValue('--about-story-parallax-x')) || 0;
+      const baseLeft = rect.left - currentSlide;
+      const baseRight = rect.right - currentSlide;
+      const availableDistance = direction > 0 ? window.innerWidth - baseRight - 8 : baseLeft - 8;
+      const slideDistance = Math.max(0, Math.min(window.innerWidth <= 760 ? 24 : 64, availableDistance));
+      item.style.setProperty('--about-story-parallax-x', `${direction * slideDistance * (1 - visibility)}px`);
     });
     animationFrame = null;
   };
@@ -816,7 +835,7 @@ function initAboutParallax() {
 
 function initInstagramParallax() {
   const section = document.querySelector('#instagram.instagram-feature');
-  const parallaxItems = section?.querySelectorAll('[data-instagram-parallax], [data-instagram-orb-depth]');
+  const parallaxItems = section?.querySelectorAll('[data-instagram-parallax]');
   if (!section || !parallaxItems?.length || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
 
   let animationFrame = null;
@@ -824,7 +843,7 @@ function initInstagramParallax() {
     const sectionProgress = (window.innerHeight - section.getBoundingClientRect().top) / (window.innerHeight + section.offsetHeight);
     const scrollDistance = (sectionProgress - 0.5) * 480;
     parallaxItems.forEach((item) => {
-      const depth = Number(item.dataset.instagramParallax ?? item.dataset.instagramOrbDepth);
+      const depth = Number(item.dataset.instagramParallax);
       item.style.transform = `translate3d(0, ${scrollDistance * depth}px, 0)`;
     });
     animationFrame = null;
@@ -902,6 +921,74 @@ function initSectionParallaxGlows() {
   window.addEventListener('scroll', scheduleUpdate, { passive: true });
   window.addEventListener('resize', scheduleUpdate);
   scheduleUpdate();
+}
+
+function initFutureGoalStats() {
+  const values = document.querySelectorAll('[data-social-stat] [data-social-value]');
+  if (!values.length) return;
+
+  const formatViews = (value) => new Intl.NumberFormat('pl-PL', {
+    maximumFractionDigits: 0
+  }).format(value);
+
+  const animateValue = (element, target) => {
+    if (!Number.isFinite(target) || target < 0) return;
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      element.textContent = formatViews(target);
+      return;
+    }
+
+    const duration = 900;
+    const start = performance.now();
+
+    const tick = (now) => {
+      const progress = Math.min(1, (now - start) / duration);
+      const eased = 1 - Math.pow(1 - progress, 4);
+      const current = progress < 1 ? Math.floor(target * eased) : target;
+      element.textContent = formatViews(current);
+      if (progress < 1) window.requestAnimationFrame(tick);
+    };
+
+    window.requestAnimationFrame(tick);
+  };
+
+  fetch('./data/social-stats.xml', { cache: 'no-store' })
+    .then((response) => response.ok ? response.text() : null)
+    .then((xmlText) => {
+      if (!xmlText) return;
+      const xml = new DOMParser().parseFromString(xmlText, 'application/xml');
+      const getXmlValue = (platform, field) => {
+        const text = xml.querySelector(`${platform} ${field}`)?.textContent.trim();
+        if (!text) return null;
+        const value = Number(text);
+        return Number.isFinite(value) ? value : null;
+      };
+      const targets = {
+        instagram: getXmlValue('instagram', 'last_7_posts_views'),
+        tiktok: getXmlValue('tiktok', 'lifetime_views'),
+        youtube: getXmlValue('youtube', 'last_7_days_views'),
+        'instagram-reels': getXmlValue('instagram_art', 'total_views'),
+        'youtube-shorts': getXmlValue('youtube_aw3ry', 'lifetime_views')
+      };
+      const socialTargets = Object.values(targets);
+      targets.total = socialTargets.every(Number.isFinite)
+        ? socialTargets.reduce((total, value) => total + value, 0)
+        : null;
+
+      const cards = document.querySelectorAll('[data-social-stat]');
+      if (!cards.length) return;
+      const observer = new IntersectionObserver((entries, currentObserver) => {
+        entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
+          const card = entry.target;
+          const value = card.querySelector('[data-social-value]');
+          if (value) animateValue(value, targets[card.dataset.socialStat]);
+          currentObserver.unobserve(card);
+        });
+      }, { threshold: 0.1 });
+      cards.forEach((card) => observer.observe(card));
+    })
+    .catch((error) => console.warn('Social stats could not be loaded:', error));
 }
 
 function initFutureGoalReveal() {
@@ -1166,21 +1253,56 @@ function initYear() {
   if (year) year.textContent = new Date().getFullYear();
 }
 
+function initAboutStoryExpansion() {
+  const panel = document.getElementById('aboutStoryPanel');
+  if (!panel) return;
+  const storyToggles = Array.from(panel.querySelectorAll('[data-about-story-toggle]'));
+
+  const setStoryExpanded = (toggle, isExpanded) => {
+    const card = toggle.closest('.about-story-grid section');
+    const detail = card.querySelector('.about-story-detail');
+    const storyLabel = toggle.querySelector('[data-about-story-toggle-label]');
+    const storyIcon = toggle.querySelector('[data-about-story-toggle-icon]');
+
+    card.classList.toggle('is-expanded', isExpanded);
+    toggle.setAttribute('aria-expanded', String(isExpanded));
+    storyLabel.textContent = isExpanded ? 'Zwiń' : 'Czytaj dalej';
+    storyIcon.textContent = isExpanded ? '↙' : '↗';
+    detail.setAttribute('aria-hidden', String(!isExpanded));
+    detail.inert = !isExpanded;
+  };
+
+  storyToggles.forEach((toggle) => {
+    toggle.addEventListener('click', () => {
+      setStoryExpanded(toggle, toggle.getAttribute('aria-expanded') !== 'true');
+    });
+  });
+  document.addEventListener('keydown', (event) => {
+    if (event.key !== 'Escape') return;
+    const activeCard = document.activeElement?.closest('.about-story-grid section.is-expanded');
+    const activeToggle = activeCard?.querySelector('[data-about-story-toggle]');
+    if (!activeToggle) return;
+    setStoryExpanded(activeToggle, false);
+    activeToggle.focus({ preventScroll: true });
+  });
+}
+
 function initNav() {
   const toggle = document.getElementById('menuToggle');
   const nav = document.getElementById('siteNav');
   if (!toggle || !nav) return;
+  const isPolishHome = document.querySelector('.personal-home') !== null;
 
   const closeNav = () => {
     nav.classList.remove('is-open');
     toggle.setAttribute('aria-expanded', 'false');
-    toggle.setAttribute('aria-label', 'Open menu');
+    toggle.setAttribute('aria-label', isPolishHome ? 'Otwórz menu' : 'Open menu');
   };
 
   const openNav = () => {
     nav.classList.add('is-open');
     toggle.setAttribute('aria-expanded', 'true');
-    toggle.setAttribute('aria-label', 'Close menu');
+    toggle.setAttribute('aria-label', isPolishHome ? 'Zamknij menu' : 'Close menu');
   };
 
   toggle.addEventListener('click', (event) => {
@@ -1339,8 +1461,8 @@ function initCursorGlow() {
   const glowTargets = document.querySelectorAll([
     '.intro-link',
     '.music-player-expand-toggle',
+    '.music-player-tiktok',
     '.driver-license-support',
-    '.future-goal-card',
     '.about-read-more'
   ].join(','));
 
@@ -1404,7 +1526,7 @@ function initGoalCardMagnets() {
   const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
   if (hasReducedMotion || !hasFinePointer) return;
 
-  document.querySelectorAll('.future-goal-card, .about-read-more, .music-player-expand-toggle').forEach((card) => {
+  document.querySelectorAll('.future-goal-card, .about-read-more, .music-player-expand-toggle, .music-player-tiktok').forEach((card) => {
     const returnToRest = () => {
       card.style.setProperty('--magnet-x', '0px');
       card.style.setProperty('--magnet-y', '0px');
