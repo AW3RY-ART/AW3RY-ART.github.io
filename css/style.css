@@ -3007,7 +3007,8 @@ body.page-dark .instagram-post {
 
 @media (hover: hover) and (pointer: fine) {
   .instagram-feature .instagram-layout-item {
-    transition: filter 1.2s cubic-bezier(.16, 1, .3, 1);
+    scale: 1;
+    transition: filter 600ms cubic-bezier(.16, 1, .3, 1), scale 600ms cubic-bezier(.16, 1, .3, 1);
   }
 
   .instagram-feature .instagram-layout-item img {
@@ -3028,12 +3029,14 @@ body.page-dark .instagram-post {
 
   .instagram-feature .instagram-layout-grid:has(.instagram-layout-item:hover) .instagram-layout-item:not(:hover),
   .instagram-feature .instagram-layout-grid:has(.instagram-layout-item:focus-within) .instagram-layout-item:not(:focus-within) {
+    scale: .94;
     filter: blur(1px);
   }
 
   .instagram-feature .instagram-layout-item:hover,
   .instagram-feature .instagram-layout-item:focus-within {
     z-index: 2;
+    scale: 1.06;
   }
 
   .instagram-feature .instagram-layout-item:hover img,
