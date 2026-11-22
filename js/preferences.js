@@ -7,8 +7,7 @@
     muted: false,
     track: 0,
     visualizerEnabled: false,
-    vfxEnabled: !isMobile,
-    popupEnabled: true
+    vfxEnabled: !isMobile
   };
   let preferences = { ...defaults };
 
@@ -27,7 +26,6 @@
         }
         if (typeof parsed.visualizerEnabled === 'boolean') preferences.visualizerEnabled = parsed.visualizerEnabled;
         if (typeof parsed.vfxEnabled === 'boolean') preferences.vfxEnabled = parsed.vfxEnabled;
-        if (typeof parsed.popupEnabled === 'boolean') preferences.popupEnabled = parsed.popupEnabled;
       }
     }
   } catch (error) {

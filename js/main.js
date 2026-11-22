@@ -52,7 +52,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initFutureGoalStats();
   initFutureMarquee();
   initServicesComingSoon();
-  initDriverLicenseToast();
   initFutureTransition();
   initSocialLoop();
   initCursorGlow();
@@ -85,28 +84,10 @@ function initSiteSettings() {
     });
   });
 
-  const updatePopup = (enabled) => {
-    const toast = document.querySelector('#driverLicenseToast');
-    const toggle = toast?.querySelector('.driver-license-toggle');
-    const details = toast?.querySelector('.driver-license-toast-details');
-    if (!toast || !toggle || !details) return;
-    toast.hidden = !enabled;
-    if (!enabled && toggle.getAttribute('aria-expanded') === 'true') {
-      toggle.setAttribute('aria-expanded', 'false');
-      details.setAttribute('aria-hidden', 'true');
-      details.inert = true;
-      toast.classList.remove('is-expanded');
-    }
-  };
-
   document.addEventListener('aw3ry:preferences-changed', (event) => {
     syncControls(event.detail);
-    if (event.detail.changed.includes('popupEnabled')) {
-      updatePopup(event.detail.popupEnabled);
-    }
   });
   syncControls();
-  updatePopup(preferenceStore.get().popupEnabled);
 }
 
 function initMusicPlayer() {
@@ -1049,105 +1030,6 @@ function initServicesComingSoon() {
   });
 }
 
-function initDriverLicenseToast() {
-  const hero = document.querySelector('.page');
-  const toast = document.querySelector('#driverLicenseToast');
-  const toggle = toast?.querySelector('.driver-license-toggle');
-  const details = toast?.querySelector('.driver-license-toast-details');
-  if (!hero || !toast || !toggle || !details) return;
-  const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
-  const hasReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-  const setExpanded = (isExpanded) => {
-    toggle.setAttribute('aria-expanded', String(isExpanded));
-    details.setAttribute('aria-hidden', String(!isExpanded));
-    details.inert = !isExpanded;
-    toast.classList.toggle('is-expanded', isExpanded);
-  };
-
-  toggle.addEventListener('click', () => {
-    setExpanded(toggle.getAttribute('aria-expanded') !== 'true');
-  });
-
-  let visibilityFrame = null;
-  let magnetFrame = null;
-  let targetOffset = 0;
-  let currentOffset = 0;
-  const maxOffset = 12;
-  const activationDistance = 80;
-
-  const animateMagnet = () => {
-    currentOffset += (targetOffset - currentOffset) * .16;
-    if (Math.abs(targetOffset - currentOffset) < .1) currentOffset = targetOffset;
-    toast.style.setProperty('--magnetic-x', `${currentOffset.toFixed(2)}px`);
-    if (currentOffset !== targetOffset) {
-      magnetFrame = window.requestAnimationFrame(animateMagnet);
-    } else {
-      magnetFrame = null;
-    }
-  };
-  const setMagnetTarget = (offset) => {
-    targetOffset = offset;
-    if (magnetFrame === null) magnetFrame = window.requestAnimationFrame(animateMagnet);
-  };
-  const updateMagnet = (event) => {
-    if (event.pointerType !== 'mouse' || !toast.classList.contains('is-visible')) return;
-    const bounds = toast.getBoundingClientRect();
-    const nearestX = Math.max(bounds.left, Math.min(event.clientX, bounds.right));
-    const nearestY = Math.max(bounds.top, Math.min(event.clientY, bounds.bottom));
-    const distanceX = event.clientX - nearestX;
-    const distanceY = event.clientY - nearestY;
-    const distance = Math.hypot(distanceX, distanceY);
-    if (distance > activationDistance) {
-      setMagnetTarget(0);
-      return;
-    }
-    const attraction = 1 - distance / activationDistance;
-    const distanceFromCenter = event.clientX - (bounds.left + bounds.width / 2);
-    const baseCenter = bounds.left + bounds.width / 2 - currentOffset;
-    const minOffset = 12 + bounds.width / 2 - baseCenter;
-    const maxViewportOffset = window.innerWidth - 12 - bounds.width / 2 - baseCenter;
-    const offset = distanceFromCenter * .15 * attraction;
-    setMagnetTarget(Math.max(Math.max(minOffset, -maxOffset), Math.min(maxOffset, maxViewportOffset, offset)));
-  };
-  const resetMagnet = () => setMagnetTarget(0);
-
-  if (hasFinePointer && !hasReducedMotion) {
-    window.addEventListener('pointermove', updateMagnet, { passive: true });
-    window.addEventListener('pointerleave', resetMagnet);
-  }
-
-  if (hasFinePointer) {
-    const collapseWhenPointerLeaves = (event) => {
-      if (event.pointerType !== 'mouse' || toggle.getAttribute('aria-expanded') !== 'true') return;
-      const bounds = toast.getBoundingClientRect();
-      const distanceX = Math.max(bounds.left - event.clientX, 0, event.clientX - bounds.right);
-      const distanceY = Math.max(bounds.top - event.clientY, 0, event.clientY - bounds.bottom);
-      if (Math.hypot(distanceX, distanceY) > 16) setExpanded(false);
-    };
-    window.addEventListener('pointermove', collapseWhenPointerLeaves, { passive: true });
-    window.addEventListener('pointerleave', () => setExpanded(false));
-  }
-
-  const updateVisibility = () => {
-    const hasLeftHero = hero.getBoundingClientRect().bottom <= 0;
-    toast.classList.toggle('is-visible', hasLeftHero);
-    if (!hasLeftHero) resetMagnet();
-    if (!hasLeftHero && toggle.getAttribute('aria-expanded') === 'true') {
-      setExpanded(false);
-    }
-    visibilityFrame = null;
-  };
-  const scheduleVisibilityUpdate = () => {
-    if (visibilityFrame !== null) return;
-    visibilityFrame = window.requestAnimationFrame(updateVisibility);
-  };
-
-  window.addEventListener('scroll', scheduleVisibilityUpdate, { passive: true });
-  window.addEventListener('resize', scheduleVisibilityUpdate);
-  scheduleVisibilityUpdate();
-}
-
 window.addEventListener('load', () => {
   resetPageScroll();
   initHashNavigation();
@@ -1462,7 +1344,6 @@ function initCursorGlow() {
     '.intro-link',
     '.music-player-expand-toggle',
     '.music-player-tiktok',
-    '.driver-license-support',
     '.about-read-more'
   ].join(','));
 
