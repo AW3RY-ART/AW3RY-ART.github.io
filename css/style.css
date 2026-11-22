@@ -817,8 +817,8 @@ html.vfx-disabled .personal-home .hero-liquid-bg::after {
   left: auto;
   right: auto;
   box-sizing: border-box;
-  width: min(335px, calc((100vw - 3rem) / 2));
-  padding: .8rem .85rem;
+  width: min(380px, calc((100vw - 3rem) / 2));
+  padding: 1rem 1.05rem;
   overflow: hidden;
   opacity: 0;
   clip-path: inset(0 100% 0 0);
@@ -855,13 +855,13 @@ html.vfx-disabled .personal-home .hero-liquid-bg::after {
 }
 
 .about-story-grid section:nth-child(odd) .about-story-detail {
-  right: calc(100% + .75rem);
+  right: calc(100% + 3rem);
   --about-story-detail-start-x: 1.5rem;
   clip-path: inset(0 0 0 100%);
 }
 
 .about-story-grid section:nth-child(even) .about-story-detail {
-  left: calc(100% + .75rem);
+  left: calc(100% + 3rem);
   --about-story-detail-start-x: -1.5rem;
   clip-path: inset(0 100% 0 0);
 }
@@ -906,7 +906,7 @@ html.vfx-disabled .personal-home .hero-liquid-bg::after {
 
   .about-story-grid section .about-story-detail,
   .about-story-grid section:nth-child(n) .about-story-detail {
-    top: calc(100% + .75rem);
+    top: calc(100% + 2.5rem);
     left: 0;
     right: auto;
     width: 100%;
@@ -1311,6 +1311,11 @@ html.vfx-disabled .about-story-grid section {
   translate: var(--magnet-x, 0px) var(--magnet-y, 0px);
   transition: width 220ms ease, height 220ms ease, min-height 220ms ease, border-radius 220ms ease, translate 560ms cubic-bezier(.22, 1.35, .36, 1), transform 220ms ease, background-color 220ms ease, color 220ms ease, box-shadow 220ms ease;
   will-change: translate;
+}
+
+.music-player-expand-toggle,
+.music-player-tiktok {
+  display: none !important;
 }
 
 .music-player-expand-toggle::after {

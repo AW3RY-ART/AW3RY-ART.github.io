@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <socialStats>
   <instagram>
-    <last_7_posts_views>1823</last_7_posts_views>
+    <last_7_posts_views>4016</last_7_posts_views>
     <account_url>https://www.instagram.com/aw3ry.clips/</account_url>
   </instagram>
   <tiktok>
@@ -9,7 +9,7 @@
     <account_url>https://www.tiktok.com/@aw3ry.clips</account_url>
   </tiktok>
   <youtube>
-    <last_7_days_views>14899</last_7_days_views>
+    <last_7_days_views>20824</last_7_days_views>
     <account_url>https://www.youtube.com/@AW3RY_CLIPS</account_url>
   </youtube>
   <twitch />
@@ -18,7 +18,7 @@
     <total_views>16072</total_views>
   </instagram_art>
   <youtube_aw3ry>
-    <lifetime_views>154378</lifetime_views>
+    <lifetime_views>154396</lifetime_views>
     <account_url>https://www.youtube.com/@AW3RY</account_url>
   </youtube_aw3ry>
 </socialStats>
