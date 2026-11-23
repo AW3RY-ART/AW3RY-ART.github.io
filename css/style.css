@@ -3114,7 +3114,7 @@ body.page-dark .instagram-post {
   letter-spacing: -.04em;
   text-transform: none;
 }
-.instagram-feature .instagram-layout-preserver { position: relative; padding-top: calc(clamp(2.2rem, 5vw, 4rem) + clamp(2.2rem, 5vw, 4rem) + 13rem); padding-bottom: 1.5rem; }
+.instagram-feature .instagram-layout-preserver { position: relative; padding-top: calc(clamp(2.2rem, 5vw, 4rem) + clamp(2.2rem, 5vw, 4rem) + 13rem + 5rem); padding-bottom: 1.5rem; }
 .services .about-title-word-inner--accent {
   text-decoration: underline;
   text-decoration-color: #d62976;
