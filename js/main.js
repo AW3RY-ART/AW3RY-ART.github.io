@@ -591,6 +591,9 @@ function initAboutTitleScrollReveal() {
           mask.classList.add('about-title-word--gallery');
           inner.classList.add('about-title-word-inner--gallery');
         }
+        if (about.id === 'instagram' && word.toLowerCase() === 'aw3ry') {
+          inner.classList.add('about-title-word-inner--aw3ry');
+        }
         if (about.id === 'services' && word.toLowerCase() === 'here') {
           inner.classList.add('about-title-word-inner--accent');
         }

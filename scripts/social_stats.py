@@ -33,9 +33,10 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "data" / "social-stats.xml"
 WEEKLY_VIEWS_FIELD = "last_7_days_views"
 LAST_SEVEN_POSTS_FIELD = "last_7_posts_views"
-INSTAGRAM_CLIPS_POST_VIEWS = (2473, 666, 171, 171, 114, 187, 234)
+INSTAGRAM_CLIPS_POST_VIEWS = (0, 2707, 666, 171, 171, 114, 187, 234)
 INSTAGRAM_ART_TOTAL_VIEWS = 16072
-TIKTOK_POST_VIEWS = (8669, 17400, 657200, 5749, 1186, 27000, 1581, 941, 2265, 5550)
+TIKTOK_POST_VIEWS = (21900, 18300, 684900, 13700, 1288, 9134, 27300, 1611, 955, 2351, 5636)
+YOUTUBE_CLIPS_WEEK_VIEWS = 32901
 ATOM_NAMESPACE = "{http://www.w3.org/2005/Atom}"
 YOUTUBE_NAMESPACE = "{http://www.youtube.com/xml/schemas/2015}"
 
@@ -282,9 +283,12 @@ def main():
     youtube_clips = (
         {WEEKLY_VIEWS_FIELD: manual_youtube}
         if manual_youtube is not None
-        else _load_stats(
-            "YouTube @AW3RY_CLIPS",
-            lambda: get_youtube_stats(cutoff),
+        else (
+            _load_stats(
+                "YouTube @AW3RY_CLIPS",
+                lambda: get_youtube_stats(cutoff),
+            )
+            or {WEEKLY_VIEWS_FIELD: YOUTUBE_CLIPS_WEEK_VIEWS}
         )
     )
     api_key = os.getenv("YOUTUBE_API_KEY")

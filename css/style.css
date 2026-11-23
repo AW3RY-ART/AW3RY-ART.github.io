@@ -1075,6 +1075,40 @@ html.vfx-disabled .about-story-grid section {
 }
 
 @media (max-width: 600px) {
+  .page {
+    height: 100svh;
+    min-height: 100svh;
+  }
+
+  .site-header {
+    top: 0;
+    right: 0;
+    left: 0;
+    height: calc(62px + env(safe-area-inset-top));
+    padding: env(safe-area-inset-top) max(20px, env(safe-area-inset-right)) 0 max(20px, env(safe-area-inset-left));
+    grid-template-columns: minmax(44px, 1fr) auto minmax(44px, 1fr);
+  }
+
+  .site-header .header-link {
+    display: none;
+  }
+
+  .header-side--left {
+    justify-self: start;
+  }
+
+  .header-side--right {
+    justify-self: end;
+  }
+
+  .personal-home h1 {
+    font-size: clamp(36px, 11vw, 52px);
+  }
+
+  .personal-home .intro {
+    width: calc(100% - 32px);
+  }
+
   .site-nav {
     position: fixed;
     top: 98px;
@@ -1599,9 +1633,7 @@ h1 { margin: 0; color: #f1f1f1; font-family: 'Atavian', Arial, sans-serif; font-
 .intro-link:active { background: #193629; box-shadow: 0 3px 10px rgba(0, 0, 0, .22); transform: translate(-50%, 0) scale(.98); }
 
 @media (max-width: 600px) {
-  .site-header { top: 25px; right: 24px; left: 24px; }
   .intro { top: 50%; }
-  h1 { font-size: clamp(36px, 11vw, 52px); }
   .music-player { bottom: 16px; }
   .intro-link {
     bottom: calc(clamp(24px, 4.1vh, 44px) - 8px);
@@ -2746,10 +2778,50 @@ body.page-dark .instagram-post {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     --goal-gap: 14px;
     gap: var(--goal-gap);
+    padding-right: clamp(12px, 4vw, 24px);
+    padding-left: clamp(12px, 4vw, 24px);
+  }
+
+  .future-goal-cell:has(.future-goal-stat[data-social-stat="instagram"]) {
+    grid-column: 1;
+    grid-row: 1;
+  }
+
+  .future-goal-cell:has(.future-goal-stat[data-social-stat="tiktok"]) {
+    grid-column: 1 / -1;
+    grid-row: 3;
+  }
+
+  .future-goal-cell:has(.future-goal-stat[data-social-stat="tiktok"]) .future-goal-card {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 2.6;
+  }
+
+  .future-goal-cell:has(.future-goal-stat[data-social-stat="youtube"]) {
+    grid-column: 1;
+    grid-row: 2;
+  }
+
+  .future-goal-cell:has(.future-goal-stat[data-social-stat="instagram-reels"]) {
+    grid-column: 2;
+    grid-row: 2;
+  }
+
+  .future-goal-cell:has(.future-goal-stat[data-social-stat="youtube-shorts"]) {
+    grid-column: 2;
+    grid-row: 1;
+  }
+
+  .future-goal-cell:has(.future-goal-stat[data-social-stat="youtube-shorts"]) .future-goal-card {
+    height: auto;
+    min-height: 0;
+    aspect-ratio: 1.25;
   }
 
   .future-goal-cell--total {
     grid-column: 1 / -1;
+    grid-row: 4;
   }
 
   .future-goal-cell--total .future-goal-card {
@@ -2759,11 +2831,21 @@ body.page-dark .instagram-post {
   }
 
   .future-goal-stat.future-goal-stat--total {
-    gap: .75rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: .6rem;
+    text-align: center;
   }
 
   .future-goal-stat--total strong {
-    font-size: clamp(1.7rem, 7vw, 3.5rem);
+    align-self: center;
+    font-size: clamp(2.2rem, 10vw, 4rem);
+  }
+
+  .future-goal-stat--total .future-goal-platform-name {
+    align-self: center;
   }
 
   .future-goal-cell:nth-child(2n)::after,
@@ -2771,6 +2853,38 @@ body.page-dark .instagram-post {
 
   .future-goal-card {
     aspect-ratio: 1.25;
+  }
+
+  .future-goal-stat {
+    min-width: 0;
+    padding: 12px;
+  }
+
+  .future-goal-stat strong {
+    max-width: 100%;
+    min-width: 0;
+    font-size: clamp(1.9rem, 9vw, 2.8rem);
+    white-space: nowrap;
+  }
+
+  .future-goal-platform-heading {
+    gap: 6px;
+  }
+
+  .future-goal-platform-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  .future-goal-platform-name {
+    font-size: clamp(.52rem, 2.1vw, .65rem);
+  }
+
+  .future-goals-grid.has-future-goal-reveal .future-goal-cell,
+  .future-goals-grid.has-future-goal-reveal .future-goal-cell.is-visible,
+  .future-goals-grid.has-future-goal-reveal .future-goal-cell:nth-child(n),
+  .future-goals-grid.has-future-goal-reveal .future-goal-cell:nth-child(n).is-visible {
+    transform: none;
   }
 
   .future-goal-mark {
@@ -2982,11 +3096,23 @@ body.page-dark .instagram-post {
 .instagram-feature .section-head { position: absolute; top: 40%; left: 50%; z-index: 1; width: var(--container); margin: 0; text-align: center; transform: translate(-50%, -50%); }
 .instagram-feature .section-title { width: 100%; max-width: none; margin: 0 auto; font-family: Arial, Helvetica, sans-serif; font-size: clamp(2.5rem, 4.8vw, 5.2rem); font-weight: 600; letter-spacing: -.075em; line-height: .92; text-transform: uppercase; }
 .instagram-feature .about-title-line { display: block; }
+.instagram-feature .about-title-line:nth-child(2) .about-title-word-inner {
+  font-family: 'Ashing', Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  letter-spacing: -.04em;
+  text-transform: none;
+}
 .instagram-feature .about-title-word--gallery { overflow: visible; }
 .instagram-feature .about-title-word-inner--gallery {
   font-size: 1.12em;
   color: #214536;
   text-shadow: none;
+}
+.instagram-feature .about-title-word-inner--aw3ry {
+  font-family: 'Ashing', Arial, Helvetica, sans-serif;
+  font-weight: 400;
+  letter-spacing: -.04em;
+  text-transform: none;
 }
 .instagram-feature .instagram-layout-preserver { position: relative; padding-top: calc(clamp(2.2rem, 5vw, 4rem) + clamp(2.2rem, 5vw, 4rem) + 13rem); padding-bottom: 1.5rem; }
 .services .about-title-word-inner--accent {
@@ -3691,7 +3817,7 @@ body.page-dark .contact { background: transparent; }
 @media (max-width: 760px) {
   .contact-links {
     top: 20px;
-    width: min(100%, 540px);
+    width: 100%;
     flex-wrap: wrap;
     gap: 1.5rem;
   }
@@ -3700,6 +3826,23 @@ body.page-dark .contact { background: transparent; }
   .contact-links a { font-size: 14px; }
   .contact-title,
   .contact-email { top: 32px; }
+
+  .contact-inner {
+    width: 100%;
+    max-width: 540px;
+  }
+
+  .contact-title.is-reveal-ready {
+    opacity: 1;
+    transform: none;
+  }
+
+  .contact-links > div.is-reveal-ready,
+  .contact-links > div.is-reveal-ready.is-revealed {
+    opacity: 1;
+    filter: none;
+    transition: none;
+  }
 
 }
 
