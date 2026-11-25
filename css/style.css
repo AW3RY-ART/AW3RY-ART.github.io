@@ -2576,6 +2576,16 @@ body.page-dark .instagram-post {
   background: #171717;
 }
 
+.future-goal-card--stat[role="button"] {
+  cursor: pointer;
+}
+
+.future-goal-card--stat[role="button"]:focus-visible {
+  z-index: 3;
+  outline: 1px solid rgba(247, 247, 247, .8);
+  outline-offset: 4px;
+}
+
 .future-goal-card--stat::before {
   display: none;
 }
@@ -2645,6 +2655,60 @@ body.page-dark .instagram-post {
   font-size: 10px;
   letter-spacing: .08em;
   text-transform: uppercase;
+}
+
+.future-goal-stat[data-period="mixed"] {
+  position: relative;
+}
+
+.future-goal-stat[data-period="mixed"] small {
+  position: absolute;
+  bottom: clamp(1rem, 2vw, 1.5rem);
+  left: clamp(1rem, 2vw, 1.5rem);
+}
+
+.future-goal-cell[data-channel-status] .future-goal-stat > * {
+  filter: blur(3px);
+  opacity: .58;
+  transition: filter 700ms cubic-bezier(.16, 1, .3, 1), opacity 700ms cubic-bezier(.16, 1, .3, 1);
+}
+
+.future-goal-status-note {
+  position: absolute;
+  top: clamp(1rem, 2vw, 1.5rem);
+  right: clamp(1rem, 2vw, 1.5rem);
+  z-index: 1;
+  color: rgba(247, 247, 247, .7);
+  font-size: 9px;
+  letter-spacing: .1em;
+  line-height: 1.4;
+  text-align: right;
+  text-transform: uppercase;
+  transition: opacity 420ms ease;
+}
+
+.future-goal-cell.is-revealed .future-goal-status-note {
+  opacity: 0;
+  pointer-events: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .future-goal-cell[data-channel-status]:hover .future-goal-stat > *,
+  .future-goal-cell[data-channel-status]:focus-within .future-goal-stat > * {
+    filter: blur(0);
+    opacity: 1;
+  }
+
+  .future-goal-cell[data-channel-status]:hover .future-goal-status-note,
+  .future-goal-cell[data-channel-status]:focus-within .future-goal-status-note {
+    opacity: 0;
+    pointer-events: none;
+  }
+}
+
+.future-goal-cell[data-channel-status].is-revealed .future-goal-stat > * {
+  filter: blur(0);
+  opacity: 1;
 }
 
 @keyframes future-goal-square-flash {
@@ -2921,6 +2985,11 @@ body.page-dark .instagram-post {
     translate: none;
     transition: background-color 240ms ease;
     will-change: auto;
+  }
+
+  .future-goal-cell[data-channel-status] .future-goal-stat > *,
+  .future-goal-status-note {
+    transition: none;
   }
 }
 

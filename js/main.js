@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initSectionParallaxGlows();
   initFutureGoalReveal();
   initFutureGoalStats();
+  initInactiveStatsReveal();
   initFutureMarquee();
   initServicesComingSoon();
   initFutureTransition();
@@ -973,6 +974,27 @@ function initFutureGoalStats() {
       cards.forEach((card) => observer.observe(card));
     })
     .catch((error) => console.warn('Social stats could not be loaded:', error));
+}
+
+function initInactiveStatsReveal() {
+  const inactiveCards = document.querySelectorAll('.future-goal-cell[data-channel-status] .future-goal-stat');
+  inactiveCards.forEach((stat) => {
+    const card = stat.closest('.future-goal-card');
+    const cell = stat.closest('.future-goal-cell');
+    if (!card || !cell) return;
+
+    const toggleReveal = () => {
+      const isRevealed = cell.classList.toggle('is-revealed');
+      card.setAttribute('aria-expanded', String(isRevealed));
+    };
+
+    card.addEventListener('click', toggleReveal);
+    card.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      toggleReveal();
+    });
+  });
 }
 
 function initFutureGoalReveal() {
