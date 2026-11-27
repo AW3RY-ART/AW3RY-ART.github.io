@@ -7,7 +7,8 @@
     muted: false,
     track: 0,
     visualizerEnabled: false,
-    vfxEnabled: !isMobile
+    vfxEnabled: !isMobile,
+    lightModeEnabled: false
   };
   let preferences = { ...defaults };
 
@@ -26,6 +27,7 @@
         }
         if (typeof parsed.visualizerEnabled === 'boolean') preferences.visualizerEnabled = parsed.visualizerEnabled;
         if (typeof parsed.vfxEnabled === 'boolean') preferences.vfxEnabled = parsed.vfxEnabled;
+        if (typeof parsed.lightModeEnabled === 'boolean') preferences.lightModeEnabled = parsed.lightModeEnabled;
       }
     }
   } catch (error) {
@@ -34,7 +36,8 @@
 
   const applyPreferences = () => {
     document.documentElement.classList.toggle('visualizer-disabled', !preferences.visualizerEnabled);
-    document.documentElement.classList.toggle('vfx-disabled', !preferences.vfxEnabled);
+    document.documentElement.classList.toggle('light-mode', preferences.lightModeEnabled);
+    document.documentElement.classList.toggle('vfx-disabled', !preferences.vfxEnabled || preferences.lightModeEnabled);
   };
   applyPreferences();
 

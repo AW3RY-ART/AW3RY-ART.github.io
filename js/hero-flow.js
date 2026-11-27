@@ -3,25 +3,33 @@
   if (!canvases.length) return;
 
   const assetUrl = new URL('hero-flow.json', document.currentScript.src);
-  fetch(assetUrl)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error(`Could not load the hero flow export (${response.status} ${response.statusText}).`);
-      }
-      return response.json();
-    })
-    .then((animation) => {
-      canvases.forEach((canvas) => {
-        try {
-          initializeAnimation(animation, canvas);
-        } catch (error) {
-          console.error('Hero flow animation could not initialize:', error);
+  let animationLoad = null;
+  const loadAnimation = () => {
+    if (document.documentElement.classList.contains('vfx-disabled') || animationLoad) return;
+    animationLoad = fetch(assetUrl)
+      .then((response) => {
+        if (!response.ok) {
+          throw new Error(`Could not load the hero flow export (${response.status} ${response.statusText}).`);
         }
+        return response.json();
+      })
+      .then((animation) => {
+        canvases.forEach((canvas) => {
+          try {
+            initializeAnimation(animation, canvas);
+          } catch (error) {
+            console.error('Hero flow animation could not initialize:', error);
+          }
+        });
+      })
+      .catch((error) => {
+        animationLoad = null;
+        console.error('Hero flow animation could not load:', error);
       });
-    })
-    .catch((error) => {
-      console.error('Hero flow animation could not load:', error);
-    });
+  };
+
+  document.addEventListener('aw3ry:preferences-changed', loadAnimation);
+  loadAnimation();
 
   function initializeAnimation(animation, canvas) {
     const hero = canvas.closest('.hero');

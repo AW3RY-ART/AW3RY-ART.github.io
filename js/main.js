@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initNav();
   initMusicPlayer();
   initSiteSettings();
+  initLightModeSuggestion();
   initSmoothScrollActions();
   initWheelSmoothing();
   initAboutTextReveal();
@@ -89,6 +90,86 @@ function initSiteSettings() {
     syncControls(event.detail);
   });
   syncControls();
+}
+
+function initLightModeSuggestion() {
+  const prompt = document.querySelector('#lightModePrompt');
+  const preferenceStore = window.aw3ryPreferences;
+  if (!prompt || !preferenceStore || !document.querySelector('.personal-home')) return;
+
+  const enableButton = prompt.querySelector('[data-light-mode-enable]');
+  const dismissButton = prompt.querySelector('[data-light-mode-dismiss]');
+  if (!enableButton || !dismissButton) return;
+
+  let dismissed = false;
+  let loadCompleted = document.readyState === 'complete';
+  let animationFrame = null;
+  let sampleStart = 0;
+  let sampleFrames = 0;
+
+  const stopFrameCheck = () => {
+    if (animationFrame !== null) {
+      window.cancelAnimationFrame(animationFrame);
+      animationFrame = null;
+    }
+  };
+  const showPrompt = () => {
+    if (dismissed || preferenceStore.get().lightModeEnabled) return;
+    prompt.hidden = false;
+    stopFrameCheck();
+  };
+  const checkFrameRate = (timestamp) => {
+    animationFrame = null;
+    if (dismissed || preferenceStore.get().lightModeEnabled) return;
+    if (document.hidden || !document.hasFocus()) {
+      sampleStart = 0;
+      sampleFrames = 0;
+      animationFrame = window.requestAnimationFrame(checkFrameRate);
+      return;
+    }
+
+    if (!sampleStart) sampleStart = timestamp;
+    sampleFrames += 1;
+    const sampleDuration = timestamp - sampleStart;
+    if (sampleDuration >= 1500) {
+      const framesPerSecond = sampleFrames * 1000 / sampleDuration;
+      sampleStart = timestamp;
+      sampleFrames = 0;
+      if (framesPerSecond < 30) {
+        showPrompt();
+        return;
+      }
+    }
+    animationFrame = window.requestAnimationFrame(checkFrameRate);
+  };
+
+  document.addEventListener('visibilitychange', () => {
+    sampleStart = 0;
+    sampleFrames = 0;
+  });
+
+  enableButton.addEventListener('click', () => {
+    dismissed = true;
+    stopFrameCheck();
+    prompt.hidden = true;
+    preferenceStore.save({ lightModeEnabled: true });
+  });
+  dismissButton.addEventListener('click', () => {
+    dismissed = true;
+    stopFrameCheck();
+    prompt.hidden = true;
+  });
+
+  window.addEventListener('load', () => {
+    loadCompleted = true;
+  }, { once: true });
+  window.setTimeout(() => {
+    if (!loadCompleted && document.readyState !== 'complete') showPrompt();
+  }, Math.max(0, 3000 - window.performance.now()));
+
+  if (preferenceStore.get().vfxEnabled && !preferenceStore.get().lightModeEnabled) {
+    animationFrame = window.requestAnimationFrame(checkFrameRate);
+  }
 }
 
 function initMusicPlayer() {
@@ -1064,7 +1145,7 @@ window.addEventListener('load', () => {
 
 function initSmoothScrollActions() {
   const logo = document.querySelector('.logo');
-  const contactLinks = document.querySelectorAll('a[href="#contact"], a[href="#about"], .intro-link, .envelope-button, .header-mini-button, .header-about-button');
+  const contactLinks = document.querySelectorAll('a[href="#contact"], a[href="#about"], a[href="#top"]:not(.logo), .intro-link, .envelope-button, .header-mini-button, .header-about-button');
 
   const enableSmoothScroll = () => {
     document.documentElement.style.scrollBehavior = 'smooth';
@@ -1432,7 +1513,7 @@ function initGoalCardMagnets() {
   const hasFinePointer = window.matchMedia('(pointer: fine)').matches;
   if (hasReducedMotion || !hasFinePointer) return;
 
-  document.querySelectorAll('.future-goal-card, .about-read-more, .music-player-expand-toggle, .music-player-tiktok').forEach((card) => {
+  document.querySelectorAll('.future-goal-card, .about-read-more, .music-player-expand-toggle, .music-player-tiktok, .gallery-bottom-nav a').forEach((card) => {
     const returnToRest = () => {
       card.style.setProperty('--magnet-x', '0px');
       card.style.setProperty('--magnet-y', '0px');

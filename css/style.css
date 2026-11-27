@@ -1,13 +1,13 @@
 @font-face {
   font-family: 'Ashing';
   src: url('../assets/fonts/typogama-ahsing.otf') format('opentype');
-  font-display: block;
+  font-display: swap;
 }
 
 @font-face {
   font-family: 'Atavian';
   src: url('../assets/fonts/Atavian-REGULAR.otf') format('opentype');
-  font-display: block;
+  font-display: swap;
 }
 
 :root {
@@ -279,6 +279,64 @@ a:focus-visible { outline: 1px solid #fff; outline-offset: 5px; }
   opacity: 0;
   filter: blur(18px);
   animation: title-in 0.7s cubic-bezier(.16, 1, .3, 1) .08s forwards, title-out 0.5s ease .78s forwards;
+}
+
+.light-mode-prompt {
+  position: fixed;
+  right: clamp(16px, 3vw, 36px);
+  bottom: clamp(16px, 3vw, 36px);
+  z-index: 2100;
+  display: grid;
+  gap: 14px;
+  width: min(390px, calc(100vw - 32px));
+  padding: 20px;
+  border: 1px solid rgba(255, 255, 255, .16);
+  background: rgba(15, 15, 16, .96);
+  color: #f7f5f0;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .28);
+}
+
+.light-mode-prompt[hidden] {
+  display: none;
+}
+
+.light-mode-prompt h2,
+.light-mode-prompt p {
+  margin: 0;
+}
+
+.light-mode-prompt h2 {
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.light-mode-prompt p {
+  margin-top: 6px;
+  color: rgba(247, 245, 240, .7);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.light-mode-prompt-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.light-mode-prompt-actions button {
+  min-height: 36px;
+  padding: 0 12px;
+  font-size: 12px;
+}
+
+.light-mode-prompt-enable {
+  background: #f7f5f0;
+  color: #111;
+}
+
+.light-mode-prompt-dismiss {
+  background: transparent;
+  color: rgba(247, 245, 240, .72);
 }
 
 @keyframes loader-fade {
@@ -1729,6 +1787,42 @@ html.vfx-disabled .work-item--coming-soon .work-media img {
 
 html.vfx-disabled .work-item--coming-soon:hover .work-media img {
   filter: saturate(.45) brightness(.76);
+}
+
+html.light-mode body:has(> .personal-home) > :not(.personal-home) {
+  display: none !important;
+}
+
+html.light-mode,
+html.light-mode body,
+html.light-mode .personal-home {
+  background: #0c0d0f;
+}
+
+html.light-mode *,
+html.light-mode *::before,
+html.light-mode *::after {
+  animation: none !important;
+  transition: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  scroll-behavior: auto !important;
+}
+
+html.light-mode .hero-liquid-bg,
+html.light-mode .personal-home .hero-liquid-bg::after {
+  display: none !important;
+}
+
+html.light-mode .personal-home .site-header {
+  opacity: 1;
+  transform: none;
+}
+
+html.light-mode .personal-home .intro h1,
+html.light-mode .personal-home .intro .eyebrow {
+  opacity: 1;
 }
 
 .reveal.is-visible,

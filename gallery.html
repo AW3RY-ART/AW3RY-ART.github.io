@@ -32,6 +32,13 @@
   <link rel="stylesheet" href="css/style.css">
   <script>
     const galleryDataScript = document.createElement('script');
+    const galleryDataReady = new Promise((resolve) => {
+      galleryDataScript.addEventListener('load', resolve, { once: true });
+      galleryDataScript.addEventListener('error', () => {
+        console.error('Gallery data script failed to load.');
+        resolve();
+      }, { once: true });
+    });
     galleryDataScript.src = 'gallery/assets/files/gallery-data.js?v=' + Date.now();
     document.head.appendChild(galleryDataScript);
   </script>
@@ -52,23 +59,33 @@
     }
 
     body {
-      background: #0d0d0d;
-      color: #f4f1eb;
+      background: #0c0d0f;
+      color: #f3f2ef;
+    }
+
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
     }
 
     .gallery-shell {
       width: 100%;
+      height: 100%;
       margin: 0 auto;
-      padding: 0 0 clamp(3rem, 5vw, 5rem);
+      padding: 0;
       background: transparent;
       position: relative;
-      z-index: 1;
+      z-index: 0;
       display: flex;
       justify-content: center;
+      overflow: hidden;
     }
 
     .gallery-shell main {
       width: min(100%, 1220px);
+      height: 100%;
       margin: 0 auto;
       padding-left: clamp(1rem, 2vw, 2rem);
       padding-right: clamp(1rem, 2vw, 2rem);
@@ -113,64 +130,300 @@
     }
 
     .gallery-hero {
-      position: relative;
-      width: 100vw;
-      min-height: 100vh;
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100vh;
+      height: 100svh;
+      min-height: 100svh;
       display: block;
-      padding-bottom: clamp(1.5rem, 3vw, 2.5rem);
-      margin: 0 calc(50% - 50vw) clamp(4rem, 7vw, 6rem);
+      margin: 0;
       overflow: hidden;
       border-bottom: 1px solid rgba(255,255,255,0.1);
-      background: #0d0d0d;
+      background: #0c0d0f;
       text-align: center;
     }
 
-    .gallery-hero-media {
-      position: absolute;
-      inset: 0;
-      z-index: 0;
-      overflow: hidden;
-      background: #000;
+    .gallery-hero .hero-liquid-bg {
+      z-index: 1;
+      transition: filter 1.2s cubic-bezier(.16, 1, .3, 1);
     }
 
-    .gallery-hero-slide {
+    .gallery-hero.is-cars-palette .hero-liquid-bg {
+      filter: hue-rotate(125deg) saturate(1.08);
+    }
+
+    .gallery-hero.is-fanarts-palette .hero-liquid-bg {
+      filter: hue-rotate(-105deg) saturate(1.08);
+    }
+
+    .gallery-hero > .gallery-infinite-grid {
       position: absolute;
+      z-index: 3;
       inset: 0;
+      overflow: hidden;
+      background-color: rgba(5, 5, 5, .24);
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity 1.2s cubic-bezier(.16, 1, .3, 1), visibility 0s linear 1.2s, background-color 520ms ease;
+    }
+
+    .gallery-hero.is-grid-background > .gallery-infinite-grid {
+      background-color: #fff;
+      pointer-events: auto;
+      cursor: grab;
+      touch-action: none;
+      user-select: none;
+    }
+
+    .gallery-infinite-grid.is-dragging {
+      cursor: grabbing;
+    }
+
+    .gallery-grid-track {
+      position: absolute;
+      top: 0;
+      left: 0;
+      display: grid;
+      grid-template-columns: repeat(3, max-content);
+      grid-template-rows: repeat(3, max-content);
+      transform-origin: top left;
+      will-change: transform;
+    }
+
+    .gallery-grid-track.is-centering {
+      transition: transform 620ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .gallery-grid-reel {
+      display: grid;
+      --gallery-grid-tile-size: clamp(112px, 14vw, 190px);
+      --gallery-grid-gap: clamp(1rem, 2.4vw, 2rem);
+      grid-template-columns: repeat(6, var(--gallery-grid-tile-size));
+      grid-auto-rows: var(--gallery-grid-tile-size);
+      gap: var(--gallery-grid-gap);
+      padding: 0 var(--gallery-grid-gap) var(--gallery-grid-gap) 0;
+    }
+
+    .gallery-grid-tile {
+      display: grid;
+      position: relative;
+      z-index: 0;
+      box-sizing: border-box;
+      width: var(--gallery-grid-tile-size);
+      height: var(--gallery-grid-tile-size);
+      place-items: center;
+      overflow: hidden;
+      background: transparent;
+      aspect-ratio: 1;
+      transition: transform 420ms cubic-bezier(.16, 1, .3, 1), filter 300ms ease, opacity 300ms ease;
+    }
+
+    .gallery-infinite-grid.has-focused-tile .gallery-grid-tile:not(.is-focused) {
+      filter: blur(3px);
+      opacity: .48;
+    }
+
+    .gallery-grid-tile.is-focused {
+      z-index: 2;
+      transform: scale(1.55);
+    }
+
+    .gallery-focus-meta {
+      position: absolute;
+      z-index: 4;
+      inset: 0;
+      color: #171717;
+      opacity: 0;
+      visibility: hidden;
+      transform: translateX(18px);
+      pointer-events: none;
+      transition: opacity 480ms ease, transform 620ms cubic-bezier(.16, 1, .3, 1), visibility 0s linear 480ms;
+    }
+
+    .gallery-focus-meta.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transform: translateX(0);
+      transition-delay: 0s;
+    }
+
+    .gallery-focus-brand {
+      position: absolute;
+      top: clamp(2.5rem, 7vh, 5rem);
+      left: 50%;
+      transform: translateX(-50%);
+      color: inherit;
+      font-family: 'Ashing', 'Brush Script MT', cursive;
+      font-size: clamp(2rem, 3.2vw, 3rem);
+      line-height: .9;
+      letter-spacing: .06em;
+      white-space: nowrap;
+    }
+
+    .gallery-focus-caption {
+      position: absolute;
+      top: 50%;
+      right: clamp(2rem, 7vw, 7rem);
+      width: min(30vw, 360px);
+      margin: 0;
+      padding: 0;
+      text-align: left;
+      transform: translateY(-50%);
+    }
+
+    .gallery-focus-eyebrow {
+      margin: 0 0 .75rem;
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+      color: rgba(23,23,23,.56);
+    }
+
+    .gallery-focus-event {
+      margin: 0;
+      font-family: 'Atavian', Arial, sans-serif;
+      font-size: clamp(2rem, 4vw, 4rem);
+      font-weight: 400;
+      line-height: .9;
+      letter-spacing: -.055em;
+      text-transform: uppercase;
+    }
+
+    .gallery-focus-image {
+      margin: 1rem 0 0;
+      font-family: Arial, sans-serif;
+      font-size: 10px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+      color: rgba(23,23,23,.62);
+    }
+
+    .gallery-focus-filename {
+      margin: .45rem 0 0;
+      font-family: Arial, sans-serif;
+      font-size: 9px;
+      color: rgba(23,23,23,.48);
+    }
+
+    .gallery-hero > .gallery-infinite-grid.has-focused-tile {
+      background-color: #fff;
+    }
+
+    .gallery-grid-tile img {
+      display: block;
       width: 100%;
       height: 100%;
-      object-fit: cover;
-      opacity: 0;
-      transform: scale(1.12);
-      transition: opacity 2.4s ease, transform 9s ease;
-      filter: grayscale(1) brightness(.52) contrast(1.05);
-    }
-
-    .gallery-hero-slide.is-active {
-      opacity: 1;
-      transform: scale(1);
-    }
-
-    .gallery-hero::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: radial-gradient(circle at center, rgba(255,255,255,0.12), rgba(0,0,0,0.22) 42%, rgba(0,0,0,0.74) 100%);
-      filter: grayscale(1) brightness(.54) contrast(1.05);
-      transform: scale(1.05);
-      z-index: 1;
-    }
-
-    .gallery-hero::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(180deg, rgba(0,0,0,0.08), rgba(0,0,0,0.32));
+      min-width: 0;
+      min-height: 0;
+      object-fit: contain;
+      object-position: center;
+      filter: saturate(.84);
       pointer-events: none;
+      user-select: none;
+    }
+
+    .gallery-hero.is-grid-background > .gallery-infinite-grid {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+    }
+
+    .gallery-hero-copy,
+    .gallery-hero .media-controls,
+    .gallery-hero > .sound-button {
+      transition: opacity 600ms ease, visibility 0s linear;
+    }
+
+    .gallery-hero.is-grid-background .gallery-hero-copy,
+    .gallery-hero.is-grid-background .media-controls,
+    .gallery-hero.is-grid-background > .sound-button {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition-delay: 0s, 600ms;
+    }
+
+    .site-header {
+      transition: background-color 760ms cubic-bezier(.16, 1, .3, 1),
+        color 760ms cubic-bezier(.16, 1, .3, 1),
+        box-shadow 760ms cubic-bezier(.16, 1, .3, 1),
+        backdrop-filter 760ms cubic-bezier(.16, 1, .3, 1),
+        border-color 760ms cubic-bezier(.16, 1, .3, 1),
+        opacity 600ms ease,
+        transform 600ms ease,
+        visibility 0s linear;
+    }
+
+    html.gallery-grid-background .site-header {
+      opacity: 0;
+      transform: translateY(-14px);
+      visibility: hidden;
+      pointer-events: none;
+      animation: none;
+      transition-delay: 0s, 0s, 0s, 0s, 0s, 0s, 0s, 600ms;
+    }
+
+    html.gallery-grid-background .site-nav {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .gallery-hero .hero-liquid-bg,
+      .gallery-hero > .gallery-infinite-grid,
+      .gallery-focus-meta,
+      .gallery-hero-copy,
+      .gallery-hero .media-controls,
+      .gallery-hero > .sound-button,
+      .site-header,
+      .gallery-grid-tile,
+      .gallery-grid-track.is-centering {
+        transition: none;
+      }
+
+      .gallery-panel--showcase::before,
+      .gallery-panel--showcase::after {
+        animation: none;
+        opacity: 0;
+      }
+
+      .gallery-panel--contact[open] {
+        animation: none;
+      }
+    }
+
+    @media (max-width: 680px) {
+      .gallery-grid-reel {
+        --gallery-grid-tile-size: clamp(84px, 21vw, 120px);
+        --gallery-grid-gap: clamp(.75rem, 3vw, 1.1rem);
+        grid-template-columns: repeat(4, var(--gallery-grid-tile-size));
+      }
+
+      .gallery-focus-meta {
+        inset: 0;
+      }
+
+      .gallery-focus-caption {
+        right: 1rem;
+        width: 35vw;
+      }
+
+      .gallery-focus-brand {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+      }
+
+      .gallery-focus-event {
+        font-size: clamp(1.25rem, 5vw, 2rem);
+      }
     }
 
     .gallery-hero-copy {
       position: absolute;
-      z-index: 1;
+      z-index: 10;
       top: 50%;
       left: 50%;
       width: min(90vw, 700px);
@@ -180,11 +433,268 @@
 
     .gallery-kicker {
       margin: 0 0 0.7rem;
-      color: rgba(244, 241, 235, 0.7);
-      font-family: Arial, sans-serif;
-      font-size: 10px;
-      letter-spacing: .18em;
+    }
+
+    .gallery-bottom-nav {
+      position: fixed;
+      z-index: 1001;
+      bottom: clamp(36px, 5vh, 58px);
+      left: 50%;
+      display: flex;
+      justify-content: center;
+      width: min(260px, calc(100vw - 48px));
+      transform: translateX(-50%);
+    }
+
+    .gallery-bottom-nav a {
+      position: relative;
+      display: block;
+      width: 100%;
+      margin: 0 auto;
+      padding: 10px 10px 9px;
+      background: #f7f7f7;
+      color: #202020;
+      font-family: 'Atavian', Arial, sans-serif;
+      font-size: 9px;
+      line-height: 1.1;
+      letter-spacing: .04em;
+      text-align: center;
       text-transform: uppercase;
+      translate: var(--magnet-x, 0px) var(--magnet-y, 0px);
+      transition: width 420ms cubic-bezier(.16, 1, .3, 1), padding 420ms cubic-bezier(.16, 1, .3, 1), opacity 260ms ease, translate 560ms cubic-bezier(.22, 1.35, .36, 1), transform 220ms ease, background-color 220ms ease, color 220ms ease, box-shadow 220ms ease;
+      will-change: translate;
+    }
+
+    .gallery-bottom-nav a span {
+      display: inline-block;
+      transition: opacity 220ms ease, transform 320ms cubic-bezier(.16, 1, .3, 1);
+    }
+
+    .gallery-return-label {
+      position: absolute;
+      inset: 50% 0 auto;
+      opacity: 0;
+      transform: translateY(6px);
+    }
+
+    .gallery-bottom-nav a.is-selected {
+      width: min(120px, 100%);
+      padding: 8px 10px;
+      background: #202020;
+      color: #f7f5f0;
+      opacity: .72;
+    }
+
+    .gallery-bottom-nav a.is-selected .gallery-start-label {
+      opacity: 0;
+      transform: translateY(-6px);
+    }
+
+    .gallery-bottom-nav a.is-selected .gallery-return-label {
+      opacity: 1;
+      transform: translateY(-50%);
+    }
+
+    .gallery-bottom-nav a:hover,
+    .gallery-bottom-nav a:focus-visible {
+      background: #214536;
+      color: #f7f5f0;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, .28);
+      translate: var(--magnet-x, 0px) calc(var(--magnet-y, 0px) - 3px);
+    }
+
+    .gallery-bottom-nav a:focus-visible {
+      outline: 2px solid #f7f7f7;
+      outline-offset: 3px;
+    }
+
+    .gallery-bottom-nav a:active {
+      background: #193629;
+      box-shadow: 0 3px 10px rgba(0, 0, 0, .22);
+      transform: scale(.98);
+    }
+
+    .gallery-bottom-nav a.is-magnetized {
+      transition: width 420ms cubic-bezier(.16, 1, .3, 1), padding 420ms cubic-bezier(.16, 1, .3, 1), opacity 260ms ease, translate 110ms ease-out, transform 220ms ease, background-color 220ms ease, color 220ms ease, box-shadow 220ms ease;
+    }
+
+    .gallery-bottom-nav a.is-selected:hover,
+    .gallery-bottom-nav a.is-selected:focus-visible {
+      background: #202020;
+      color: #f7f5f0;
+      box-shadow: 0 4px 14px rgba(0, 0, 0, .2);
+      opacity: 1;
+    }
+
+    .gallery-bottom-nav a.is-photo-locked,
+    .gallery-bottom-nav a.is-photo-locked:hover,
+    .gallery-bottom-nav a.is-photo-locked:focus-visible {
+      background: #090909;
+      color: #fff;
+      box-shadow: 0 8px 26px rgba(0, 0, 0, .28);
+      opacity: 1;
+    }
+
+    .cars-section,
+    .fanarts-section {
+      background: #0d0d0d;
+    }
+
+    .cars-section {
+      padding-top: clamp(1rem, 4vw, 3rem);
+    }
+
+    .fanarts-section {
+      padding: clamp(4rem, 8vw, 7rem) 0;
+      text-align: center;
+    }
+
+    .fanarts-title {
+      margin: 0 0 clamp(2rem, 4vw, 3rem);
+      color: #f4f1eb;
+      font-size: clamp(2.5rem, 5vw, 5rem);
+      line-height: .92;
+      letter-spacing: -.075em;
+      text-transform: uppercase;
+    }
+
+    .fanarts-image {
+      width: min(100%, 760px);
+      max-height: 78svh;
+      margin: 0 auto;
+      object-fit: contain;
+    }
+
+    .closing-atmosphere {
+      background: #0d0d0d;
+    }
+
+    .gallery-panel {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      max-width: none;
+      height: 100%;
+      max-height: none;
+      margin: 0;
+      padding: clamp(4.5rem, 8vh, 6rem) clamp(1rem, 4vw, 3rem) 3rem;
+      overflow: auto;
+      border: 0;
+      background: #0d0d0d;
+      color: #f4f1eb;
+    }
+
+    .gallery-panel::backdrop {
+      background: rgba(0,0,0,0.72);
+      backdrop-filter: blur(8px);
+    }
+
+    .gallery-panel--showcase {
+      background: #f2f2f2;
+      color: #171717;
+    }
+
+    .gallery-panel--showcase::backdrop {
+      background: #fff;
+      animation: gallery-white-backdrop 1.35s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .gallery-panel--showcase::after {
+      position: absolute;
+      z-index: 30;
+      inset: 0;
+      content: "";
+      background: #fff;
+      pointer-events: none;
+      animation: gallery-white-reveal 1.35s cubic-bezier(.16, 1, .3, 1) forwards;
+    }
+
+    .gallery-panel--showcase .gallery-infinite-grid {
+      z-index: 0;
+    }
+
+    .gallery-panel--showcase > *:not(.gallery-infinite-grid) {
+      position: relative;
+      z-index: 1;
+    }
+
+    .gallery-panel--showcase .gallery-panel-close {
+      position: sticky;
+    }
+
+    .gallery-panel--showcase .cars-section,
+    .gallery-panel--showcase .fanarts-section {
+      background: transparent;
+    }
+
+    .gallery-panel--showcase .gallery-mode-label,
+    .gallery-panel--showcase .gallery-current-mode,
+    .gallery-panel--showcase .gallery-filter,
+    .gallery-panel--showcase .fanarts-title {
+      color: #171717;
+    }
+
+    .gallery-panel--showcase .gallery-filter.is-active {
+      color: #171717;
+    }
+
+    .gallery-panel--showcase .gallery-show-more {
+      border-color: rgba(0,0,0,.3);
+      color: #171717;
+    }
+
+    .gallery-panel--showcase .gallery-show-more:hover,
+    .gallery-panel--showcase .gallery-show-more:focus-visible {
+      border-color: #171717;
+      background: #171717;
+      color: #fff;
+    }
+
+    .gallery-panel--showcase .gallery-panel-close {
+      border-color: rgba(0,0,0,.24);
+      background: rgba(255,255,255,.8);
+      color: #171717;
+    }
+
+    .gallery-panel--contact[open] {
+      animation: gallery-contact-fade 750ms ease-out both;
+    }
+
+    @keyframes gallery-white-backdrop {
+      0%, 45% { background: #fff; }
+      100% { background: rgba(0,0,0,.72); }
+    }
+
+    @keyframes gallery-white-reveal {
+      0%, 45% { opacity: 1; }
+      100% { opacity: 0; }
+    }
+
+    @keyframes gallery-contact-fade {
+      from {
+        opacity: 0;
+      }
+      to { opacity: 1; }
+    }
+
+    .gallery-panel-close {
+      position: sticky;
+      top: 0;
+      z-index: 20;
+      display: block;
+      margin: 0 0 1.5rem auto;
+      padding: 0.65rem 0.85rem;
+      border: 1px solid rgba(255,255,255,0.28);
+      background: rgba(13,13,13,0.8);
+      color: #f4f1eb;
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .gallery-panel-close:hover,
+    .gallery-panel-close:focus-visible {
+      border-color: #f4f1eb;
     }
 
     .gallery-mode-label {
@@ -325,45 +835,6 @@
 
     .gallery-title {
       margin: 0;
-      color: #f3f0eb;
-      font-family: 'Atavian', Arial, sans-serif;
-      font-size: clamp(42px, 4.2vw, 60px);
-      line-height: .91;
-      letter-spacing: .01em;
-      font-weight: 400;
-      text-transform: uppercase;
-    }
-
-    .gallery-scroll {
-      position: absolute;
-      left: 50%;
-      bottom: clamp(22px, 3.6vh, 38px);
-      z-index: 2;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      width: 3.5rem;
-      height: 3.5rem;
-      transform: translateX(-50%);
-      color: rgba(244, 241, 235, 0.9);
-      transition: opacity 200ms ease, transform 200ms ease;
-    }
-
-    .gallery-scroll:hover,
-    .gallery-scroll:focus-visible {
-      opacity: 1;
-      transform: translateX(-50%) translateY(2px);
-    }
-
-    .gallery-scroll svg {
-      display: block;
-      width: 2.7rem;
-      height: auto;
-      stroke: currentColor;
-      stroke-width: 1.6;
-      fill: none;
-      stroke-linecap: round;
-      stroke-linejoin: round;
     }
 
     .gallery-grid {
@@ -410,7 +881,7 @@
     .gallery-show-more:focus-visible {
       border-color: #f4f1eb;
       background: #f4f1eb;
-      color: #0d0d0d;
+      color: #171717;
     }
 
     .closing-atmosphere .site-footer {
@@ -501,6 +972,26 @@
         grid-template-columns: 1fr;
       }
 
+      .gallery-bottom-nav a {
+        padding: 12px 14px 11px;
+        border: 1px solid rgba(17, 17, 17, 0.12);
+        font-size: 9px;
+        letter-spacing: .12em;
+      }
+
+      .gallery-bottom-nav a.is-selected {
+        padding: 8px 10px;
+      }
+
+      .gallery-bottom-nav {
+        width: min(68vw, 300px);
+      }
+
+      .gallery-bottom-nav a:hover,
+      .gallery-bottom-nav a:focus-visible {
+        translate: var(--magnet-x, 0px) calc(var(--magnet-y, 0px) - 3px);
+      }
+
       .gallery-item,
       .gallery-item img {
         aspect-ratio: 1.05;
@@ -548,24 +1039,16 @@
 
     <a class="logo" href="index.html" aria-label="AW3RY home">AW3RY</a>
 
-    <a class="header-link header-link--right" href="index.html#about" aria-label="About Dawid">About me</a>
+    <a class="header-link header-link--right" href="index.html" aria-label="AW3RY home">About me</a>
 
-    <div class="header-side header-side--right">
-      <a class="envelope-button" href="index.html#contact" aria-label="Open contact section">
-        <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.1">
-          <rect x="2" y="5" width="16" height="11" />
-          <path d="M2.5 6 10 12 17.5 6" />
-        </svg>
-      </a>
-    </div>
+    <div class="header-side header-side--right"></div>
   </header>
 
   <nav class="site-nav" id="siteNav" aria-label="Main navigation">
     <div class="site-nav-panel">
       <a href="#top" style="--i:0">Home</a>
-      <a href="#galleryFilterBar" style="--i:1">Filters</a>
-      <a href="#gallery" style="--i:2">Gallery</a>
-      <a href="#melancholia" data-melancholia-trigger style="--i:3">melancholia</a>
+      <a href="#cars" style="--i:1">Start</a>
+      <a href="#melancholia" data-melancholia-trigger style="--i:2">melancholia</a>
 
       <section class="site-nav-settings" aria-labelledby="site-settings-title">
         <h2 id="site-settings-title">Settings</h2>
@@ -595,13 +1078,22 @@
 
   <div class="gallery-shell" id="top">
     <main>
-      <section class="gallery-hero" aria-labelledby="gallery-title">
-        <div class="gallery-hero-media" aria-hidden="true">
-          <img class="gallery-hero-slide is-active" src="gallery/substance/_XM50033.webp" alt="">
-          <img class="gallery-hero-slide" src="gallery/kustom-movement/_XM50105.webp" alt="">
-          <img class="gallery-hero-slide" src="gallery/kustom-movement/FXM50165.webp" alt="">
+      <section class="gallery-hero hero personal-home" aria-labelledby="gallery-title">
+        <div class="hero-liquid-bg" aria-hidden="true">
+          <canvas class="hero-flow-canvas"></canvas>
         </div>
-
+        <div class="gallery-infinite-grid" id="galleryInfiniteGrid" aria-hidden="true">
+          <div class="gallery-grid-track" id="galleryInfiniteGridTrack"></div>
+        </div>
+        <aside class="gallery-focus-meta" id="galleryFocusMeta" aria-hidden="true" aria-live="polite">
+          <div class="gallery-focus-brand">AW3RY</div>
+          <div class="gallery-focus-caption">
+            <p class="gallery-focus-eyebrow">Selected event</p>
+            <h2 class="gallery-focus-event" data-gallery-focus-event></h2>
+            <p class="gallery-focus-image" data-gallery-focus-image></p>
+            <p class="gallery-focus-filename" data-gallery-focus-filename></p>
+          </div>
+        </aside>
         <div class="media-controls" aria-label="Media controls">
           <button class="media-button play-button" type="button" aria-label="Pause animation" aria-pressed="false">
             <svg viewBox="0 0 20 20" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round">
@@ -620,19 +1112,29 @@
         </button>
 
         <div class="gallery-hero-copy">
-          <p class="gallery-kicker">Selected frames</p>
+          <p class="gallery-kicker eyebrow">Selected frames</p>
           <h1 id="gallery-title" class="gallery-title">Gallery</h1>
         </div>
 
-        <a class="gallery-scroll" href="#" aria-label="Scroll down slightly">
-          <svg viewBox="0 0 60 40" aria-hidden="true">
-            <path d="M12 12L30 28L48 12" />
-          </svg>
-        </a>
       </section>
 
+    </main>
+  </div>
+
+  <nav class="gallery-bottom-nav" aria-label="Gallery sections">
+    <a href="#cars" aria-label="Start gallery">
+      <span class="gallery-start-label">Start</span>
+      <span class="gallery-return-label" aria-hidden="true">Powrót</span>
+    </a>
+  </nav>
+
+  <dialog class="gallery-panel gallery-panel--showcase" id="cars" aria-labelledby="cars-title">
+    <div class="gallery-infinite-grid" aria-hidden="true"></div>
+    <button class="gallery-panel-close" type="button" data-close-gallery-panel>Close</button>
+    <section class="cars-section" aria-labelledby="cars-title">
+      <h2 class="visually-hidden" id="cars-title">Cars</h2>
       <div class="gallery-filter-section">
-        <p class="gallery-mode-label">Current Filter</p>
+        <p class="gallery-mode-label">Cars</p>
         <h2 class="gallery-current-mode" id="galleryCurrentMode"><span class="about-title-line">All</span></h2>
 
         <div class="gallery-filter-bar" id="galleryFilterBar" aria-label="Gallery filters">
@@ -640,78 +1142,68 @@
         </div>
       </div>
 
-      <section class="gallery-grid" id="gallery" aria-label="AW3RY gallery"></section>
+      <section class="gallery-grid" id="gallery" aria-label="AW3RY car photography"></section>
       <div class="gallery-load-more-wrap">
-        <button class="gallery-show-more" id="galleryShowMore" type="button" aria-controls="gallery" hidden>Pokaż więcej</button>
+        <button class="gallery-show-more" id="galleryShowMore" type="button" aria-controls="gallery" hidden>Show more</button>
       </div>
-    </main>
-  </div>
-
-  <div class="closing-atmosphere" data-section-parallax-range="700" data-section-cutoff-start="0.22" data-section-cutoff-end="1.15">
-    <div class="section-parallax-glow closing-atmosphere-glow" aria-hidden="true">
-      <span data-section-parallax-depth="0.2"></span>
-      <span data-section-parallax-depth="0.32"></span>
-      <span data-section-parallax-depth="0.14"></span>
-      <span data-section-parallax-depth="0.26"></span>
-    </div>
-    <div class="closing-atmosphere-pattern" aria-hidden="true">
-      <span class="closing-pattern-frame" data-section-parallax-depth="0.19"></span>
-      <span class="closing-pattern-frame" data-section-parallax-depth="0.304"></span>
-      <span class="closing-pattern-frame" data-section-parallax-depth="0.133"></span>
-      <span class="closing-pattern-plus" data-section-parallax-depth="0.247">+</span>
-      <span class="closing-pattern-plus" data-section-parallax-depth="0.19">+</span>
-      <span class="closing-pattern-plus" data-section-parallax-depth="0.304">+</span>
-      <span class="closing-pattern-plus" data-section-parallax-depth="0.133">+</span>
-    </div>
-    <div class="closing-atmosphere-content">
-      <section class="section contact tone-b" id="contact">
-        <div class="contact-inner">
-          <h2 class="contact-title">Let’s create<br>something worth<br>keeping.</h2>
-          <a href="mailto:AW3RY.art@gmail.com" class="contact-email about-read-more cursor-glow-target">AW3RY.art@gmail.com</a>
-
-          <div class="contact-links">
-            <div>
-              <p class="section-eyebrow">Dawid</p>
-              <a href="https://www.instagram.com/aw3ry.private/" target="_blank" rel="noopener">Instagram</a>
-              <a href="https://www.linkedin.com/in/dawidjag%C3%B3ra/" target="_blank" rel="noopener">LinkedIn</a>
-            </div>
-            <div>
-              <p class="section-eyebrow">AW3RY</p>
-              <a href="https://www.instagram.com/aw3ry.art/" target="_blank" rel="noopener">Instagram</a>
-              <a href="https://www.facebook.com/Awery320?locale=pl_PL" target="_blank" rel="noopener">Facebook</a>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <footer class="site-footer">
-        <p>© <span id="year"></span> AW3RY / Dawid, Łódź.</p>
-      </footer>
-    </div>
-  </div>
+    </section>
+  </dialog>
 
   <script src="js/main.js"></script>
   <script>
-    const year = document.getElementById('year');
-    if (year) year.textContent = new Date().getFullYear();
-
     const galleryHeader = document.querySelector('.site-header');
     const galleryShell = document.querySelector('.gallery-shell');
+    const gallerySiteNav = document.querySelector('.site-nav');
+    const galleryMenuToggle = document.getElementById('menuToggle');
     const galleryFilterBar = document.getElementById('galleryFilterBar');
     const galleryGrid = document.getElementById('gallery');
+    const galleryInfiniteGrid = document.getElementById('galleryInfiniteGrid');
+    const galleryInfiniteGridTrack = document.getElementById('galleryInfiniteGridTrack');
+    const galleryFocusMeta = document.getElementById('galleryFocusMeta');
+    const galleryFocusEvent = galleryFocusMeta?.querySelector('[data-gallery-focus-event]');
+    const galleryFocusImage = galleryFocusMeta?.querySelector('[data-gallery-focus-image]');
+    const galleryFocusFilename = galleryFocusMeta?.querySelector('[data-gallery-focus-filename]');
     const galleryShowMore = document.getElementById('galleryShowMore');
     const galleryCurrentMode = document.getElementById('galleryCurrentMode');
-    const galleryHeroSlides = Array.from(document.querySelectorAll('.gallery-hero-slide'));
+    const galleryHero = document.querySelector('.gallery-hero');
+    const galleryMediaControls = galleryHero?.querySelector('.media-controls');
+    const gallerySoundButton = galleryHero?.querySelector('.sound-button');
+    const galleryHeroPlayButton = galleryHero?.querySelector('.play-button');
     const galleryNavLink = document.querySelector('[data-scroll-top="true"]');
-    const galleryNavAnchors = document.querySelectorAll('a[href="#top"], a[href="#gallery"], a[href="#galleryFilterBar"]');
-    let galleryHeroTimer = null;
-    let galleryAlbums = [];
+    const galleryNavAnchors = document.querySelectorAll('a[href="#top"], a[href="#cars"]');
+    const galleryStartButton = document.querySelector('.gallery-bottom-nav a[href="#cars"]');
+    const galleryPanelCloseButtons = document.querySelectorAll('[data-close-gallery-panel]');
+    const setGalleryStartButtonState = (isGalleryOpen) => {
+      if (!galleryStartButton) return;
+      galleryStartButton.classList.toggle('is-selected', isGalleryOpen);
+      galleryStartButton.setAttribute('aria-label', isGalleryOpen ? 'Return to gallery cover' : 'Start gallery');
+    };
     let galleryImageRecords = [];
     let galleryActiveFilter = 'all';
     let galleryVisibleRows = 4;
     let galleryRenderedCount = 0;
     let galleryColumnCount = 0;
     let galleryParallaxFrame = null;
+    let galleryGridPeriodX = 0;
+    let galleryGridPeriodY = 0;
+    let galleryGridOffsetX = 0;
+    let galleryGridOffsetY = 0;
+    let galleryGridZoom = 1;
+    let galleryGridDrag = null;
+    let galleryFocusedTile = null;
+    let galleryPhotoLocked = false;
+    let galleryPendingFocusedTile = null;
+    let galleryGridInertiaFrame = null;
+    let galleryGridCenteringTimeout = null;
+    let galleryGridPointerMovedDuringCentering = false;
+    let galleryGridLastPointerX = null;
+    let galleryGridLastPointerY = null;
+    let galleryGridPositionInitialized = false;
+    const galleryGridMinZoom = 0.7;
+    const galleryGridMaxZoom = 1.45;
+    const galleryGridClickThreshold = 8;
+    const galleryGridFocusDistance = 120;
+    const galleryPhotoDismissDistance = 36;
     const galleryParallaxImages = new Set();
     const galleryParallaxObserver = !window.matchMedia('(prefers-reduced-motion: reduce)').matches && 'IntersectionObserver' in window
       ? new IntersectionObserver((entries) => {
@@ -732,71 +1224,31 @@
       galleryHeader.classList.toggle('is-scrolled', window.scrollY > earlyScrollThreshold);
     }
 
+    function setGalleryGridMode(isActive) {
+      galleryHero?.classList.toggle('is-grid-background', isActive);
+      document.documentElement.classList.toggle('gallery-grid-background', isActive);
+      if (!isActive) {
+        clearGalleryFocusedTile();
+        stopGalleryGridInertia();
+        galleryGridDrag = null;
+        galleryInfiniteGrid?.classList.remove('is-dragging');
+      }
+      if (galleryHeader) galleryHeader.inert = isActive;
+      if (galleryMediaControls) galleryMediaControls.inert = isActive;
+      if (gallerySoundButton) gallerySoundButton.inert = isActive;
+      if (gallerySiteNav) {
+        if (isActive) gallerySiteNav.classList.remove('is-open');
+        gallerySiteNav.inert = isActive;
+      }
+      if (isActive) galleryMenuToggle?.setAttribute('aria-expanded', 'false');
+    }
+
     function slugify(value) {
       return String(value)
         .toLowerCase()
         .trim()
         .replace(/[_\s]+/g, '-')
         .replace(/[^a-z0-9-]/g, '');
-    }
-
-    function getAllGalleryImages() {
-      return (galleryAlbums || []).flatMap((album) => Array.isArray(album.images) ? album.images : []);
-    }
-
-    function getRandomHeroImages(sourceImages = []) {
-      const images = sourceImages.length ? [...sourceImages] : getAllGalleryImages();
-      if (!images.length) return [];
-
-      for (let i = images.length - 1; i > 0; i -= 1) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [images[i], images[j]] = [images[j], images[i]];
-      }
-
-      return images.slice(0, Math.min(3, images.length));
-    }
-
-    function updateHeroSlides(images) {
-      const heroImages = images && images.length ? images : getRandomHeroImages();
-
-      galleryHeroSlides.forEach((slide, index) => {
-        slide.src = heroImages[index % heroImages.length] || heroImages[0];
-        slide.classList.remove('is-active');
-      });
-
-      window.setTimeout(() => {
-        galleryHeroSlides.forEach((slide, index) => {
-          slide.classList.toggle('is-active', index === 0);
-          void slide.offsetWidth;
-        });
-      }, 30);
-
-      if (galleryHeroTimer) {
-        clearInterval(galleryHeroTimer);
-      }
-
-      galleryHeroTimer = window.setInterval(() => {
-        if (!galleryHeroSlides.length) return;
-        const activeIndex = galleryHeroSlides.findIndex((slide) => slide.classList.contains('is-active'));
-        const nextIndex = activeIndex >= 0 ? (activeIndex + 1) % galleryHeroSlides.length : 0;
-
-        galleryHeroSlides.forEach((slide, index) => {
-          slide.classList.remove('is-active');
-        });
-
-        window.setTimeout(() => {
-          galleryHeroSlides.forEach((slide, index) => {
-            slide.classList.toggle('is-active', index === nextIndex);
-            void slide.offsetWidth;
-          });
-        }, 30);
-      }, 6500);
-    }
-
-    function updateHeroForFilter(filterName) {
-      const selectedAlbum = galleryAlbums.find((album) => slugify(album.name || album.title || 'album') === filterName);
-      const albumImages = selectedAlbum && Array.isArray(selectedAlbum.images) ? selectedAlbum.images : getRandomHeroImages(getAllGalleryImages());
-      updateHeroSlides(albumImages);
     }
 
     function getGalleryColumns() {
@@ -808,6 +1260,411 @@
       return galleryActiveFilter === 'all'
         ? galleryImageRecords
         : galleryImageRecords.filter((record) => record.filter === galleryActiveFilter);
+    }
+
+    function normalizeGalleryGridOffset(offset, period) {
+      if (period <= 0) return offset;
+      const remainder = ((offset % period) + period) % period;
+      return remainder === 0 ? -period : remainder - period;
+    }
+
+    function getNearestGalleryGridOffset(offset, period, currentOffset) {
+      if (period <= 0) return offset;
+      const difference = offset - currentOffset;
+      const nearestDifference = ((difference + period / 2) % period + period) % period - period / 2;
+      return currentOffset + nearestDifference;
+    }
+
+    function updateGalleryGridPosition(reset = false) {
+      const reel = galleryInfiniteGridTrack?.querySelector('.gallery-grid-reel');
+      if (!reel) return;
+
+      const nextPeriodX = reel.offsetWidth * galleryGridZoom;
+      const nextPeriodY = reel.offsetHeight * galleryGridZoom;
+      if (nextPeriodX <= 0 || nextPeriodY <= 0) return;
+
+      galleryGridPeriodX = nextPeriodX;
+      galleryGridPeriodY = nextPeriodY;
+      if (reset || !galleryGridPositionInitialized) {
+        galleryGridOffsetX = -galleryGridPeriodX;
+        galleryGridOffsetY = -galleryGridPeriodY;
+        galleryGridPositionInitialized = true;
+      } else {
+        galleryGridOffsetX = normalizeGalleryGridOffset(galleryGridOffsetX, galleryGridPeriodX);
+        galleryGridOffsetY = normalizeGalleryGridOffset(galleryGridOffsetY, galleryGridPeriodY);
+      }
+
+      applyGalleryGridTransform();
+    }
+
+    function applyGalleryGridTransform() {
+      if (!galleryInfiniteGridTrack) return;
+      galleryInfiniteGridTrack.style.transform = `translate3d(${galleryGridOffsetX}px, ${galleryGridOffsetY}px, 0) scale(${galleryGridZoom})`;
+    }
+
+    function rebaseGalleryGridAfterFocus(tile) {
+      if (!tile || galleryGridPeriodX <= 0 || galleryGridPeriodY <= 0) return tile;
+
+      const getSafeOffset = (offset, period) => {
+        let safeOffset = offset;
+        while (safeOffset < -period * 1.5) safeOffset += period;
+        while (safeOffset >= -period * 0.5) safeOffset -= period;
+        return safeOffset;
+      };
+
+      const nextOffsetX = getSafeOffset(galleryGridOffsetX, galleryGridPeriodX);
+      const nextOffsetY = getSafeOffset(galleryGridOffsetY, galleryGridPeriodY);
+      const columnShift = Math.round((galleryGridOffsetX - nextOffsetX) / galleryGridPeriodX);
+      const rowShift = Math.round((galleryGridOffsetY - nextOffsetY) / galleryGridPeriodY);
+      if (columnShift === 0 && rowShift === 0) return tile;
+
+      const reel = tile.closest('.gallery-grid-reel');
+      const reelRow = Number(reel?.dataset.gridRow);
+      const reelColumn = Number(reel?.dataset.gridColumn);
+      const rebasedReel = galleryInfiniteGridTrack.querySelector(
+        `.gallery-grid-reel[data-grid-row="${reelRow + rowShift}"][data-grid-column="${reelColumn + columnShift}"]`
+      );
+      const rebasedTile = rebasedReel?.querySelector(
+        `.gallery-grid-tile[data-grid-image-index="${tile.dataset.gridImageIndex}"]`
+      );
+      if (!rebasedTile) return tile;
+
+      if (rebasedTile !== tile) tile.classList.remove('is-focused');
+      galleryGridOffsetX = nextOffsetX;
+      galleryGridOffsetY = nextOffsetY;
+      applyGalleryGridTransform();
+      return rebasedTile;
+    }
+
+    function setGalleryFocusedTile(tile) {
+      if (galleryFocusedTile === tile) return;
+      galleryFocusedTile?.classList.remove('is-focused');
+      galleryFocusedTile = tile;
+      galleryFocusedTile?.classList.add('is-focused');
+      galleryInfiniteGrid?.classList.toggle('has-focused-tile', Boolean(tile));
+      galleryStartButton?.classList.toggle('is-photo-locked', Boolean(tile) && galleryPhotoLocked);
+      galleryStartButton?.setAttribute(
+        'aria-label',
+        tile ? 'Return to photo grid' : galleryHero?.classList.contains('is-grid-background') ? 'Return to gallery cover' : 'Start gallery'
+      );
+      galleryFocusMeta?.classList.toggle('is-visible', Boolean(tile));
+      galleryFocusMeta?.setAttribute('aria-hidden', String(!tile));
+      if (tile) {
+        if (galleryFocusEvent) galleryFocusEvent.textContent = tile.dataset.albumTitle || 'Gallery';
+        if (galleryFocusImage) {
+          galleryFocusImage.textContent = `Frame ${tile.dataset.imageNumber || ''} / ${tile.dataset.imageCount || ''}`;
+        }
+        if (galleryFocusFilename) galleryFocusFilename.textContent = tile.dataset.imageName || '';
+      }
+    }
+
+    function finishGalleryGridCentering() {
+      if (galleryGridCenteringTimeout !== null) {
+        window.clearTimeout(galleryGridCenteringTimeout);
+        galleryGridCenteringTimeout = null;
+      }
+      galleryInfiniteGridTrack?.classList.remove('is-centering');
+      if (galleryPendingFocusedTile) {
+        const pendingTile = galleryPendingFocusedTile;
+        galleryPendingFocusedTile = null;
+        setGalleryFocusedTile(rebaseGalleryGridAfterFocus(pendingTile));
+      }
+
+      const pointerMoved = galleryGridPointerMovedDuringCentering;
+      galleryGridPointerMovedDuringCentering = false;
+      if (pointerMoved && galleryGridLastPointerX !== null && galleryGridLastPointerY !== null) {
+        updateGalleryFocusedTileDistance(galleryGridLastPointerX, galleryGridLastPointerY);
+      }
+    }
+
+    function clearGalleryFocusedTile() {
+      galleryPhotoLocked = false;
+      finishGalleryGridCentering();
+      setGalleryFocusedTile(null);
+    }
+
+    function updateGalleryFocusedTileDistance(pointerX, pointerY, movementX = 0, movementY = 0) {
+      galleryGridLastPointerX = pointerX;
+      galleryGridLastPointerY = pointerY;
+      if (galleryPhotoLocked) return;
+      if (galleryGridCenteringTimeout !== null) {
+        if (movementX !== 0 || movementY !== 0) {
+          galleryGridPointerMovedDuringCentering = true;
+        }
+        return;
+      }
+      if (!galleryFocusedTile) return;
+      if (!galleryFocusedTile.isConnected) {
+        clearGalleryFocusedTile();
+        return;
+      }
+
+      const bounds = galleryFocusedTile.getBoundingClientRect();
+      const distanceX = Math.max(bounds.left - pointerX, 0, pointerX - bounds.right);
+      const distanceY = Math.max(bounds.top - pointerY, 0, pointerY - bounds.bottom);
+      if (Math.hypot(distanceX, distanceY) > galleryGridFocusDistance) {
+        clearGalleryFocusedTile();
+      }
+    }
+
+    function focusGalleryTile(tile, pointerX, pointerY) {
+      if (!tile) {
+        clearGalleryFocusedTile();
+        return;
+      }
+      if (galleryPhotoLocked) return;
+
+      finishGalleryGridCentering();
+      galleryPhotoLocked = true;
+      const tileBounds = tile.getBoundingClientRect();
+      const gridBounds = galleryInfiniteGrid.getBoundingClientRect();
+      const reel = tile.closest('.gallery-grid-reel');
+      const nextZoom = galleryGridMaxZoom;
+      const nextPeriodX = (reel?.offsetWidth || 0) * nextZoom;
+      const nextPeriodY = (reel?.offsetHeight || 0) * nextZoom;
+      const localCenterX = (tileBounds.left + tileBounds.width / 2 - gridBounds.left - galleryGridOffsetX) / galleryGridZoom;
+      const localCenterY = (tileBounds.top + tileBounds.height / 2 - gridBounds.top - galleryGridOffsetY) / galleryGridZoom;
+      const rawOffsetX = gridBounds.width * 0.25 - localCenterX * nextZoom;
+      const rawOffsetY = gridBounds.height / 2 - localCenterY * nextZoom;
+      const nextOffsetX = getNearestGalleryGridOffset(rawOffsetX, nextPeriodX, galleryGridOffsetX);
+      const nextOffsetY = getNearestGalleryGridOffset(rawOffsetY, nextPeriodY, galleryGridOffsetY);
+      const reelRow = Number(reel?.dataset.gridRow);
+      const reelColumn = Number(reel?.dataset.gridColumn);
+      const rowShift = Math.round((rawOffsetY - nextOffsetY) / nextPeriodY);
+      const columnShift = Math.round((rawOffsetX - nextOffsetX) / nextPeriodX);
+      const centeredReel = galleryInfiniteGridTrack.querySelector(
+        `.gallery-grid-reel[data-grid-row="${reelRow + rowShift}"][data-grid-column="${reelColumn + columnShift}"]`
+      );
+      const centeredTile = centeredReel?.querySelector(
+        `.gallery-grid-tile[data-grid-image-index="${tile.dataset.gridImageIndex}"]`
+      ) || tile;
+      const shouldAnimate = !window.matchMedia('(prefers-reduced-motion: reduce)').matches
+        && (
+          Math.abs(nextOffsetX - galleryGridOffsetX) > 0.5
+          || Math.abs(nextOffsetY - galleryGridOffsetY) > 0.5
+          || Math.abs(nextZoom - galleryGridZoom) > 0.001
+        );
+
+      setGalleryFocusedTile(tile);
+      galleryGridLastPointerX = pointerX;
+      galleryGridLastPointerY = pointerY;
+      galleryGridPointerMovedDuringCentering = false;
+      if (centeredTile !== tile) {
+        centeredTile.classList.add('is-focused');
+        galleryPendingFocusedTile = centeredTile;
+      }
+
+      galleryGridZoom = nextZoom;
+      galleryGridPeriodX = nextPeriodX;
+      galleryGridPeriodY = nextPeriodY;
+      galleryGridOffsetX = nextOffsetX;
+      galleryGridOffsetY = nextOffsetY;
+      if (shouldAnimate) {
+        galleryInfiniteGridTrack.classList.add('is-centering');
+        applyGalleryGridTransform();
+        galleryGridCenteringTimeout = window.setTimeout(finishGalleryGridCentering, 660);
+      } else {
+        galleryPendingFocusedTile = null;
+        applyGalleryGridTransform();
+        setGalleryFocusedTile(rebaseGalleryGridAfterFocus(centeredTile));
+      }
+    }
+
+    function stopGalleryGridInertia() {
+      if (galleryGridInertiaFrame !== null) {
+        cancelAnimationFrame(galleryGridInertiaFrame);
+        galleryGridInertiaFrame = null;
+      }
+    }
+
+    function startGalleryGridInertia(velocityX, velocityY) {
+      if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+      if (Math.hypot(velocityX, velocityY) < 0.06) return;
+
+      stopGalleryGridInertia();
+      let previousTime = performance.now();
+      const glide = (time) => {
+        const elapsed = Math.min(time - previousTime, 32);
+        previousTime = time;
+        galleryGridOffsetX = normalizeGalleryGridOffset(
+          galleryGridOffsetX + velocityX * elapsed,
+          galleryGridPeriodX
+        );
+        galleryGridOffsetY = normalizeGalleryGridOffset(
+          galleryGridOffsetY + velocityY * elapsed,
+          galleryGridPeriodY
+        );
+        applyGalleryGridTransform();
+
+        const friction = Math.pow(0.96, elapsed / 16);
+        velocityX *= friction;
+        velocityY *= friction;
+        if (Math.hypot(velocityX, velocityY) < 0.025) {
+          galleryGridInertiaFrame = null;
+          return;
+        }
+        galleryGridInertiaFrame = requestAnimationFrame(glide);
+      };
+      galleryGridInertiaFrame = requestAnimationFrame(glide);
+    }
+
+    function endGalleryGridDrag(event) {
+      if (!galleryGridDrag || event.pointerId !== galleryGridDrag.pointerId) return;
+      const distance = Math.hypot(
+        event.clientX - galleryGridDrag.startX,
+        event.clientY - galleryGridDrag.startY
+      );
+      const clickedTile = galleryGridDrag.clickedTile;
+      const velocityX = galleryGridDrag.velocityX;
+      const velocityY = galleryGridDrag.velocityY;
+      galleryGridDrag = null;
+      galleryInfiniteGrid?.classList.remove('is-dragging');
+      if (event.type === 'pointerup' && distance <= galleryGridClickThreshold) {
+        focusGalleryTile(clickedTile, event.clientX, event.clientY);
+      } else if (event.type === 'pointerup') {
+        startGalleryGridInertia(velocityX, velocityY);
+      }
+    }
+
+    galleryInfiniteGrid?.addEventListener('pointerdown', (event) => {
+      if (!galleryHero?.classList.contains('is-grid-background') || event.button !== 0) return;
+      finishGalleryGridCentering();
+      stopGalleryGridInertia();
+      galleryGridDrag = {
+        pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
+        offsetX: galleryGridOffsetX,
+        offsetY: galleryGridOffsetY,
+        lastX: event.clientX,
+        lastY: event.clientY,
+        lastTime: event.timeStamp,
+        velocityX: 0,
+        velocityY: 0,
+        clickedTile: event.target instanceof Element
+          ? event.target.closest('.gallery-grid-tile')
+          : null
+      };
+      galleryInfiniteGrid.setPointerCapture(event.pointerId);
+      galleryInfiniteGrid.classList.add('is-dragging');
+      event.preventDefault();
+    });
+
+    galleryInfiniteGrid?.addEventListener('pointermove', (event) => {
+      if (!galleryGridDrag || event.pointerId !== galleryGridDrag.pointerId) return;
+      const elapsed = Math.max(1, event.timeStamp - galleryGridDrag.lastTime);
+      const deltaX = event.clientX - galleryGridDrag.lastX;
+      const deltaY = event.clientY - galleryGridDrag.lastY;
+      const sampleVelocityX = Math.max(-1.5, Math.min(1.5, deltaX / elapsed));
+      const sampleVelocityY = Math.max(-1.5, Math.min(1.5, deltaY / elapsed));
+      galleryGridDrag.velocityX = galleryGridDrag.velocityX * 0.4 + sampleVelocityX * 0.6;
+      galleryGridDrag.velocityY = galleryGridDrag.velocityY * 0.4 + sampleVelocityY * 0.6;
+      galleryGridDrag.lastX = event.clientX;
+      galleryGridDrag.lastY = event.clientY;
+      galleryGridDrag.lastTime = event.timeStamp;
+      galleryGridOffsetX = normalizeGalleryGridOffset(
+        galleryGridDrag.offsetX + event.clientX - galleryGridDrag.startX,
+        galleryGridPeriodX
+      );
+      galleryGridOffsetY = normalizeGalleryGridOffset(
+        galleryGridDrag.offsetY + event.clientY - galleryGridDrag.startY,
+        galleryGridPeriodY
+      );
+      applyGalleryGridTransform();
+      if (
+        galleryPhotoLocked
+        && Math.hypot(event.clientX - galleryGridDrag.startX, event.clientY - galleryGridDrag.startY) >= galleryPhotoDismissDistance
+      ) {
+        clearGalleryFocusedTile();
+      } else {
+        updateGalleryFocusedTileDistance(event.clientX, event.clientY);
+      }
+    });
+
+    galleryInfiniteGrid?.addEventListener('pointerup', endGalleryGridDrag);
+    galleryInfiniteGrid?.addEventListener('pointercancel', endGalleryGridDrag);
+    galleryInfiniteGrid?.addEventListener('lostpointercapture', endGalleryGridDrag);
+    galleryInfiniteGrid?.addEventListener('pointermove', (event) => {
+      if (!galleryGridDrag) {
+        updateGalleryFocusedTileDistance(event.clientX, event.clientY, event.movementX, event.movementY);
+      }
+    });
+    galleryInfiniteGrid?.addEventListener('pointerleave', (event) => {
+      updateGalleryFocusedTileDistance(event.clientX, event.clientY, event.movementX, event.movementY);
+    });
+    document.addEventListener('pointerdown', (event) => {
+      if (galleryFocusedTile && !galleryPhotoLocked && !galleryInfiniteGrid?.contains(event.target)) {
+        clearGalleryFocusedTile();
+      }
+    }, true);
+    galleryInfiniteGrid?.addEventListener('wheel', (event) => {
+      if (!galleryHero?.classList.contains('is-grid-background')) return;
+      event.preventDefault();
+      finishGalleryGridCentering();
+      const wheelDelta = event.deltaMode === WheelEvent.DOM_DELTA_LINE
+        ? event.deltaY * 16
+        : event.deltaMode === WheelEvent.DOM_DELTA_PAGE
+          ? event.deltaY * window.innerHeight
+          : event.deltaY;
+      const nextZoom = Math.max(
+        galleryGridMinZoom,
+        Math.min(galleryGridMaxZoom, galleryGridZoom * Math.exp(-wheelDelta * 0.001))
+      );
+      if (nextZoom === galleryGridZoom) return;
+
+      stopGalleryGridInertia();
+      galleryGridDrag = null;
+      galleryInfiniteGrid.classList.remove('is-dragging');
+      galleryGridOffsetX = event.clientX - ((event.clientX - galleryGridOffsetX) / galleryGridZoom) * nextZoom;
+      galleryGridOffsetY = event.clientY - ((event.clientY - galleryGridOffsetY) / galleryGridZoom) * nextZoom;
+      galleryGridZoom = nextZoom;
+      updateGalleryGridPosition();
+    }, { passive: false });
+
+    function renderInfiniteGridTiles() {
+      if (!galleryInfiniteGridTrack || galleryImageRecords.length === 0) return;
+
+      const tileCount = 24;
+      const selectedImages = Array.from({ length: tileCount }, (_, index) => {
+        const recordIndex = galleryImageRecords.length > tileCount
+          ? Math.floor(index * galleryImageRecords.length / tileCount)
+          : index % galleryImageRecords.length;
+        return galleryImageRecords[recordIndex];
+      });
+      const reels = document.createDocumentFragment();
+
+      for (let row = 0; row < 3; row += 1) {
+        for (let column = 0; column < 3; column += 1) {
+          const reel = document.createElement('div');
+          reel.className = 'gallery-grid-reel';
+          reel.dataset.gridRow = String(row);
+          reel.dataset.gridColumn = String(column);
+
+          selectedImages.forEach((record, index) => {
+            const tile = document.createElement('div');
+            tile.className = 'gallery-grid-tile';
+            tile.dataset.gridImageIndex = String(index);
+            tile.dataset.albumTitle = record.albumTitle;
+            tile.dataset.imageNumber = String(record.index + 1);
+            tile.dataset.imageCount = String(record.imageCount);
+            tile.dataset.imageName = record.imagePath.split('/').pop().replace(/\.[^.]+$/, '');
+
+            const image = document.createElement('img');
+            image.src = encodeURI(record.imagePath);
+            image.alt = '';
+            image.loading = 'lazy';
+            image.decoding = 'async';
+            image.draggable = false;
+            tile.appendChild(image);
+            reel.appendChild(tile);
+          });
+
+          reels.appendChild(reel);
+        }
+      }
+
+      galleryInfiniteGridTrack.replaceChildren(reels);
+      updateGalleryGridPosition(true);
     }
 
     function createGalleryItem(record, index) {
@@ -908,8 +1765,6 @@
           }, 120);
         }
 
-        updateHeroForFilter(selectedFilter);
-
         if (!galleryGrid) return;
 
         galleryGrid.classList.add('is-transitioning');
@@ -925,6 +1780,10 @@
     }
 
     async function loadGalleryData() {
+      if (window.location.protocol === 'file:' && !window.galleryData) {
+        await galleryDataReady;
+      }
+
       const fallbackData = {
         albums: [
           {
@@ -966,7 +1825,6 @@
       galleryGrid.innerHTML = '';
 
       const albums = Array.isArray(data.albums) ? data.albums : [];
-      galleryAlbums = albums;
       galleryImageRecords = [];
 
       albums.forEach((album) => {
@@ -977,15 +1835,19 @@
         button.textContent = album.title || album.name || 'Gallery';
         galleryFilterBar.appendChild(button);
 
-        (Array.isArray(album.images) ? album.images : []).forEach((imagePath, index) => {
+        const albumImages = Array.isArray(album.images) ? album.images : [];
+        albumImages.forEach((imagePath, index) => {
           galleryImageRecords.push({
             imagePath,
             index,
+            imageCount: albumImages.length,
             filter: button.dataset.filter,
             albumTitle: album.title || album.name || 'Gallery'
           });
         });
       });
+
+      renderInfiniteGridTiles();
 
       if (!albums.some((album) => slugify(album.name || album.title || 'album') === 'bring-the-nine')) {
         const button = document.createElement('button');
@@ -1005,29 +1867,39 @@
           renderGalleryItems();
         });
       }
-      updateHeroForFilter('all');
-      const requestedFilter = new URLSearchParams(window.location.search).get('filter');
-      const requestedButton = Array.from(galleryFilterBar.querySelectorAll('.gallery-filter'))
-        .find((button) => button.dataset.filter === requestedFilter);
-      if (requestedButton) {
-        requestedButton.click();
-        window.setTimeout(() => {
-          const targetTop = galleryGrid.getBoundingClientRect().top + window.scrollY - 350;
-          window.scrollTo({ top: targetTop, behavior: 'smooth' });
-        }, 240);
-      }
     }
 
     if (galleryNavLink) {
       galleryNavLink.addEventListener('click', (event) => {
         event.preventDefault();
-        window.scrollTo({
-          top: 0,
-          left: 0,
-          behavior: 'smooth'
-        });
+        document.querySelectorAll('.gallery-panel[open]').forEach((panel) => panel.close());
+        setGalleryGridMode(false);
+        galleryHero?.classList.remove('is-cars-palette', 'is-fanarts-palette');
+        setGalleryStartButtonState(false);
       });
     }
+
+    galleryPanelCloseButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const panel = button.closest('dialog');
+        if (panel && panel.open) panel.close();
+      });
+    });
+
+    document.querySelectorAll('.gallery-panel').forEach((panel) => {
+      panel.addEventListener('cancel', (event) => {
+        event.preventDefault();
+        panel.close();
+      });
+    });
+
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Escape') return;
+      const openPanel = document.querySelector('.gallery-panel[open]');
+      if (!openPanel) return;
+      event.preventDefault();
+      openPanel.close();
+    });
 
     galleryNavAnchors.forEach((anchor) => {
       anchor.addEventListener('click', (event) => {
@@ -1038,26 +1910,48 @@
 
         event.preventDefault();
 
-        const offset = targetId === '#top' ? 0 : 96;
-        const targetTop = target.getBoundingClientRect().top + window.scrollY - offset;
+        if (targetId === '#top') {
+          document.querySelectorAll('.gallery-panel[open]').forEach((panel) => panel.close());
+          setGalleryGridMode(false);
+          galleryHero?.classList.remove('is-cars-palette', 'is-fanarts-palette');
+          setGalleryStartButtonState(false);
+          return;
+        }
 
-        window.scrollTo({
-          top: targetTop,
-          left: 0,
-          behavior: 'smooth'
-        });
+        if (targetId === '#cars') {
+          if (galleryPhotoLocked) {
+            clearGalleryFocusedTile();
+            return;
+          }
+          if (galleryHero?.classList.contains('is-grid-background') && anchor.classList.contains('is-selected')) {
+            setGalleryGridMode(false);
+            galleryHero.classList.remove('is-cars-palette', 'is-fanarts-palette');
+            setGalleryStartButtonState(false);
+            return;
+          }
+          setGalleryGridMode(true);
+          galleryHero?.classList.remove('is-cars-palette', 'is-fanarts-palette');
+          galleryHero?.classList.add('is-cars-palette');
+          setGalleryStartButtonState(true);
+          return;
+        }
+
+        if (target instanceof HTMLDialogElement && !target.open) target.showModal();
       });
     });
 
-    const galleryScroll = document.querySelector('.gallery-scroll');
-    if (galleryScroll) {
-      galleryScroll.addEventListener('click', (event) => {
-        event.preventDefault();
-        window.scrollBy({
-          top: 180,
-          left: 0,
-          behavior: 'smooth'
-        });
+    if (galleryHero && galleryHeroPlayButton) {
+      const setGalleryAnimationPaused = (isPaused) => {
+        galleryHero.classList.toggle('is-animation-paused', isPaused);
+        galleryHeroPlayButton.setAttribute('aria-pressed', String(isPaused));
+        galleryHeroPlayButton.setAttribute('aria-label', isPaused ? 'Play animation' : 'Pause animation');
+      };
+
+      const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const effectsDisabled = document.documentElement.classList.contains('vfx-disabled');
+      setGalleryAnimationPaused(prefersReducedMotion || effectsDisabled);
+      galleryHeroPlayButton.addEventListener('click', () => {
+        setGalleryAnimationPaused(!galleryHero.classList.contains('is-animation-paused'));
       });
     }
 
@@ -1071,10 +1965,12 @@
         galleryColumnCount = nextColumnCount;
         renderGalleryItems(true);
       }
+      updateGalleryGridPosition();
       scheduleGalleryParallax();
     }, { passive: true });
     updateGalleryHeader();
     loadGalleryData();
   </script>
+  <script src="js/hero-flow.js"></script>
 </body>
 </html>
