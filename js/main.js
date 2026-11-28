@@ -1030,13 +1030,13 @@ function initFutureGoalStats() {
         return Number.isFinite(value) ? value : null;
       };
       const targets = {
-        instagram: getXmlValue('instagram', 'last_7_posts_views'),
-        tiktok: getXmlValue('tiktok', 'lifetime_views'),
-        youtube: getXmlValue('youtube', 'last_7_days_views'),
+        instagram: getXmlValue('instagram', 'last_30_days_views'),
+        tiktok: getXmlValue('tiktok', 'last_30_days_views'),
+        youtube: getXmlValue('youtube', 'last_30_days_views'),
         'instagram-reels': getXmlValue('instagram_art', 'total_views'),
         'youtube-shorts': getXmlValue('youtube_aw3ry', 'lifetime_views')
       };
-      const socialTargets = Object.values(targets);
+      const socialTargets = [targets.instagram, targets.tiktok, targets.youtube];
       targets.total = socialTargets.every(Number.isFinite)
         ? socialTargets.reduce((total, value) => total + value, 0)
         : null;

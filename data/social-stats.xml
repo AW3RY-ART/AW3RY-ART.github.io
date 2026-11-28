@@ -1,15 +1,15 @@
 <?xml version='1.0' encoding='utf-8'?>
 <socialStats>
   <instagram>
-    <last_7_posts_views>6528</last_7_posts_views>
+    <last_30_days_views>6794</last_30_days_views>
     <account_url>https://www.instagram.com/aw3ry.clips/</account_url>
   </instagram>
   <tiktok>
-    <lifetime_views>850725</lifetime_views>
+    <last_30_days_views>1548434</last_30_days_views>
     <account_url>https://www.tiktok.com/@aw3ry.clips</account_url>
   </tiktok>
   <youtube>
-    <last_7_days_views>46118</last_7_days_views>
+    <last_30_days_views>54138</last_30_days_views>
     <account_url>https://www.youtube.com/@AW3RY_CLIPS</account_url>
   </youtube>
   <twitch />

@@ -1,4 +1,4 @@
-"""Sum views on posts published during the last 7 days and write social-stats.xml.
+"""Collect social view counts for recent posts and write social-stats.xml.
 
 Environment variables:
 YOUTUBE_API_KEY, YOUTUBE_CHANNEL_ID
@@ -6,11 +6,12 @@ YOUTUBE_AW3RY_CHANNEL_ID
 TWITCH_CLIENT_ID, TWITCH_CLIENT_SECRET, TWITCH_BROADCASTER_ID
 
 Optional fallback:
-YOUTUBE_CLIPS_WEEK_VIEWS, YOUTUBE_AW3RY_LIFETIME_VIEWS
+YOUTUBE_CLIPS_30_DAY_VIEWS, YOUTUBE_AW3RY_LIFETIME_VIEWS
 INSTAGRAM_CLIPS_URL, INSTAGRAM_ART_URL
 YOUTUBE_CLIPS_URL, YOUTUBE_AW3RY_URL
 
-TikTok and Instagram view counts are fixed from the supplied screenshots.
+Instagram, TikTok, and YouTube Clips view counts are fixed from the supplied screenshots.
+All three counts represent the last 30 days.
 
 Run:
 python scripts/social_stats.py
@@ -31,21 +32,24 @@ import xml.etree.ElementTree as ET
 
 ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "data" / "social-stats.xml"
-WEEKLY_VIEWS_FIELD = "last_7_days_views"
-LAST_SEVEN_POSTS_FIELD = "last_7_posts_views"
-INSTAGRAM_CLIPS_POST_VIEWS = (0, 2707, 666, 171, 171, 114, 187, 234)
+LAST_30_DAYS_VIEWS_FIELD = "last_30_days_views"
+INSTAGRAM_CLIPS_POST_VIEWS = (214, 2270, 2766, 667, 171, 171, 114, 187, 234)
 INSTAGRAM_ART_TOTAL_VIEWS = 16072
-TIKTOK_POST_VIEWS = (21900, 18300, 684900, 13700, 1288, 9134, 27300, 1611, 955, 2351, 5636)
-YOUTUBE_CLIPS_WEEK_VIEWS = 32901
+TIKTOK_POST_VIEWS = (
+    593200, 24600, 818400, 4530, 1228, 11300,
+    1265, 1195, 17700, 22900, 1521, 10300,
+    904, 27900, 1732, 1055, 2638, 6066,
+)
+YOUTUBE_CLIPS_30_DAY_VIEWS = 54138
 ATOM_NAMESPACE = "{http://www.w3.org/2005/Atom}"
 YOUTUBE_NAMESPACE = "{http://www.youtube.com/xml/schemas/2015}"
 
 
-def _week_cutoff(now=None):
+def _period_cutoff(now=None, days=30):
     current_time = now or datetime.now(timezone.utc)
     if current_time.tzinfo is None:
         current_time = current_time.replace(tzinfo=timezone.utc)
-    return current_time.astimezone(timezone.utc) - timedelta(days=7)
+    return current_time.astimezone(timezone.utc) - timedelta(days=days)
 
 
 def _parse_datetime(value):
@@ -86,7 +90,7 @@ def get_youtube_stats(cutoff=None):
 
 
 def get_youtube_channel_stats(api_key, channel_id, cutoff=None):
-    cutoff = cutoff or _week_cutoff()
+    cutoff = cutoff or _period_cutoff()
     published_after = cutoff.isoformat(timespec="seconds").replace("+00:00", "Z")
     video_ids = []
     page_token = None
@@ -116,7 +120,7 @@ def get_youtube_channel_stats(api_key, channel_id, cutoff=None):
             break
 
     if not video_ids:
-        return {WEEKLY_VIEWS_FIELD: 0}
+        return {LAST_30_DAYS_VIEWS_FIELD: 0}
 
     total_views = 0
     for offset in range(0, len(video_ids), 50):
@@ -130,7 +134,7 @@ def get_youtube_channel_stats(api_key, channel_id, cutoff=None):
             int(item.get("statistics", {}).get("viewCount", 0))
             for item in details.get("items", [])
         )
-    return {WEEKLY_VIEWS_FIELD: total_views}
+    return {LAST_30_DAYS_VIEWS_FIELD: total_views}
 
 
 def get_youtube_lifetime_stats(api_key, channel_id):
@@ -166,7 +170,7 @@ def parse_view_count(value):
     return int(digits) if digits else None
 
 
-def _get_public_youtube_week_views(url, cutoff):
+def _get_public_youtube_period_views(url, cutoff):
     html = fetch_public_html(url)
     channel_id_match = re.search(r'"(?:channelId|browseId)":"(UC[^"]+)"', html)
     if not channel_id_match:
@@ -261,7 +265,7 @@ def _load_stats(label, fetch):
 
 
 def main():
-    cutoff = _week_cutoff()
+    cutoff = _period_cutoff()
     clips_url = os.getenv("YOUTUBE_CLIPS_URL", "https://www.youtube.com/@AW3RY_CLIPS")
     aw3ry_url = os.getenv("YOUTUBE_AW3RY_URL", "https://www.youtube.com/@AW3RY")
     instagram_clips_url = os.getenv(
@@ -273,22 +277,25 @@ def main():
         "https://www.instagram.com/aw3ry.art/",
     )
     tiktok_url = os.getenv("TIKTOK_CLIPS_URL", "https://www.tiktok.com/@aw3ry.clips")
-    manual_youtube = _optional_int(os.getenv("YOUTUBE_CLIPS_WEEK_VIEWS"))
+    manual_youtube = _optional_int(os.getenv(
+        "YOUTUBE_CLIPS_30_DAY_VIEWS",
+        os.getenv("YOUTUBE_CLIPS_WEEK_VIEWS"),
+    ))
     manual_youtube_aw3ry = _optional_int(os.getenv("YOUTUBE_AW3RY_LIFETIME_VIEWS"))
 
     instagram_clips = {
-        LAST_SEVEN_POSTS_FIELD: sum(INSTAGRAM_CLIPS_POST_VIEWS)
+        LAST_30_DAYS_VIEWS_FIELD: sum(INSTAGRAM_CLIPS_POST_VIEWS)
     }
-    tiktok = {"lifetime_views": sum(TIKTOK_POST_VIEWS)}
+    tiktok = {LAST_30_DAYS_VIEWS_FIELD: sum(TIKTOK_POST_VIEWS)}
     youtube_clips = (
-        {WEEKLY_VIEWS_FIELD: manual_youtube}
+        {LAST_30_DAYS_VIEWS_FIELD: manual_youtube}
         if manual_youtube is not None
         else (
             _load_stats(
                 "YouTube @AW3RY_CLIPS",
                 lambda: get_youtube_stats(cutoff),
             )
-            or {WEEKLY_VIEWS_FIELD: YOUTUBE_CLIPS_WEEK_VIEWS}
+            or {LAST_30_DAYS_VIEWS_FIELD: YOUTUBE_CLIPS_30_DAY_VIEWS}
         )
     )
     api_key = os.getenv("YOUTUBE_API_KEY")
@@ -308,14 +315,14 @@ def main():
             lambda: get_public_youtube_lifetime_stats(aw3ry_url),
         )
 
-    if youtube_clips.get(WEEKLY_VIEWS_FIELD) is None:
-        public_week_views = _load_stats(
+    if youtube_clips.get(LAST_30_DAYS_VIEWS_FIELD) is None:
+        public_period_views = _load_stats(
             "YouTube @AW3RY_CLIPS",
             lambda: {
-                WEEKLY_VIEWS_FIELD: _get_public_youtube_week_views(clips_url, cutoff)
+                LAST_30_DAYS_VIEWS_FIELD: _get_public_youtube_period_views(clips_url, cutoff)
             },
         )
-        youtube_clips.update(public_week_views)
+        youtube_clips.update(public_period_views)
 
     stats = {
         "instagram": instagram_clips,
@@ -333,9 +340,9 @@ def main():
     stats["youtube_aw3ry"] = youtube_aw3ry
     stats["youtube_aw3ry"]["account_url"] = aw3ry_url
 
-    stats["instagram"].setdefault(LAST_SEVEN_POSTS_FIELD, None)
-    stats["youtube"].setdefault(WEEKLY_VIEWS_FIELD, None)
-    stats["tiktok"].setdefault("lifetime_views", None)
+    stats["instagram"].setdefault(LAST_30_DAYS_VIEWS_FIELD, None)
+    stats["youtube"].setdefault(LAST_30_DAYS_VIEWS_FIELD, None)
+    stats["tiktok"].setdefault(LAST_30_DAYS_VIEWS_FIELD, None)
     stats["youtube_aw3ry"].setdefault("lifetime_views", None)
 
     missing = [
@@ -343,9 +350,9 @@ def main():
         for label, values in (
             ("YouTube @AW3RY_CLIPS", stats["youtube"]),
         )
-        if values.get(WEEKLY_VIEWS_FIELD) is None
+        if values.get(LAST_30_DAYS_VIEWS_FIELD) is None
     ]
-    if stats["tiktok"]["lifetime_views"] is None:
+    if stats["tiktok"][LAST_30_DAYS_VIEWS_FIELD] is None:
         missing.append("TikTok aw3ry.clips")
     if stats["youtube_aw3ry"]["lifetime_views"] is None:
         missing.append("YouTube @AW3RY")
